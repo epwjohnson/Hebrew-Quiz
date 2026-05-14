@@ -386,12 +386,38 @@
       <strong>⚠️ Speech Recognition Not Supported</strong><br>
       Your browser doesn't support speech recognition. Please use <a href="https://www.google.com/chrome/">Google Chrome</a> for the best experience.
     </div>
-    
-    <header>
-      <h1>קריאה בעברית</h1>
-      <p class="subtitle">Hebrew Reading Practice with Speech Recognition</p>
-    </header>
 
+    <!-- Welcome / instructions screen -->
+    <div id="welcome-screen" style="max-width: 560px; margin: 0 auto;">
+      <div class="quiz-card">
+        <div style="text-align: center; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--gold-dim);">
+          <h1 style="font-family: 'David Libre', serif; font-size: 1.8rem; color: var(--gold); margin-bottom: 4px;">קריאה בעברית</h1>
+          <p class="subtitle">Hebrew Reading Practice with Speech Recognition</p>
+        </div>
+        <h2 style="color: var(--gold); font-size: 1.2rem; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.05em;">How to Practise</h2>
+        <ol style="margin-left: 20px; line-height: 2.2; color: var(--silver); text-align: left; list-style: none; counter-reset: steps;">
+          <li style="counter-increment: steps;"><span style="color: var(--gold); font-weight: bold; margin-right: 8px;">1.</span>Select a prayer from the sidebar</li>
+          <li style="counter-increment: steps;"><span style="color: var(--gold); font-weight: bold; margin-right: 8px;">2.</span>Read the Hebrew line silently</li>
+          <li style="counter-increment: steps;"><span style="color: var(--gold); font-weight: bold; margin-right: 8px;">3.</span>Click 🔊 to hear it first if you wish</li>
+          <li style="counter-increment: steps;"><span style="color: var(--gold); font-weight: bold; margin-right: 8px;">4.</span>Click 🎤 and read the line aloud</li>
+          <li style="counter-increment: steps;"><span style="color: var(--gold); font-weight: bold; margin-right: 8px;">5.</span>Perfect scores advance automatically</li>
+          <li style="counter-increment: steps;"><span style="color: var(--gold); font-weight: bold; margin-right: 8px;">6.</span>Use ← Back and Skip → to navigate freely</li>
+        </ol>
+        <p style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #30363d; color: #8b949e; font-size: 0.85rem; line-height: 1.6;">
+          <strong style="color: var(--silver);">Please note:</strong> this checks words, not pronunciation details. Differences like ח vs ה cannot be detected — use the Listen button to compare your pronunciation.
+        </p>
+        <div style="text-align: center; margin-top: 24px;">
+          <button onclick="document.getElementById('welcome-screen').classList.add('hidden'); document.getElementById('main-layout').classList.remove('hidden');" style="background: var(--gold); color: #000; border: none; border-radius: 8px; padding: 14px 40px; font-size: 1.1rem; font-family: inherit; cursor: pointer;">Begin →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main quiz layout (hidden until Begin pressed) -->
+    <div id="main-layout" class="hidden">
+      <header style="text-align: center;">
+        <h1>קריאה בעברית</h1>
+        <p class="subtitle">Hebrew Reading Practice with Speech Recognition</p>
+      </header>
     <div class="progress-text" id="progress-text">Line 1 of 6</div>
     <div class="progress-bar">
       <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
@@ -413,19 +439,6 @@
         <button class="prayer-btn" data-prayer="hatikva">Hatikva</button>
       </div>
       <div class="main-column">
-        <div class="instructions" id="instructions-box">
-          <strong>How to practise:</strong>
-          <ol>
-            <li>Read the Hebrew text silently first</li>
-            <li>Click the 🎤 microphone button and read aloud</li>
-            <li>The quiz will show what it heard and compare to the expected text</li>
-            <li>Click "Try Again" to retry or "Next Line" to continue</li>
-          </ol>
-          <em>Tip: Speak clearly and at a natural pace. You can also click "Listen" to hear the correct pronunciation.</em>
-          <p style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #21262d; color: #8b949e; font-size: 0.85rem;">
-            ⚠️ This checks words, not pronunciation details. Differences like ח vs ה cannot be detected — use Listen to compare your pronunciation.
-          </p>
-        </div>
         <div class="quiz-card">
           <div id="quiz-area">
 
@@ -433,10 +446,7 @@
         <div class="feedback-message hidden" id="feedback-message"></div>
 
         <!-- Action buttons - appear after attempt, just below feedback -->
-        <div class="action-buttons hidden" id="action-buttons">
-          <button class="action-btn secondary" id="retry-btn">🔄 Try Again</button>
-          <button class="action-btn primary" id="next-btn">Next Line →</button>
-        </div>
+        <div class="action-buttons hidden" id="action-buttons"></div>
 
         <!-- Hebrew line - always visible -->
         <div class="section-label" id="section-label">Read this aloud:</div>
@@ -448,10 +458,10 @@
           <div class="mic-status" id="mic-status">Click to start recording</div>
         </div>
 
-        <div style="text-align: center; margin-top: 10px;">
+        <div style="text-align: center; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;">
           <button class="listen-btn" id="listen-btn-pre">🔊 Listen to this line</button>
-          <button class="action-btn secondary" id="back-btn" style="margin-left: 10px; padding: 6px 14px; font-size: 0.85rem;">← Back</button>
-          <button class="action-btn secondary" id="skip-btn" style="margin-left: 6px; padding: 6px 14px; font-size: 0.85rem;">Skip →</button>
+          <button class="action-btn secondary" id="back-btn" style="padding: 6px 14px; font-size: 0.85rem;">← Back</button>
+          <button class="action-btn secondary" id="skip-btn" style="padding: 6px 14px; font-size: 0.85rem;">Skip →</button>
         </div>
 
         <!-- Detailed results - below fold, user doesn't need to scroll here to continue -->
@@ -491,20 +501,9 @@
     </div>
 
         <!-- Instructions/rubric at bottom -->
-        <details style="margin-top: 12px; color: #8b949e; font-size: 0.85rem; background: var(--bg-card); border: 1px solid #30363d; border-radius: 12px; padding: 14px 35px;">
-          <summary style="cursor: pointer; color: #a67c2e; margin-bottom: 8px;">How to practise ▸</summary>
-          <div style="line-height: 1.6;">
-            <ol style="margin-left: 20px; margin-bottom: 8px;">
-              <li>Read the Hebrew text silently</li>
-              <li>Click 🎤 and read aloud</li>
-              <li>See how well you matched</li>
-              <li>Try Again or move to Next Line</li>
-            </ol>
-            ⚠️ This checks words, not pronunciation details. Differences like ח vs ה cannot be detected — use Listen to compare your pronunciation.
-          </div>
-        </details>
       </div><!-- end main-column -->
     </div><!-- end layout -->
+    </div><!-- end main-layout -->
   </div><!-- end container -->
 
   <script>
@@ -803,8 +802,6 @@
     const feedbackMessage = document.getElementById('feedback-message');
     const transliterationHint = document.getElementById('transliteration-hint');
     const englishMeaning = document.getElementById('english-meaning');
-    const retryBtn = document.getElementById('retry-btn');
-    const nextBtn = document.getElementById('next-btn');
     const quizArea = document.getElementById('quiz-area');
     const completion = document.getElementById('completion');
     const statGood = document.getElementById('stat-good');
@@ -1112,21 +1109,26 @@
       }
       
       const isCorrect = comparison.score >= 0.85;
+      const isPerfect = comparison.score >= 1.0;
       
-      // Feedback banner at top
-      feedbackMessage.textContent = isCorrect
-        ? '✓ Great job! ' + Math.round(comparison.score * 100) + '% match'
-        : '✗ Not quite. ' + Math.round(comparison.score * 100) + '% match. Try again!';
+      // Feedback banner
+      feedbackMessage.textContent = isPerfect
+        ? '✓ Perfect!'
+        : isCorrect
+          ? '✓ Good! ' + Math.round(comparison.score * 100) + '% match'
+          : '✗ ' + Math.round(comparison.score * 100) + '% — try again';
       feedbackMessage.className = 'feedback-message ' + (isCorrect ? 'correct' : 'incorrect');
       feedbackMessage.classList.remove('hidden');
       
-      // Action buttons near top
-      document.getElementById('action-buttons').classList.remove('hidden');
-      
-      // Detailed results below
+      // Show detailed results
       resultsArea.classList.remove('hidden');
       
-      micStatus.textContent = 'Click to try again';
+      micStatus.textContent = 'Click microphone to try again';
+      
+      // Auto-advance on perfect score
+      if (isPerfect) {
+        setTimeout(() => nextLine(), 3000);
+      }
     }
 
     // Render comparison with highlighting
@@ -1210,7 +1212,7 @@
 
       const utterance = new SpeechSynthesisUtterance(speakText);
       utterance.lang = 'he-IL';
-      utterance.rate = 0.8;
+      utterance.rate = 0.5;
 
       const voices = window.speechSynthesis.getVoices();
       const hebrewVoice = voices.find(v => v.lang.startsWith('he'));
@@ -1302,10 +1304,7 @@
     micBtn.addEventListener('click', () => {
       if (!recognition) return;
       
-      // Hide instructions on first use
-      const instructionsBox = document.getElementById('instructions-box');
-      if (instructionsBox) instructionsBox.classList.add('hidden');
-      
+      // Start speech recognition
       if (isListening) {
         recognition.stop();
       } else {
@@ -1317,14 +1316,6 @@
 
     document.getElementById('listen-btn-pre').addEventListener('click', () => {
       speakLine();
-    });
-
-    retryBtn.addEventListener('click', () => {
-      resultsArea.classList.add('hidden');
-      feedbackMessage.classList.add('hidden');
-      document.getElementById('action-buttons').classList.add('hidden');
-      document.getElementById('pronunciation-notes').classList.add('hidden');
-      micStatus.textContent = 'Click to start recording';
     });
 
     document.getElementById('back-btn').addEventListener('click', () => {
@@ -1343,7 +1334,6 @@
       showLine();
     });
 
-    nextBtn.addEventListener('click', nextLine);
     restartBtn.addEventListener('click', () => switchPrayer(currentPrayer));
 
     // Load voices
@@ -1371,6 +1361,12 @@
     // Initialize
     showLine();
     updateListenButton();
+
+    // Welcome screen
+    document.getElementById('continue-btn').addEventListener('click', function() {
+      document.getElementById('welcome-screen').classList.add('hidden');
+      document.getElementById('main-layout').classList.remove('hidden');
+    });
   </script>
 </body>
 </html>
