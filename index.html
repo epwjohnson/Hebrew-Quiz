@@ -333,15 +333,15 @@
     
     /* Listen button */
     .listen-btn {
-      padding: 10px 20px;
+      padding: 8px 20px;
       border: 1px solid var(--silver-dim);
       background: transparent;
       color: var(--silver);
       font-family: 'Crimson Pro', serif;
-      font-size: 1rem;
+      font-size: 0.95rem;
+      line-height: 1.2;
       border-radius: 6px;
       cursor: pointer;
-      margin-top: 15px;
       transition: all 0.2s;
     }
     .listen-btn:hover { border-color: var(--gold); color: var(--gold); }
@@ -458,10 +458,10 @@
           <div class="mic-status" id="mic-status">Click to start recording</div>
         </div>
 
-        <div style="text-align: center; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;">
-          <button class="listen-btn" id="listen-btn-pre">🔊 Listen to this line</button>
-          <button class="action-btn secondary" id="back-btn" style="padding: 6px 14px; font-size: 0.85rem;">← Back</button>
-          <button class="action-btn secondary" id="skip-btn" style="padding: 6px 14px; font-size: 0.85rem;">Skip →</button>
+        <div style="text-align: center; margin-top: 14px; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;">
+          <button class="listen-btn" id="listen-btn-pre" style="padding: 8px 20px; font-size: 0.95rem; line-height: 1.2;">🔊 Listen</button>
+          <button class="action-btn secondary" id="back-btn" style="padding: 8px 16px; font-size: 0.95rem; line-height: 1.2; background: #1a3a5c; color: #7eb8e0; border-color: #2a5a8c;">← Back</button>
+          <button class="action-btn secondary" id="skip-btn" style="padding: 8px 16px; font-size: 0.95rem; line-height: 1.2; background: #1a3a2a; color: #5cb87a; border-color: #2a6a40;">Skip →</button>
         </div>
 
         <!-- Detailed results - below fold, user doesn't need to scroll here to continue -->
@@ -496,7 +496,7 @@
             <div class="stat-label">Need Practice</div>
           </div>
         </div>
-        <button class="action-btn primary" id="restart-btn">Practice Again</button>
+        <button class="action-btn primary" id="restart-btn">Practise Again</button>
       </div>
     </div>
 
