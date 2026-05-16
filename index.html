@@ -691,7 +691,8 @@
           { hebrew: "וּבִתְבוּנָה מְשַׁנֶּה עִתִּים", transliteration: "uvitevuna meshane itim", stress: "u-vi-te-vu-NA me-sha-NEH i-TIM", english: "and with understanding changes the times" },
           { hebrew: "וּמַחֲלִיף אֶת הַזְּמַנִּים", transliteration: "umachalif et hazmanim", stress: "u-ma-cha-LIF et haz-ma-NIM", english: "and alternates the seasons" },
           { hebrew: "וּמְסַדֵּר אֶת הַכּוֹכָבִים", transliteration: "umsader et hakochavim", stress: "um-sa-DER et ha-ko-cha-VIM", english: "and arranges the stars" },
-          { hebrew: "בְּמִשְׁמְרוֹתֵיהֶם בָּרָקִיעַ כִּרְצוֹנוֹ", transliteration: "bemishmeroteihem barakia kirtzono", stress: "be-mish-me-ro-TEI-hem ba-ra-KI-a kir-tzo-NO", english: "in their watches in the sky according to His will" },
+          { hebrew: "בְּמִשְׁמְרוֹתֵיהֶם בָּרָקִיעַ כִּרְצוֹנוֹ", transliteration: "bemishmeroteihem barakia kirtzono", stress: "be-mish-me-ro-TEI-hem ba-ra-KI-a kir-tzo-NO", english: "in their watches in the sky according to His will",
+            notes: ["<strong>בְּמִשְׁמְרוֹתֵיהֶם</strong> — say slowly and clearly: <em>be-mish-me-ro-TEI-hem</em>"] },
           { hebrew: "בּוֹרֵא יוֹם וָלָיְלָה", transliteration: "borei yom valayla", stress: "bo-REI yom va-LAY-la", english: "He creates day and night" },
           { hebrew: "גּוֹלֵל אוֹר מִפְּנֵי חֹשֶׁךְ", transliteration: "golel or mipnei choshech", stress: "go-LEL or mip-NEI cho-SHECH", english: "rolling light away from darkness",
             notes: ["<strong>גּוֹלֵל</strong> — exaggerate the 'g' sound clearly: <em>GO-lel</em> — SR mishears it as כולל if the 'g' is soft"] },
@@ -706,7 +707,8 @@
           { hebrew: "בְּשָׁכְבֵנוּ וּבְקוּמֵנוּ", transliteration: "beshochbeinu uvkumeinu", stress: "be-shoch-BEI-nu uv-ku-MEI-nu", english: "when we lie down and when we rise up" },
           { hebrew: "נָשִׂיחַ בְּחֻקֶּיךָ", transliteration: "nasiach bechukecha", stress: "na-SI-ach be-chu-KE-cha", english: "we shall meditate on Your instruction",
             notes: ["<strong>נָשִׂיחַ</strong> — say slowly and clearly: <em>na-SI-ach</em> — SR struggles with this word"] },
-          { hebrew: "וְנִשְׂמַח וְנַעֲלֹז בְּדִבְרֵי תוֹרָתֶךָ", transliteration: "venismach venaeloz bedivrei toratecha", stress: "ve-nis-MACH ve-na-e-LOZ be-div-REI to-ra-TE-cha", english: "We shall rejoice in the words of Your Torah" },
+          { hebrew: "וְנִשְׂמַח וְנַעֲלֹז בְּדִבְרֵי תוֹרָתֶךָ", transliteration: "venismach venaeloz bedivrei toratecha", stress: "ve-nis-MACH ve-na-e-LOZ be-div-REI to-ra-TE-cha", english: "We shall rejoice in the words of Your Torah",
+            notes: ["<strong>וְנַעֲלֹז</strong> — SR struggles with this word. Say slowly: <em>ve-na-e-LOZ</em>"] },
           { hebrew: "וּבְמִצְווֹתֶיךָ לְעוֹלָם וָעֶד", transliteration: "uvmitzvotecha leolam vaed", stress: "uv-mitz-vo-TE-cha le-o-LAM VA-ed", english: "and in Your commandments forever and ever" },
           { hebrew: "כִּי הֵם חַיֵּינוּ וְאֹרֶךְ יָמֵינוּ", transliteration: "ki hem chayeinu veorech yameinu", stress: "ki HEM cha-YEI-nu ve-O-rech ya-MEI-nu", english: "for they are our life and the length of our days" },
           { hebrew: "וּבָהֶם נֶהְגֶּה יוֹמָם וָלָיְלָה", transliteration: "uvahem nehge yomam valayla", stress: "u-va-HEM neh-GEH yo-MAM va-LAY-la", english: "and we will think of them day and night" },
@@ -944,6 +946,14 @@
         .replace(/לימדתה/g, 'למדת')
         .replace(/ונעלו/g, 'ונעלז')
         .replace(/ובמצוות/g, 'ובמצותיך')
+        .replace(/חושך/g, 'חשך')
+        .replace(/הוא מעביר/g, 'ומעביר')
+        .replace(/הוא מביא/g, 'ומביא')
+        .replace(/לימדת/g, 'למדת')
+        .replace(/בשכבת קומינו/g, 'בשכבנו ובקומנו')
+        .replace(/בחוקיך/g, 'בחקיך')
+        .replace(/ונעל לוז/g, 'ונעלז')
+        .replace(/מצוותיך/g, 'ובמצותיך')
         .replace(/גולי/g, 'גואלי')
         .replace(/ניסי/g, 'נסי')
         .replace(/באים/g, 'ועם')
