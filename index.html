@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hebrew Reading Practice - Speech Recognition</title>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600&family=David+Libre:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep: #0a1628;
+      --bg-card: #112240;
+      --bg-input: #1a2f4a;
+      --gold: #d4a853;
+      --gold-dim: #a67c2e;
+      --silver: #c9d1d9;
+      --silver-dim: #8b949e;
+      --correct: #3fb950;
+      --error: #f85149;
+      --highlight-correct: #1d3b2a;
+      --highlight-error: #5c1d1a;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Crimson Pro', Georgia, serif;
+      background: var(--bg-deep);
+      color: var(--silver);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container { max-width: 800px; margin: 0 auto; }
+    h1 {
+      font-family: 'David Libre', serif;
+      font-size: 1.8rem;
+      color: var(--gold);
+      margin-bottom: 5px;
+    }
+    .subtitle { color: var(--silver-dim); font-size: 1rem; }
+    
+    /* Instructions */
+    .instructions {
+      background: var(--bg-input);
+      border-radius: 8px;
+      padding: 15px 20px;
+      margin-bottom: 20px;
+      font-size: 0.95rem;
+      color: var(--silver-dim);
+      line-height: 1.6;
+    }
+    .instructions strong { color: var(--silver); }
+    .instructions ol { margin-left: 20px; margin-top: 8px; }
+    .instructions li { margin-bottom: 5px; }
+    
+    /* Prayer Selection */
+    /* Layout: sidebar + main */
+    .layout {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 15px;
+      align-items: start;
+    }
+    .prayer-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      grid-row: 1;
+      /* align-self: start keeps it at the top */
+      align-self: start;
+    }
+    .main-column {
+      grid-row: 1;
+      min-width: 0;
+    }
+    .prayer-btn {
+      padding: 10px 12px;
+      border: 1px solid var(--gold-dim);
+      background: transparent;
+      color: var(--silver);
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.95rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+      width: 100%;
+    }
+    .prayer-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .prayer-btn.active { background: var(--gold-dim); border-color: var(--gold); color: #fff; }
+    
+    header {
+      text-align: center;
+      margin-bottom: 15px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--gold-dim);
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 15px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--gold-dim);
+      /* Offset left by sidebar width + gap so title centres over main column */
+      padding-left: 125px;
+    }
+    .progress-text {
+      text-align: center;
+      color: var(--silver-dim);
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+      padding-left: 125px;
+    }
+    .progress-bar {
+      background: var(--bg-input);
+      height: 6px;
+      border-radius: 3px;
+      margin-bottom: 15px;
+      overflow: hidden;
+      margin-left: 125px;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+      transition: width 0.3s ease;
+    }
+    
+    /* Main Card */
+    .quiz-card {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 35px;
+      border: 1px solid #30363d;
+      text-align: center;
+    }
+    
+    .section-label {
+      font-size: 0.85rem;
+      color: var(--silver-dim);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+    
+    .hebrew-line {
+      font-family: 'David Libre', serif;
+      font-size: 2.5rem;
+      color: #fff;
+      line-height: 1.6;
+      margin-bottom: 30px;
+      direction: rtl;
+      padding: 20px;
+      background: var(--bg-input);
+      border-radius: 8px;
+    }
+    
+    /* Microphone Button */
+    .mic-container {
+      margin-bottom: 25px;
+    }
+    .mic-btn {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 4px solid var(--gold);
+      background: transparent;
+      color: var(--gold);
+      font-size: 2.5rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .mic-btn:hover { background: rgba(212, 168, 83, 0.1); }
+    .mic-btn.listening {
+      background: var(--error);
+      border-color: var(--error);
+      color: #fff;
+      animation: pulse 1s infinite;
+    }
+    .mic-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    .mic-status {
+      margin-top: 12px;
+      font-size: 1rem;
+      color: var(--silver-dim);
+      min-height: 1.5em;
+    }
+    .mic-status.listening { color: var(--error); }
+    .mic-status.processing { color: var(--gold); }
+    
+    /* Results Area */
+    .results-area {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid #30363d;
+    }
+    .result-box {
+      background: var(--bg-input);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 10px;
+    }
+    .result-label {
+      font-size: 0.8rem;
+      color: var(--silver-dim);
+      margin-bottom: 6px;
+    }
+    .result-hebrew {
+      font-family: 'David Libre', serif;
+      font-size: 1.6rem;
+      direction: rtl;
+      line-height: 1.4;
+    }
+    .result-hebrew.correct { color: var(--correct); }
+    .result-hebrew.incorrect { color: var(--error); }
+    
+    .word-match { color: var(--correct); }
+    .word-mismatch { 
+      color: var(--error); 
+      background: rgba(248, 81, 73, 0.2);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .word-error {
+      color: var(--error);
+      background: rgba(248, 81, 73, 0.3);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .word-partial {
+      color: var(--gold);
+      background: rgba(212, 168, 83, 0.2);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .word-extra {
+      color: var(--error);
+      text-decoration: line-through;
+      opacity: 0.7;
+    }
+    .word-missing {
+      color: var(--gold);
+      opacity: 0.7;
+      font-style: italic;
+    }
+    .translit {
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.7em;
+      color: var(--silver-dim);
+      font-style: italic;
+    }
+    .phonetic-heard {
+      font-family: 'Crimson Pro', serif;
+      font-size: 1.1rem;
+      color: var(--gold);
+      margin-top: 10px;
+      font-style: italic;
+    }
+    
+    .feedback-message {
+      font-size: 1.1rem;
+      margin: 10px 0;
+      padding: 10px 15px;
+      border-radius: 8px;
+    }
+    .feedback-message.correct {
+      background: var(--highlight-correct);
+      color: var(--correct);
+    }
+    .feedback-message.incorrect {
+      background: var(--highlight-error);
+      color: var(--error);
+    }
+    
+    .transliteration-hint {
+      font-size: 1rem;
+      color: var(--silver-dim);
+      margin-top: 8px;
+      font-style: italic;
+    }
+    
+    .english-meaning {
+      font-size: 0.95rem;
+      color: var(--silver-dim);
+      margin-top: 4px;
+    }
+
+    .pronunciation-notes {
+      margin-top: 14px;
+      padding: 10px 14px;
+      background: rgba(212, 168, 83, 0.1);
+      border-left: 3px solid var(--gold-dim);
+      border-radius: 0 6px 6px 0;
+      font-size: 0.9rem;
+      color: var(--silver-dim);
+      line-height: 1.6;
+    }
+    .pronunciation-notes strong { color: var(--gold); }
+    .pronunciation-notes .note-item { margin-bottom: 4px; }
+    .pronunciation-notes .note-item:last-child { margin-bottom: 0; }
+    
+    /* Action Buttons */
+    .action-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin-top: 25px;
+    }
+    .action-btn {
+      padding: 14px 35px;
+      border: none;
+      font-family: 'Crimson Pro', serif;
+      font-size: 1.1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .action-btn.primary {
+      background: var(--gold);
+      color: #000;
+    }
+    .action-btn.secondary {
+      background: var(--bg-input);
+      color: var(--silver);
+      border: 1px solid #30363d;
+    }
+    .action-btn:hover { opacity: 0.9; transform: scale(1.02); }
+    
+    /* Listen button */
+    .listen-btn {
+      padding: 8px 20px;
+      border: 1px solid var(--silver-dim);
+      background: transparent;
+      color: var(--silver);
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.95rem;
+      line-height: 1.2;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .listen-btn:hover { border-color: var(--gold); color: var(--gold); }
+    
+    .hidden { display: none !important; }
+    
+    /* Completion */
+    .completion { text-align: center; padding: 30px; }
+    .completion h2 {
+      font-family: 'David Libre', serif;
+      font-size: 1.8rem;
+      color: var(--gold);
+      margin-bottom: 15px;
+    }
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 50px;
+      margin: 25px 0;
+    }
+    .stat { text-align: center; }
+    .stat-value { font-size: 2.5rem; font-weight: 600; }
+    .stat-value.good { color: var(--correct); }
+    .stat-value.retry { color: var(--error); }
+    .stat-label { color: var(--silver-dim); }
+    
+    /* Browser warning */
+    .browser-warning {
+      background: var(--highlight-error);
+      border: 1px solid var(--error);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      color: var(--error);
+    }
+    .browser-warning a { color: var(--gold); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="browser-warning" class="browser-warning hidden">
+      <strong>⚠️ Speech Recognition Not Supported</strong><br>
+      Your browser doesn't support speech recognition. Please use <a href="https://www.google.com/chrome/">Google Chrome</a> for the best experience.
+    </div>
+
+    <!-- Welcome / instructions screen -->
+    <div id="welcome-screen" style="max-width: 560px; margin: 0 auto;">
+      <div class="quiz-card">
+        <div style="text-align: center; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--gold-dim);">
+          <h1 style="font-family: 'David Libre', serif; font-size: 1.8rem; color: var(--gold); margin-bottom: 4px;">קריאה בעברית</h1>
+          <p class="subtitle">Hebrew Reading Practice with Speech Recognition</p>
+        </div>
+        <h2 style="color: var(--gold); font-size: 1.2rem; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.05em;">How to Practise</h2>
+        <ol style="margin-left: 20px; line-height: 2.2; color: var(--silver); text-align: left; list-style: none; counter-reset: steps;">
+          <li style="counter-increment: steps;"><span style="color: var(--gold); font-weight: bold; margin-right: 8px;">1.</span>Select a prayer from the sidebar</li>
+          <li style="counter-increment: steps;"><span style="color: var(--gold); font-weight: bold; margin-right: 8px;">2.</span>Read the Hebrew line silently</li>
+          <li style="counter-increment: steps;"><span style="color: var(--gold); font-weight: bold; margin-right: 8px;">3.</span>Click 🔊 to hear it first if you wish</li>
+          <li style="counter-increment: steps;"><span style="color: var(--gold); font-weight: bold; margin-right: 8px;">4.</span>Click 🎤 and read the line aloud</li>
+          <li style="counter-increment: steps;"><span style="color: var(--gold); font-weight: bold; margin-right: 8px;">5.</span>Perfect scores advance automatically</li>
+          <li style="counter-increment: steps;"><span style="color: var(--gold); font-weight: bold; margin-right: 8px;">6.</span>Use ← Back and Skip → to navigate freely</li>
+        </ol>
+        <p style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #30363d; color: #8b949e; font-size: 0.85rem; line-height: 1.6;">
+          <strong style="color: var(--silver);">Please note:</strong> this checks words, not pronunciation details. Differences like ח vs ה cannot be detected — use the Listen button to compare your pronunciation.
+        </p>
+        <div style="text-align: center; margin-top: 24px;">
+          <button onclick="document.getElementById('welcome-screen').classList.add('hidden'); document.getElementById('main-layout').classList.remove('hidden');" style="background: var(--gold); color: #000; border: none; border-radius: 8px; padding: 14px 40px; font-size: 1.1rem; font-family: inherit; cursor: pointer;">Begin →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main quiz layout (hidden until Begin pressed) -->
+    <div id="main-layout" class="hidden">
+      <header style="text-align: center;">
+        <h1>קריאה בעברית</h1>
+        <p class="subtitle">Hebrew Reading Practice with Speech Recognition</p>
+      </header>
+    <div class="progress-text" id="progress-text">Line 1 of 6</div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+    </div>
+
+    <div class="layout">
+      <div class="prayer-sidebar" id="prayer-select">
+        <button class="prayer-btn active" data-prayer="hadlakat-nerot">Candles</button>
+        <button class="prayer-btn" data-prayer="shalom-aleichem">Shalom Aleichem</button>
+        <button class="prayer-btn" data-prayer="mizmor-shir">Mizmor Shir</button>
+        <button class="prayer-btn" data-prayer="lecha-dodi">L'cha Dodi</button>
+        <button class="prayer-btn" data-prayer="barchu">Barchu</button>
+        <button class="prayer-btn" data-prayer="shema">Shema</button>
+        <button class="prayer-btn" data-prayer="vshamru">V'shamru</button>
+        <button class="prayer-btn" data-prayer="amida">Amida</button>
+        <button class="prayer-btn" data-prayer="aleinu">Aleinu</button>
+        <button class="prayer-btn" data-prayer="adon-olam">Adon Olam</button>
+        <button class="prayer-btn" data-prayer="kiddush">Kiddush</button>
+        <button class="prayer-btn" data-prayer="hatikva">Hatikva</button>
+      </div>
+      <div class="main-column">
+        <div class="quiz-card">
+          <div id="quiz-area">
+
+        <!-- Feedback banner - appears after attempt, above Hebrew -->
+        <div class="feedback-message hidden" id="feedback-message"></div>
+
+        <!-- Action buttons - appear after attempt, just below feedback -->
+        <div class="action-buttons hidden" id="action-buttons"></div>
+
+        <!-- Hebrew line - always visible -->
+        <div class="section-label" id="section-label">Read this aloud:</div>
+        <div class="hebrew-line" id="hebrew-line">שְׁמַע יִשְׂרָאֵל יְהוָה אֱלֹהֵינוּ יְהוָה אֶחָד</div>
+
+        <!-- Mic + listen -->
+        <div class="mic-container">
+          <button class="mic-btn" id="mic-btn" title="Start Recording">🎤</button>
+          <div class="mic-status" id="mic-status">Click to start recording</div>
+        </div>
+
+        <div style="text-align: center; margin-top: 14px; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;">
+          <button class="listen-btn" id="listen-btn-pre" style="padding: 8px 20px; font-size: 0.95rem; line-height: 1.2;">🔊 Listen</button>
+          <button class="action-btn secondary" id="back-btn" style="padding: 8px 16px; font-size: 0.95rem; line-height: 1.2; background: #1a3a5c; color: #7eb8e0; border-color: #2a5a8c;">← Back</button>
+          <button class="action-btn secondary" id="skip-btn" style="padding: 8px 16px; font-size: 0.95rem; line-height: 1.2; background: #1a3a2a; color: #5cb87a; border-color: #2a6a40;">Skip →</button>
+        </div>
+
+        <!-- Detailed results - below fold, user doesn't need to scroll here to continue -->
+        <div class="results-area hidden" id="results-area">
+          <div class="result-box">
+            <div class="result-label">What I heard:</div>
+            <div class="result-hebrew" id="heard-text"></div>
+          </div>
+
+          <div class="result-box">
+            <div class="result-label">Expected:</div>
+            <div class="result-hebrew" id="expected-text"></div>
+          </div>
+
+          <div class="transliteration-hint" id="transliteration-hint"></div>
+          <div class="english-meaning" id="english-meaning"></div>
+          <div class="pronunciation-notes hidden" id="pronunciation-notes"></div>
+        </div>
+
+      </div>
+
+      <div id="completion" class="completion hidden">
+        <h2>כל הכבוד!</h2>
+        <p>You completed the reading practice!</p>
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-value good" id="stat-good">0</div>
+            <div class="stat-label">Correct</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value retry" id="stat-retry">0</div>
+            <div class="stat-label">Need Practice</div>
+          </div>
+        </div>
+        <button class="action-btn primary" id="restart-btn">Practise Again</button>
+      </div>
+    </div>
+
+        <!-- Instructions/rubric at bottom -->
+      </div><!-- end main-column -->
+    </div><!-- end layout -->
+    </div><!-- end main-layout -->
+  </div><!-- end container -->
+
+  <script>
+    // Prayer data
+    const prayers = {
+      "shema": {
+        name: "Shema",
+        lines: [
+          // First line and response
+          { hebrew: "שְׁמַע יִשְׂרָאֵל יְהוָה אֱלֹהֵינוּ יְהוָה אֶחָד", transliteration: "shma yisrael adonai eloheinu adonai echad", stress: "SHMA yis-RA-el a-do-NAI e-lo-HEI-nu a-do-NAI e-CHAD", english: "Hear, O Israel: the Lord is our God, the Lord is One",
+            notes: ["<strong>יִשְׂרָאֵל</strong> — <em>yis</em>-ra-el, not <em>is</em>-ra-el (י = y sound)", "<strong>אֶחָד</strong> — e-<em>chad</em>, not e-<em>had</em> (ח = guttural ch)"] },
+          { hebrew: "בָּרוּךְ שֵׁם כְּבוֹד מַלְכוּתוֹ לְעוֹלָם וָעֶד", transliteration: "baruch shem kvod malchuto leolam vaed", stress: "ba-RUCH shem KVOD mal-chu-TO le-o-LAM VA-ed", english: "Blessed be the name of His glorious kingdom forever and ever",
+            notes: ["<strong>בָּרוּךְ</strong> — ba-<em>ruch</em>, not ba-<em>rook</em> (ך = guttural ch)"] },
+          // First paragraph - V'ahavta (Deuteronomy 6:5-9)
+          { hebrew: "וְאָהַבְתָּ אֵת יְהוָה אֱלֹהֶיךָ", transliteration: "veahavta et adonai elohecha", stress: "ve-a-HAV-ta et a-do-NAI e-lo-HE-cha", english: "And you shall love the Lord your God" },
+          { hebrew: "בְּכָל לְבָבְךָ וּבְכָל נַפְשְׁךָ וּבְכָל מְאֹדֶךָ", transliteration: "bechol levavcha uvchol nafshecha uvchol meodecha", stress: "be-CHOL le-VAV-cha uv-CHOL naf-SHE-cha uv-CHOL me-O-de-cha", english: "with all your heart, with all your soul, and with all your might" },
+          { hebrew: "וְהָיוּ הַדְּבָרִים הָאֵלֶּה", transliteration: "vehayu hadvarim haeleh", stress: "ve-HA-yu had-va-RIM ha-E-leh", english: "And these words" },
+          { hebrew: "אֲשֶׁר אָנֹכִי מְצַוְּךָ הַיּוֹם עַל לְבָבֶךָ", transliteration: "asher anochi metzavecha hayom al levavecha", stress: "A-sher a-NO-chi me-tza-VE-cha ha-YOM al le-va-VE-cha", english: "which I command you today shall be upon your heart" },
+          { hebrew: "וְשִׁנַּנְתָּם לְבָנֶיךָ וְדִבַּרְתָּ בָּם", transliteration: "veshinantam levanecha vedibarta bam", stress: "ve-shi-NAN-tam le-va-NE-cha ve-di-BAR-ta BAM", english: "And you shall teach them diligently to your children, and speak of them" },
+          { hebrew: "בְּשִׁבְתְּךָ בְּבֵיתֶךָ וּבְלֶכְתְּךָ בַדֶּרֶךְ", transliteration: "beshivtecha beveitecha uvlechtecha vaderech", stress: "be-shiv-TE-cha be-vei-TE-cha uv-lech-TE-cha va-DE-rech", english: "when you sit in your house and when you walk on the way" },
+          { hebrew: "וּבְשָׁכְבְּךָ וּבְקוּמֶךָ", transliteration: "uvshochbecha uvkumecha", stress: "uv-shoch-BE-cha uv-ku-ME-cha", english: "when you lie down and when you rise up" },
+          { hebrew: "וּקְשַׁרְתָּם לְאוֹת עַל יָדֶךָ", transliteration: "ukshartam leot al yadecha", stress: "uk-shar-TAM le-OT al ya-DE-cha", english: "And you shall bind them as a sign upon your hand" },
+          { hebrew: "וְהָיוּ לְטֹטָפֹת בֵּין עֵינֶיךָ", transliteration: "vehayu letotafot bein einecha", stress: "ve-HA-yu le-to-ta-FOT bein ei-NE-cha", english: "and they shall be as frontlets between your eyes" },
+          { hebrew: "וּכְתַבְתָּם עַל מְזֻזוֹת בֵּיתֶךָ וּבִשְׁעָרֶיךָ", transliteration: "uchtavtam al mezuzot beitecha uvisharecha", stress: "uch-tav-TAM al me-zu-ZOT bei-TE-cha u-vi-sha-RE-cha", english: "And you shall write them on the doorposts of your house and on your gates" }
+        ]
+      },
+      "lecha-dodi": {
+        name: "L'cha Dodi",
+        lines: [
+          { hebrew: "לְכָה דוֹדִי לִקְרַאת כַּלָּה", transliteration: "lecha dodi likrat kala", stress: "LE-cha do-DI lik-RAT ka-LA", english: "Come, my beloved, to greet the bride" },
+          { hebrew: "פְּנֵי שַׁבָּת נְקַבְּלָה", transliteration: "pnei shabat nekabla", stress: "pnei sha-BAT ne-kab-LA", english: "Let us welcome the Sabbath presence" },
+          { hebrew: "שָׁמוֹר וְזָכוֹר בְּדִבּוּר אֶחָד", transliteration: "shamor vezachor bedibur echad", stress: "sha-MOR ve-za-CHOR be-di-BUR e-CHAD", english: "Keep and remember in one utterance",
+            notes: ["<strong>אֶחָד</strong> — e-<em>chad</em>, not e-<em>had</em> (ח = guttural ch)"] },
+          { hebrew: "הִשְׁמִיעָנוּ אֵל הַמְיֻחָד", transliteration: "hishmianu el hameyuchad", stress: "hish-mi-A-nu el ha-me-yu-CHAD", english: "The one God caused us to hear" },
+          { hebrew: "יְיָ אֶחָד וּשְׁמוֹ אֶחָד", transliteration: "adonai echad ushmo echad", stress: "a-do-NAI e-CHAD ush-MO e-CHAD", english: "The Lord is One and His name is One" },
+          { hebrew: "לְשֵׁם וּלְתִפְאֶרֶת וְלִתְהִלָּה", transliteration: "leshem ultiferet velithila", stress: "le-SHEM ul-tif-E-ret ve-li-thi-LA", english: "For renown, for splendor, and for praise" },
+          { hebrew: "לִקְרַאת שַׁבָּת לְכוּ וְנֵלְכָה", transliteration: "likrat shabat lechu venelcha", stress: "lik-RAT sha-BAT le-CHU ve-nel-CHA", english: "To greet the Sabbath, come let us go" },
+          { hebrew: "כִּי הִיא מְקוֹר הַבְּרָכָה", transliteration: "ki hi mekor habracha", stress: "ki hi me-KOR ha-bra-CHA", english: "For she is the source of blessing" },
+          { hebrew: "מֵרֹאשׁ מִקֶּדֶם נְסוּכָה", transliteration: "merosh mikedem nesucha", stress: "me-ROSH mi-KE-dem ne-su-CHA", english: "From the beginning, from of old, she was chosen" },
+          { hebrew: "סוֹף מַעֲשֶׂה בְּמַחֲשָׁבָה תְּחִלָּה", transliteration: "sof maaseh bemachshava tchila", stress: "sof ma-a-SEH be-mach-sha-VA tchi-LA", english: "Last in deed, first in thought" },
+          { hebrew: "בָּאִי בְשָׁלוֹם עֲטֶרֶת בַּעְלָהּ", transliteration: "boi veshalom ateret baala", stress: "bo-I ve-sha-LOM a-TE-ret ba-a-LA", english: "Come in peace, crown of her husband" },
+          { hebrew: "גַּם בְּשִׂמְחָה וּבְצָהֳלָה", transliteration: "gam besimcha uvtzhala", stress: "gam be-sim-CHA uv-tzha-LA", english: "With joy and jubilation" },
+          { hebrew: "תּוֹךְ אֱמוּנֵי עַם סְגֻלָּה", transliteration: "toch emunei am segula", stress: "toch e-mu-NEI am se-gu-LA", english: "Among the faithful of the treasured people" },
+          { hebrew: "בָּאִי כַלָּה בָּאִי כַלָּה", transliteration: "boi chala boi chala", stress: "bo-I cha-LA bo-I cha-LA", english: "Come, O bride! Come, O bride!" }
+        ]
+      },
+      "adon-olam": {
+        name: "Adon Olam",
+        lines: [
+          { hebrew: "אֲדוֹן עוֹלָם אֲשֶׁר מָלַךְ", transliteration: "adon olam asher malach", stress: "a-DON o-LAM A-sher ma-LACH", english: "Lord of the universe who reigned" },
+          { hebrew: "בְּטֶרֶם כָּל יְצִיר נִבְרָא", transliteration: "beterem kol yetzir nivra", stress: "be-TE-rem kol ye-TZIR niv-RA", english: "before any creature was formed" },
+          { hebrew: "לְעֵת נַעֲשָׂה בְחֶפְצוֹ כֹּל", transliteration: "leet naasa vecheftzo kol", stress: "le-ET na-A-sa ve-chef-TZO kol", english: "When all was made by His will",
+            notes: ["<strong>לְעֵת</strong> — speech recognition struggles with this word. Speak slowly and clearly: <em>le-ET</em>", "<strong>כֹּל</strong> — rhymes with \"dole\", not \"call\""] },
+          { hebrew: "אֲזַי מֶלֶךְ שְׁמוֹ נִקְרָא", transliteration: "azai melech shmo nikra", stress: "a-ZAI ME-lech shmo nik-RA", english: "then was His name proclaimed King",
+            notes: ["<strong>מֶלֶךְ</strong> — ME-lech, not ME-leh (ך = guttural ch)"] },
+          { hebrew: "וְאַחֲרֵי כִּכְלוֹת הַכֹּל", transliteration: "veacharei kichlot hakol", stress: "ve-a-cha-REI kich-LOT ha-KOL", english: "And after all things cease to be" },
+          { hebrew: "לְבַדּוֹ יִמְלֹךְ נוֹרָא", transliteration: "levado yimloch nora", stress: "le-va-DO yim-LOCH no-RA", english: "He alone will reign in awe" },
+          { hebrew: "וְהוּא הָיָה וְהוּא הֹוֶה", transliteration: "vehu haya vehu hoveh", stress: "ve-HU ha-YA ve-HU ho-VEH", english: "He was, He is" },
+          { hebrew: "וְהוּא יִהְיֶה בְּתִפְאָרָה", transliteration: "vehu yihyeh betifara", stress: "ve-HU yih-YEH be-tif-A-ra", english: "and He will be in glory" },
+          { hebrew: "וְהוּא אֶחָד וְאֵין שֵׁנִי", transliteration: "vehu echad veein sheni", stress: "ve-HU e-CHAD ve-EIN she-NI", english: "He is One, there is no second" },
+          { hebrew: "לְהַמְשִׁיל לוֹ לְהַחְבִּירָה", transliteration: "lehamshil lo lehachbira", stress: "le-ham-SHIL lo le-hach-bi-RA", english: "to compare to Him or equal Him" },
+          { hebrew: "בְּלִי רֵאשִׁית בְּלִי תַכְלִית", transliteration: "bli reishit bli tachlit", stress: "bli rei-SHIT bli tach-LIT", english: "Without beginning, without end" },
+          { hebrew: "וְלוֹ הָעֹז וְהַמִּשְׂרָה", transliteration: "velo haoz vehamisra", stress: "ve-LO ha-OZ ve-ha-mis-RA", english: "His is the power and dominion" },
+          { hebrew: "וְהוּא אֵלִי וְחַי גֹּאֲלִי", transliteration: "vehu eli vechai goali", stress: "ve-HU e-LI ve-CHAI go-a-LI", english: "He is my God, my living Redeemer" },
+          { hebrew: "וְצוּר חֶבְלִי בְּעֵת צָרָה", transliteration: "vetzur chevli beet tzara", stress: "ve-TZUR chev-LI be-ET tza-RA", english: "the rock of my lot in time of trouble" },
+          { hebrew: "וְהוּא נִסִּי וּמָנוֹס לִי", transliteration: "vehu nisi umanos li", stress: "ve-HU ni-SI u-ma-NOS li", english: "He is my banner and my refuge" },
+          { hebrew: "מְנָת כּוֹסִי בְּיוֹם אֶקְרָא", transliteration: "menat kosi beyom ekra", stress: "me-NAT ko-SI be-YOM ek-RA", english: "the portion of my cup on the day I call" },
+          { hebrew: "בְּיָדוֹ אַפְקִיד רוּחִי", transliteration: "beyado afkid ruchi", stress: "be-ya-DO af-KID ru-CHI", english: "Into His hand I entrust my spirit" },
+          { hebrew: "בְּעֵת אִישַׁן וְאָעִירָה", transliteration: "beet ishan veaira", stress: "be-ET i-SHAN ve-a-I-ra", english: "when I sleep and when I wake" },
+          { hebrew: "וְעִם רוּחִי גְּוִיָּתִי", transliteration: "veim ruchi geviyati", stress: "ve-IM ru-CHI ge-vi-ya-TI", english: "And with my spirit, my body" },
+          { hebrew: "יְהוָה לִי וְלֹא אִירָא", transliteration: "adonai li velo ira", stress: "a-do-NAI li ve-LO i-RA", english: "The Lord is with me, I shall not fear" }
+        ]
+      },
+      "hatikva": {
+        name: "Hatikva",
+        lines: [
+          { hebrew: "כָּל עוֹד בַּלֵּבָב פְּנִימָה", transliteration: "kol od balevav pnima", stress: "kol od ba-le-VAV pni-MA", english: "As long as in the heart within" },
+          { hebrew: "נֶפֶשׁ יְהוּדִי הוֹמִיָּה", transliteration: "nefesh yehudi homiya", stress: "NE-fesh ye-hu-DI ho-mi-YA", english: "a Jewish soul still yearns" },
+          { hebrew: "וּלְפַאֲתֵי מִזְרָח קָדִימָה", transliteration: "ulfa'atei mizrach kadima", stress: "ul-fa-a-TEI miz-RACH ka-di-MA", english: "and toward the edges of the east, forward" },
+          { hebrew: "עַיִן לְצִיּוֹן צוֹפִיָּה", transliteration: "ayin letziyon tzofiya", stress: "A-yin le-tzi-YON tzo-fi-YA", english: "an eye gazes toward Zion" },
+          { hebrew: "עוֹד לֹא אָבְדָה תִּקְוָתֵנוּ", transliteration: "od lo avda tikvatenu", stress: "od lo av-DA tik-va-TE-nu", english: "Our hope is not yet lost" },
+          { hebrew: "הַתִּקְוָה בַּת שְׁנוֹת אַלְפַּיִם", transliteration: "hatikva bat shnot alpayim", stress: "ha-tik-VA bat shnot al-PA-yim", english: "the hope of two thousand years" },
+          { hebrew: "לִהְיוֹת עַם חָפְשִׁי בְּאַרְצֵנוּ", transliteration: "lihyot am chofshi beartzenu", stress: "lih-YOT am CHOF-shi be-ar-TZE-nu", english: "to be a free people in our land" },
+          { hebrew: "אֶרֶץ צִיּוֹן וִירוּשָׁלַיִם", transliteration: "eretz tziyon virushalayim", stress: "E-retz tzi-YON vi-ru-sha-LA-yim", english: "the land of Zion and Jerusalem" }
+        ]
+      },
+      "mizmor-shir": {
+        name: "Mizmor Shir (Psalm 92)",
+        lines: [
+          { hebrew: "מִזְמוֹר שִׁיר לְיוֹם הַשַּׁבָּת", transliteration: "mizmor shir leyom hashabat", stress: "miz-MOR shir le-YOM ha-sha-BAT", english: "A psalm, a song for the Sabbath day" },
+          { hebrew: "טוֹב לְהֹדוֹת לַיהוָה", transliteration: "tov lehodot ladonai", stress: "tov le-ho-DOT la-do-NAI", english: "It is good to give thanks to the Lord" },
+          { hebrew: "וּלְזַמֵּר לְשִׁמְךָ עֶלְיוֹן", transliteration: "ulzamer leshimcha elyon", stress: "ul-za-MER le-shim-CHA el-YON", english: "and to sing praises to Your name, O Most High",
+            notes: ["<strong>וּלְזַמֵּר</strong> — say slowly and clearly: <em>ul-za-MER</em> — the SR often misses the first syllable if spoken quickly"] },
+          { hebrew: "לְהַגִּיד בַּבֹּקֶר חַסְדֶּךָ", transliteration: "lehagid baboker chasdecha", stress: "le-ha-GID ba-BO-ker chas-DE-cha", english: "to declare Your lovingkindness in the morning" },
+          { hebrew: "וֶאֱמוּנָתְךָ בַּלֵּילוֹת", transliteration: "veemunatcha baleilot", stress: "ve-e-mu-nat-CHA ba-lei-LOT", english: "and Your faithfulness by night" },
+          { hebrew: "עֲלֵי עָשׂוֹר וַעֲלֵי נָבֶל", transliteration: "alei asor vaalei navel", stress: "a-LEI a-SOR va-a-LEI NA-vel", english: "upon a ten-stringed instrument and upon the lute" },
+          { hebrew: "עֲלֵי הִגָּיוֹן בְּכִנּוֹר", transliteration: "alei higayon bechinor", english: "with meditation upon the harp" },
+          { hebrew: "כִּי שִׂמַּחְתַּנִי יְהוָה בְּפָעֳלֶךָ", transliteration: "ki simachtani adonai befoalecha", stress: "ki si-mach-TA-ni a-do-NAI be-fo-a-LE-cha", english: "For You, Lord, have made me glad through Your work" },
+          { hebrew: "בְּמַעֲשֵׂי יָדֶיךָ אֲרַנֵּן", transliteration: "bemasei yadecha aranen", stress: "be-ma-a-SEI ya-DE-cha a-ra-NEN", english: "I will sing for joy at the works of Your hands" },
+          { hebrew: "מַה גָּדְלוּ מַעֲשֶׂיךָ יְהוָה", transliteration: "ma gadlu maasecha adonai", stress: "ma GAD-lu ma-a-SE-cha a-do-NAI", english: "How great are Your works, O Lord" },
+          { hebrew: "מְאֹד עָמְקוּ מַחְשְׁבֹתֶיךָ", transliteration: "meod amku machshevotecha", english: "Your thoughts are very deep" },
+          { hebrew: "צַדִּיק כַּתָּמָר יִפְרָח", transliteration: "tzadik katamar yifrach", stress: "tza-DIK ka-ta-MAR yif-RACH", english: "The righteous shall flourish like a palm tree" },
+          { hebrew: "כְּאֶרֶז בַּלְּבָנוֹן יִשְׂגֶּה", transliteration: "keerez balvanon yisgeh", english: "like a cedar in Lebanon, they shall grow tall" },
+          { hebrew: "שְׁתוּלִים בְּבֵית יְהוָה בְּחַצְרוֹת אֱלֹהֵינוּ יַפְרִיחוּ", transliteration: "shetulim beveit adonai bechatzrot eloheinu yafrichu", stress: "she-tu-LIM be-VEIT a-do-NAI be-chatz-ROT e-lo-HEI-nu yaf-RI-chu", english: "Planted in the house of the Lord, they shall flourish in the courts of our God" },
+          { hebrew: "עוֹד יְנוּבוּן בְּשֵׂיבָה", transliteration: "od yenuvun beseiva", stress: "od ye-nu-VUN be-sei-VA", english: "They shall bring forth fruit in old age" },
+          { hebrew: "דְּשֵׁנִים וְרַעֲנַנִּים יִהְיוּ", transliteration: "desheinin veraananim yiheyu", stress: "de-shei-NIM ve-ra-a-na-NIM yih-YU", english: "full of sap and green" },
+          { hebrew: "לְהַגִּיד כִּי יָשָׁר יְהוָה", transliteration: "lehagid ki yashar adonai", stress: "le-ha-GID ki ya-SHAR a-do-NAI", english: "declaring that the Lord is upright" },
+          { hebrew: "צוּרִי וְלֹא עַוְלָתָה בּוֹ", transliteration: "tzuri velo avlata bo", stress: "tzu-RI ve-LO av-la-TA BO", english: "my Rock, in whom there is no unrighteousness" }
+        ]
+      },
+      "hadlakat-nerot": {
+        name: "Hadlakat Nerot (Candle Lighting)",
+        lines: [
+          { hebrew: "בָּרוּךְ אַתָּה יְהוָה", transliteration: "baruch ata adonai", stress: "ba-RUCH a-TA a-do-NAI", english: "Blessed are You, Lord",
+            notes: ["<strong>בָּרוּךְ</strong> — ba-<em>ruch</em>, not ba-<em>rook</em> (ך = guttural ch)"] },
+          { hebrew: "אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם", transliteration: "eloheinu melech haolam", stress: "e-lo-HEI-nu ME-lech ha-o-LAM", english: "our God, King of the universe",
+            notes: ["<strong>מֶלֶךְ</strong> — ME-lech, not ME-leh (ך = guttural ch)"] },
+          { hebrew: "אֲשֶׁר קִדְּשָׁנוּ בְּמִצְוֹתָיו", transliteration: "asher kidshanu bemitzvotav", stress: "A-sher kid-SHA-nu be-mitz-vo-TAV", english: "who has sanctified us with His commandments" },
+          { hebrew: "וְצִוָּנוּ לְהַדְלִיק נֵר שֶׁל שַׁבָּת", transliteration: "vetzivanu lehadlik ner shel shabat", stress: "ve-tzi-VA-nu le-had-LIK ner shel sha-BAT", english: "and commanded us to kindle the Sabbath light",
+            notes: ["<strong>לְהַדְלִיק</strong> — le-had-<em>lik</em>, don't drop the ה (le-ad-lik is incorrect)"] }
+        ]
+      },
+      "kiddush": {
+        name: "Kiddush (Wine & Bread)",
+        lines: [
+          // Vayechulu - Friday night intro
+          { hebrew: "וַיְכֻלּוּ הַשָּׁמַיִם וְהָאָרֶץ וְכָל צְבָאָם", transliteration: "vayechulu hashamayim vehaaretz vechol tzevaam", stress: "va-ye-chu-LU ha-sha-MA-yim ve-ha-A-retz ve-CHOL tze-va-AM", english: "And the heavens and the earth and all their hosts were completed" },
+          { hebrew: "וַיְכַל אֱלֹהִים בַּיּוֹם הַשְּׁבִיעִי מְלַאכְתּוֹ אֲשֶׁר עָשָׂה", transliteration: "vayechal elohim bayom hashvii melachto asher asa", stress: "va-ye-CHAL e-lo-HIM ba-YOM hash-vi-I me-lach-TO A-sher a-SA", english: "And God completed on the seventh day His work which He had done" },
+          { hebrew: "וַיִּשְׁבֹּת בַּיּוֹם הַשְּׁבִיעִי מִכָּל מְלַאכְתּוֹ אֲשֶׁר עָשָׂה", transliteration: "vayishbot bayom hashvii mikol melachto asher asa", stress: "va-yish-BOT ba-YOM hash-vi-I mi-KOL me-lach-TO A-sher a-SA", english: "And He rested on the seventh day from all His work which He had done" },
+          { hebrew: "וַיְבָרֶךְ אֱלֹהִים אֶת יוֹם הַשְּׁבִיעִי וַיְקַדֵּשׁ אֹתוֹ", transliteration: "vayevarech elohim et yom hashvii vayekadesh oto", stress: "va-ye-va-RECH e-lo-HIM et yom hash-vi-I va-ye-ka-DESH o-TO", english: "And God blessed the seventh day and sanctified it" },
+          { hebrew: "כִּי בוֹ שָׁבַת מִכָּל מְלַאכְתּוֹ", transliteration: "ki vo shavat mikol melachto", stress: "ki vo sha-VAT mi-KOL me-lach-TO", english: "for on it He rested from all His work" },
+          { hebrew: "אֲשֶׁר בָּרָא אֱלֹהִים לַעֲשׂוֹת", transliteration: "asher bara elohim laasot", stress: "A-sher ba-RA e-lo-HIM la-a-SOT", english: "which God created to do" },
+          // Borei pri hagafen
+          { hebrew: "סַבְרִי מָרָנָן וְרַבָּנָן וְרַבּוֹתַי", transliteration: "savri maranan verabanan verabotai", stress: "sav-RI ma-ra-NAN ve-ra-ba-NAN ve-ra-bo-TAI", english: "Attention, masters, teachers, and friends" },
+          { hebrew: "בָּרוּךְ אַתָּה יְהוָה", transliteration: "baruch ata adonai", english: "Blessed are You, Lord" },
+          { hebrew: "אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם", transliteration: "eloheinu melech haolam", english: "our God, King of the universe" },
+          { hebrew: "בּוֹרֵא פְּרִי הַגָּפֶן", transliteration: "borei pri hagafen", stress: "bo-REI pri ha-GA-fen", english: "who creates the fruit of the vine" },
+          // Kiddush blessing
+          { hebrew: "בָּרוּךְ אַתָּה יְהוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם", transliteration: "baruch ata adonai eloheinu melech haolam", stress: "ba-RUCH a-TA a-do-NAI e-lo-HEI-nu ME-lech ha-o-LAM", english: "Blessed are You, Lord our God, King of the universe" },
+          { hebrew: "אֲשֶׁר קִדְּשָׁנוּ בְּמִצְוֹתָיו וְרָצָה בָנוּ", transliteration: "asher kidshanu bemitzvotav veratza vanu", stress: "A-sher kid-SHA-nu be-mitz-vo-TAV ve-ra-TZA VA-nu", english: "who has sanctified us with His commandments and was pleased with us" },
+          { hebrew: "וְשַׁבַּת קָדְשׁוֹ בְּאַהֲבָה וּבְרָצוֹן הִנְחִילָנוּ", transliteration: "veshabat kodsho beahava uveratzon hinchilanu", stress: "ve-sha-BAT kod-SHO be-a-ha-VA u-ve-ra-TZON hin-chi-LA-nu", english: "and His holy Sabbath with love and favor He gave us as a heritage" },
+          { hebrew: "זִכָּרוֹן לְמַעֲשֵׂה בְרֵאשִׁית", transliteration: "zikaron lemaaseh vereshit", stress: "zi-ka-RON le-ma-a-SEH ve-re-SHIT", english: "a remembrance of the work of creation" },
+          { hebrew: "כִּי הוּא יוֹם תְּחִלָּה לְמִקְרָאֵי קֹדֶשׁ", transliteration: "ki hu yom tchila lemikraei kodesh", stress: "ki hu yom tchi-LA le-mik-ra-EI KO-desh", english: "for it is the first of the holy convocations" },
+          { hebrew: "זֵכֶר לִיצִיאַת מִצְרָיִם", transliteration: "zecher litziat mitzrayim", english: "a remembrance of the exodus from Egypt" },
+          { hebrew: "כִּי בָנוּ בָחַרְתָּ וְאוֹתָנוּ קִדַּשְׁתָּ מִכָּל הָעַמִּים", transliteration: "ki vanu vacharta veotanu kidashta mikol haamim", stress: "ki VA-nu va-CHAR-ta ve-o-TA-nu ki-DASH-ta mi-KOL ha-a-MIM", english: "for You have chosen us and sanctified us from all peoples" },
+          { hebrew: "וְשַׁבַּת קָדְשְׁךָ בְּאַהֲבָה וּבְרָצוֹן הִנְחַלְתָּנוּ", transliteration: "veshabat kodshecha beahava uveratzon hinchaltanu", stress: "ve-sha-BAT kod-SHE-cha be-a-ha-VA u-ve-ra-TZON hin-chal-TA-nu", english: "and Your holy Sabbath with love and favor You gave us as a heritage" },
+          { hebrew: "בָּרוּךְ אַתָּה יְהוָה מְקַדֵּשׁ הַשַּׁבָּת", transliteration: "baruch ata adonai mekadesh hashabat", stress: "ba-RUCH a-TA a-do-NAI me-ka-DESH ha-sha-BAT", english: "Blessed are You, Lord, who sanctifies the Sabbath" },
+          // Hamotzi
+          { hebrew: "בָּרוּךְ אַתָּה יְהוָה", transliteration: "baruch ata adonai", english: "Blessed are You, Lord" },
+          { hebrew: "אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם", transliteration: "eloheinu melech haolam", english: "our God, King of the universe" },
+          { hebrew: "הַמּוֹצִיא לֶחֶם מִן הָאָרֶץ", transliteration: "hamotzi lechem min haaretz", stress: "ha-MO-tzi LE-chem min ha-A-retz", english: "who brings forth bread from the earth" }
+        ]
+      },
+
+      "shalom-aleichem": {
+        name: "Shalom Aleichem",
+        lines: [
+          { hebrew: "שָׁלוֹם עֲלֵיכֶם מַלְאֲכֵי הַשָּׁרֵת", transliteration: "shalom aleichem malachei hasharet", stress: "sha-LOM a-lei-CHEM mal-a-CHEI ha-sha-RET", english: "Peace to you, Angels of service" },
+          { hebrew: "מַלְאֲכֵי עֶלְיוֹן", transliteration: "malachei elyon", stress: "mal-a-CHEI el-YON", english: "messengers of the Most High" },
+          { hebrew: "מִמֶּלֶךְ מַלְכֵי הַמְּלָכִים", transliteration: "mimelech malachei hamelachim", stress: "mi-ME-lech mal-CHEI ha-me-la-CHIM", english: "messengers of the Ruler of Rulers" },
+          { hebrew: "הַקָּדוֹשׁ בָּרוּךְ הוּא", transliteration: "hakadosh baruch hu", stress: "ha-ka-DOSH ba-RUCH HU", english: "the blessed, the Holy One" },
+          { hebrew: "בּוֹאֲכֶם לְשָׁלוֹם מַלְאֲכֵי הַשָּׁלוֹם", transliteration: "boachem leshalom malachei hashalom", stress: "bo-a-CHEM le-sha-LOM mal-a-CHEI ha-sha-LOM", english: "Come in peace, Angels of peace" },
+          { hebrew: "מַלְאֲכֵי עֶלְיוֹן", transliteration: "malachei elyon", stress: "mal-a-CHEI el-YON", english: "messengers of the Most High" },
+          { hebrew: "מִמֶּלֶךְ מַלְכֵי הַמְּלָכִים", transliteration: "mimelech malachei hamelachim", stress: "mi-ME-lech mal-CHEI ha-me-la-CHIM", english: "messengers of the Ruler of Rulers" },
+          { hebrew: "הַקָּדוֹשׁ בָּרוּךְ הוּא", transliteration: "hakadosh baruch hu", stress: "ha-ka-DOSH ba-RUCH HU", english: "the blessed, the Holy One" },
+          { hebrew: "בָּרְכוּנִי לְשָׁלוֹם מַלְאֲכֵי הַשָּׁלוֹם", transliteration: "barchuni leshalom malachei hashalom", stress: "bar-CHU-ni le-sha-LOM mal-a-CHEI ha-sha-LOM", english: "Bless me with peace, Angels of peace" },
+          { hebrew: "מַלְאֲכֵי עֶלְיוֹן", transliteration: "malachei elyon", stress: "mal-a-CHEI el-YON", english: "messengers of the Most High" },
+          { hebrew: "מִמֶּלֶךְ מַלְכֵי הַמְּלָכִים", transliteration: "mimelech malachei hamelachim", stress: "mi-ME-lech mal-CHEI ha-me-la-CHIM", english: "messengers of the Ruler of Rulers" },
+          { hebrew: "הַקָּדוֹשׁ בָּרוּךְ הוּא", transliteration: "hakadosh baruch hu", stress: "ha-ka-DOSH ba-RUCH HU", english: "the blessed, the Holy One" },
+          { hebrew: "צֵאתְכֶם לְשָׁלוֹם מַלְאֲכֵי הַשָּׁלוֹם", transliteration: "tzeitechem leshalom malachei hashalom", stress: "tzei-te-CHEM le-sha-LOM mal-a-CHEI ha-sha-LOM", english: "Go in peace, Angels of peace" },
+          { hebrew: "מַלְאֲכֵי עֶלְיוֹן", transliteration: "malachei elyon", stress: "mal-a-CHEI el-YON", english: "messengers of the Most High" },
+          { hebrew: "מִמֶּלֶךְ מַלְכֵי הַמְּלָכִים", transliteration: "mimelech malachei hamelachim", stress: "mi-ME-lech mal-CHEI ha-me-la-CHIM", english: "messengers of the Ruler of Rulers" },
+          { hebrew: "הַקָּדוֹשׁ בָּרוּךְ הוּא", transliteration: "hakadosh baruch hu", stress: "ha-ka-DOSH ba-RUCH HU", english: "the blessed, the Holy One" }
+        ]
+      },
+
+      "barchu": {
+        name: "Barchu",
+        lines: [
+          { hebrew: "בָּרְכוּ אֶת יְהוָה הַמְּבֹרָךְ", transliteration: "barchu et adonai hamvorach", stress: "bar-CHU et a-do-NAI ham-vo-RACH", english: "Bless the Lord who is blessed" },
+          { hebrew: "בָּרוּךְ יְהוָה הַמְּבֹרָךְ לְעוֹלָם וָעֶד", transliteration: "baruch adonai hamvorach leolam vaed", stress: "ba-RUCH a-do-NAI ham-vo-RACH le-o-LAM VA-ed", english: "Blessed is the Lord who is blessed forever and ever" },
+          { hebrew: "בָּרוּךְ אַתָּה יְהוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם", transliteration: "baruch ata adonai eloheinu melech haolam", stress: "ba-RUCH a-TA a-do-NAI e-lo-HEI-nu ME-lech ha-o-LAM", english: "Blessed are You, Lord our God, King of the universe" },
+          { hebrew: "אֲשֶׁר בִּדְבָרוֹ מַעֲרִיב עֲרָבִים", transliteration: "asher bidvaro maariv aravim", stress: "A-sher bid-va-RO ma-a-RIV a-ra-VIM", english: "who by His word brings on the evening twilight" },
+          { hebrew: "בְּחָכְמָה פּוֹתֵחַ שְׁעָרִים", transliteration: "bechochma pote-ach shearim", stress: "be-choch-MA po-TE-ach she-a-RIM", english: "with wisdom opens the gates" },
+          { hebrew: "וּבִתְבוּנָה מְשַׁנֶּה עִתִּים", transliteration: "uvitevuna meshane itim", stress: "u-vi-te-vu-NA me-sha-NEH i-TIM", english: "and with understanding changes the times" },
+          { hebrew: "וּמַחֲלִיף אֶת הַזְּמַנִּים", transliteration: "umachalif et hazmanim", stress: "u-ma-cha-LIF et haz-ma-NIM", english: "and alternates the seasons" },
+          { hebrew: "וּמְסַדֵּר אֶת הַכּוֹכָבִים", transliteration: "umsader et hakochavim", stress: "um-sa-DER et ha-ko-cha-VIM", english: "and arranges the stars" },
+          { hebrew: "בְּמִשְׁמְרוֹתֵיהֶם בָּרָקִיעַ כִּרְצוֹנוֹ", transliteration: "bemishmeroteihem barakia kirtzono", stress: "be-mish-me-ro-TEI-hem ba-ra-KI-a kir-tzo-NO", english: "in their watches in the sky according to His will" },
+          { hebrew: "בּוֹרֵא יוֹם וָלָיְלָה", transliteration: "borei yom valayla", stress: "bo-REI yom va-LAY-la", english: "He creates day and night" },
+          { hebrew: "גּוֹלֵל אוֹר מִפְּנֵי חֹשֶׁךְ", transliteration: "golel or mipnei choshech", stress: "go-LEL or mip-NEI cho-SHECH", english: "rolling light away from darkness" },
+          { hebrew: "וְחֹשֶׁךְ מִפְּנֵי אוֹר", transliteration: "vechoshech mipnei or", stress: "ve-CHO-shech mip-NEI or", english: "and darkness from light" },
+          { hebrew: "וּמַעֲבִיר יוֹם וּמֵבִיא לָיְלָה", transliteration: "umaavir yom umeivi layla", stress: "u-ma-a-VIR yom u-mei-VI LAY-la", english: "He makes the day pass and brings on the night" },
+          { hebrew: "וּמַבְדִּיל בֵּין יוֹם וּבֵין לָיְלָה", transliteration: "umavdil bein yom uvein layla", stress: "u-mav-DIL bein yom u-VEIN LAY-la", english: "and separates between day and night" },
+          { hebrew: "יְהוָה צְבָאוֹת שְׁמוֹ", transliteration: "adonai tzvaot shmo", stress: "a-do-NAI tzva-OT shMO", english: "Lord of Hosts is His name" },
+          { hebrew: "בָּרוּךְ אַתָּה יְהוָה הַמַּעֲרִיב עֲרָבִים", transliteration: "baruch ata adonai hamaariv aravim", stress: "ba-RUCH a-TA a-do-NAI ha-ma-a-RIV a-ra-VIM", english: "Blessed are You, Lord, who brings on the evening twilight" },
+          { hebrew: "אַהֲבַת עוֹלָם בֵּית יִשְׂרָאֵל עַמְּךָ אָהַבְתָּ", transliteration: "ahavat olam beit yisrael amcha ahavta", stress: "a-ha-VAT o-LAM beit yis-ra-EL am-CHA a-hav-TA", english: "With endless love You have loved the house of Israel, Your people" },
+          { hebrew: "תּוֹרָה וּמִצְווֹת חֻקִּים וּמִשְׁפָּטִים אוֹתָנוּ לִמַּדְתָּ", transliteration: "torah umitzvot chukim umishpatim otanu limadta", stress: "to-RA u-mitz-VOT chu-KIM u-mish-pa-TIM o-TA-nu li-mad-TA", english: "You have taught us Law and commandments, statutes and judgements" },
+          { hebrew: "עַל כֵּן יְהוָה אֱלֹהֵינוּ", transliteration: "al ken adonai eloheinu", stress: "al KEN a-do-NAI e-lo-HEI-nu", english: "Therefore, Lord our God" },
+          { hebrew: "בְּשָׁכְבֵנוּ וּבְקוּמֵנוּ נָשִׂיחַ בְּחֻקֶּיךָ", transliteration: "beshochbeinu uvkumeinu nasiach bechukechu", stress: "be-shoch-BEI-nu uv-ku-MEI-nu na-SI-ach be-chu-KE-cha", english: "when we lie down and when we rise up, we shall meditate on Your instruction" },
+          { hebrew: "וְנִשְׂמַח וְנַעֲלֹז בְּדִבְרֵי תוֹרָתֶךָ וּבְמִצְווֹתֶיךָ לְעוֹלָם וָעֶד", transliteration: "venismach venaeloz bedivrei toratecha uvmitzvotecha leolam vaed", stress: "ve-nis-MACH ve-na-e-LOZ be-div-REI to-ra-TE-cha uv-mitz-vo-TE-cha le-o-LAM VA-ed", english: "We shall find joy in the words of Your Law forever" },
+          { hebrew: "כִּי הֵם חַיֵּינוּ וְאֹרֶךְ יָמֵינוּ", transliteration: "ki hem chayeinu veorech yameinu", stress: "ki HEM cha-YEI-nu ve-O-rech ya-MEI-nu", english: "for they are our life and the length of our days" },
+          { hebrew: "וּבָהֶם נֶהְגֶּה יוֹמָם וָלָיְלָה", transliteration: "uvahem nehge yomam valayla", stress: "u-va-HEM neh-GEH yo-MAM va-LAY-la", english: "and we will think of them day and night" },
+          { hebrew: "וְאַהֲבָתְךָ אַל תָּסִיר מִמֶּנּוּ לְעוֹלָמִים", transliteration: "veahavatcha al tasir mimenu leolamin", stress: "ve-a-ha-vat-CHA al ta-SIR mi-ME-nu le-o-la-MIM", english: "May You never withdraw Your love from us" },
+          { hebrew: "בָּרוּךְ אַתָּה יְהוָה אוֹהֵב עַמּוֹ יִשְׂרָאֵל", transliteration: "baruch ata adonai ohev amo yisrael", stress: "ba-RUCH a-TA a-do-NAI o-HEV a-MO yis-ra-EL", english: "Blessed are You, Lord, who loves Your people Israel" }
+        ]
+      },
+
+      "vshamru": {
+        name: "V'shamru",
+        lines: [
+          { hebrew: "וְשָׁמְרוּ בְנֵי יִשְׂרָאֵל אֶת הַשַּׁבָּת", transliteration: "veshamru vnei yisrael et hashabat", stress: "ve-sham-RU vnei yis-ra-EL et ha-sha-BAT", english: "And the children of Israel shall keep the Sabbath" },
+          { hebrew: "לַעֲשׂוֹת אֶת הַשַּׁבָּת לְדֹרֹתָם בְּרִית עוֹלָם", transliteration: "laasot et hashabat ledorotam brit olam", stress: "la-a-SOT et ha-sha-BAT le-do-ro-TAM brit o-LAM", english: "they will make the Sabbath throughout all generations as an everlasting covenant" },
+          { hebrew: "בֵּינִי וּבֵין בְּנֵי יִשְׂרָאֵל", transliteration: "beini uvein bnei yisrael", stress: "BEI-ni u-VEIN bnei yis-ra-EL", english: "It is a sign between me and the children of Israel",
+            notes: ["Pause briefly after יִשְׂרָאֵל then continue — speak slowly so the SR catches all words"] },
+          { hebrew: "אוֹת הִיא לְעֹלָם", transliteration: "ot hi leolam", stress: "OT hi le-o-LAM", english: "forever" },
+          { hebrew: "כִּי שֵׁשֶׁת יָמִים עָשָׂה יְהוָה", transliteration: "ki sheishet yamim asa adonai", stress: "ki SHEI-shet ya-MIM a-SA a-do-NAI", english: "for in six days God made" },
+          { hebrew: "אֶת הַשָּׁמַיִם וְאֶת הָאָרֶץ", transliteration: "et hashamayim veet haaretz", stress: "et ha-sha-MA-yim ve-ET ha-A-retz", english: "the heavens and the earth" },
+          { hebrew: "וּבַיּוֹם הַשְּׁבִיעִי שָׁבַת וַיִּנָּפַשׁ", transliteration: "uvayom hashvii shavat vayinafash", stress: "u-va-YOM hash-vi-I sha-VAT va-yi-NA-fash", english: "and on the seventh day God rested and was refreshed" }
+        ]
+      },
+
+      "amida": {
+        name: "Amida",
+        lines: [
+          { hebrew: "אֲדֹנָי שְׂפָתַי תִּפְתָּח וּפִי יַגִּיד תְּהִלָּתֶךָ", transliteration: "adonai sefatai tiftach ufi yagid tehilatecha", stress: "a-do-NAI se-fa-TAI tif-TACH u-FI ya-GID te-hi-la-TE-cha", english: "God, open my lips, and my mouth shall declare Your praise" },
+          { hebrew: "בָּרוּךְ אַתָּה יְהוָה אֱלֹהֵינוּ וֵאלֹהֵי אֲבוֹתֵינוּ", transliteration: "baruch ata adonai eloheinu velohei avoteinu", stress: "ba-RUCH a-TA a-do-NAI e-lo-HEI-nu ve-lo-HEI a-vo-TEI-nu", english: "Blessed are You, Lord our God and God of our ancestors" },
+          { hebrew: "אֱלֹהֵי אַבְרָהָם אֱלֹהֵי יִצְחָק וֵאלֹהֵי יַעֲקֹב", transliteration: "elohei avraham elohei yitzchak velohei yaakov", stress: "e-lo-HEI av-ra-HAM e-lo-HEI yitz-CHAK ve-lo-HEI ya-a-KOV", english: "God of Abraham, God of Isaac and God of Jacob" },
+          { hebrew: "אֱלֹהֵי שָׂרָה אֱלֹהֵי רִבְקָה", transliteration: "elohei sara elohei rivka", stress: "e-lo-HEI sa-RA e-lo-HEI riv-KA", english: "God of Sarah, God of Rebecca" },
+          { hebrew: "אֱלֹהֵי לֵאָה וֵאלֹהֵי רָחֵל", transliteration: "elohei leah velohei rachel", stress: "e-lo-HEI le-A ve-lo-HEI ra-CHEL", english: "God of Leah and God of Rachel" },
+          { hebrew: "הָאֵל הַגָּדוֹל הַגִּבּוֹר וְהַנּוֹרָא אֵל עֶלְיוֹן", transliteration: "hael hagadol hagibor vehanora el elyon", stress: "ha-EL ha-ga-DOL ha-gi-BOR ve-ha-no-RA el el-YON", english: "the great, mighty and awesome God, God Most High" },
+          { hebrew: "גּוֹמֵל חֲסָדִים טוֹבִים וְקוֹנֵה הַכֹּל", transliteration: "gomel chasadim tovim vekoneh hakol", stress: "go-MEL cha-sa-DIM to-VIM ve-ko-NEH ha-KOL", english: "who bestows loving kindness and possesses all" },
+          { hebrew: "וְזוֹכֵר חַסְדֵי אָבוֹת וְאִמָּהוֹת", transliteration: "vezocheir chasdei avot veimahot", stress: "ve-zo-CHEIR chas-DEI a-VOT ve-i-ma-HOT", english: "who remembers the loving deeds of our ancestors",
+            notes: ["<strong>וְאִמָּהוֹת</strong> — SR finds this word challenging. Say it slowly and precisely: <em>ve-i-ma-HOT</em>"] },
+          { hebrew: "וּמֵבִיא גוֹאֵל לִבְנֵי בְנֵיהֶם", transliteration: "umeivi goel livnei vneihem", stress: "u-mei-VI go-EL liv-NEI vnei-HEM", english: "and brings a redeemer to their children's children" },
+          { hebrew: "לְמַעַן שְׁמוֹ בְּאַהֲבָה", transliteration: "lemaan shmo beahava", stress: "le-MA-an shmo be-a-ha-VA", english: "for the sake of His name, with love" },
+          { hebrew: "מֶלֶךְ עוֹזֵר וּמוֹשִׁיעַ וּמָגֵן", transliteration: "melech ozer umoshia umagen", stress: "ME-lech o-ZER u-mo-SHI-a u-ma-GEN", english: "Sovereign, Helper, Saviour and Shield" },
+          { hebrew: "בָּרוּךְ אַתָּה יְהוָה מָגֵן אַבְרָהָם וּפוֹקֵד שָׂרָה", transliteration: "baruch ata adonai magen avraham ufoked sara", stress: "ba-RUCH a-TA a-do-NAI ma-GEN av-ra-HAM u-fo-KED sa-RA", english: "Blessed are You, Lord, Shield of Abraham and Guardian of Sarah" },
+          { hebrew: "אַתָּה גִּבּוֹר לְעוֹלָם אֲדֹנָי", transliteration: "ata gibor leolam adonai", stress: "a-TA gi-BOR le-o-LAM a-do-NAI", english: "You are forever mighty, Lord" },
+          { hebrew: "מְחַיֵּה מֵתִים אַתָּה רַב לְהוֹשִׁיעַ", transliteration: "mechaye meitim ata rav lehoshia", stress: "me-cha-YEH mei-TIM a-TA rav le-ho-SHI-a", english: "You revive the dead and are great to save" },
+          { hebrew: "מְכַלְכֵּל חַיִּים בְּחֶסֶד", transliteration: "mechalkel chayim bechesed", stress: "me-chal-KEL cha-YIM be-CHE-sed", english: "You sustain the living with kindness" },
+          { hebrew: "מְחַיֵּה מֵתִים בְּרַחֲמִים רַבִּים", transliteration: "mechaye meitim berachamim rabim", stress: "me-cha-YEH mei-TIM be-ra-cha-MIM ra-BIM", english: "You revive the dead with great mercy" },
+          { hebrew: "סוֹמֵךְ נוֹפְלִים וְרוֹפֵא חוֹלִים וּמַתִּיר אֲסוּרִים", transliteration: "somech noflim verofei cholim umatir asurim", stress: "so-MECH nof-LIM ve-ro-FEI cho-LIM u-ma-TIR a-su-RIM", english: "You support the fallen, heal the sick and free the captive" },
+          { hebrew: "וּמְקַיֵּם אֱמוּנָתוֹ לִישֵׁנֵי עָפָר", transliteration: "umkayem emuanto lishenei afar", stress: "um-ka-YEM e-mu-na-TO li-shei-NEI a-FAR", english: "and keep faith with those who sleep in the dust" },
+          { hebrew: "מִי כָמוֹךָ בַּעַל גְּבוּרוֹת וּמִי דּוֹמֶה לָּךְ", transliteration: "mi chamocha baal gevurot umi dome lach", stress: "mi cha-MO-cha BA-al ge-vu-ROT u-mi do-MEH LACH", english: "Who is like You, God of mighty deeds, who can be compared to You" },
+          { hebrew: "מֶלֶךְ מֵמִית וּמְחַיֶּה וּמַצְמִיחַ יְשׁוּעָה", transliteration: "melech memit umechaye umatzmiach yeshua", stress: "ME-lech me-MIT u-me-cha-YEH u-matz-MI-ach ye-shu-A", english: "Sovereign who brings death and life and causes salvation to flourish" },
+          { hebrew: "וְנֶאֱמָן אַתָּה לְהַחֲיוֹת מֵתִים", transliteration: "veneeman ata lehachayot meitim", stress: "ve-ne-e-MAN a-TA le-ha-cha-YOT mei-TIM", english: "You are faithful to bring life to the dead",
+            notes: ["<strong>מֵתִים</strong> — SR struggles with this word in this position. Say it slowly and clearly: <em>mei-TIM</em>"] },
+          { hebrew: "בָּרוּךְ אַתָּה יְהוָה מְחַיֵּה הַמֵּתִים", transliteration: "baruch ata adonai mechaye hameitim", stress: "ba-RUCH a-TA a-do-NAI me-cha-YEH ha-mei-TIM", english: "Blessed are You, Lord, who brings life to the dead" }
+        ]
+      },
+
+      "aleinu": {
+        name: "Aleinu",
+        lines: [
+          { hebrew: "עָלֵינוּ לְשַׁבֵּחַ לַאֲדוֹן הַכֹּל", transliteration: "aleinu leshabeach ladon hakol", stress: "a-LEI-nu le-sha-BEI-ach la-a-DON ha-KOL", english: "It is our duty to praise the Lord of all" },
+          { hebrew: "לָתֵת גְּדֻלָּה לְיוֹצֵר בְּרֵאשִׁית", transliteration: "latet gedulah leyotzer bereshit", stress: "la-TET ge-du-LA le-yo-TZER be-re-SHIT", english: "to ascribe greatness to the One who formed the world in the beginning" },
+          { hebrew: "שֶׁהוּא נוֹטֶה שָׁמַיִם וְיוֹסֵד אָרֶץ", transliteration: "shehu noteh shamayim veyosed aretz", stress: "she-HU no-TEH sha-MA-yim ve-yo-SED A-retz", english: "who stretches out the heavens and laid the foundations of the earth" },
+          { hebrew: "הוּא אֱלֹהֵינוּ אֵין עוֹד", transliteration: "hu eloheinu ein od", stress: "HU e-lo-HEI-nu ein OD", english: "He is our God, there is no other" },
+          { hebrew: "אֱמֶת מַלְכֵּנוּ אֶפֶס זוּלָתוֹ", transliteration: "emet malkeinu efes zulato", stress: "E-met mal-KEI-nu E-fes zu-la-TO", english: "our King is true, there is none besides Him" },
+          { hebrew: "כַּכָּתוּב בְּתוֹרָתוֹ וְיָדַעְתָּ הַיּוֹם", transliteration: "kakatuv betorato veyadata hayom", stress: "ka-ka-TUV be-to-ra-TO ve-ya-DA-ta ha-YOM", english: "as it is written in His Law: know this day" },
+          { hebrew: "כִּי יְהוָה הוּא הָאֱלֹהִים בַּשָּׁמַיִם מִמַּעַל", transliteration: "ki adonai hu haelohim bashamayim mimaal", stress: "ki a-do-NAI hu ha-e-lo-HIM ba-sha-MA-yim mi-ma-AL", english: "that the Lord He is God in the heavens above" },
+          { hebrew: "וְעַל הָאָרֶץ מִתָּחַת אֵין עוֹד", transliteration: "veal haaretz mitachat ein od", stress: "ve-AL ha-A-retz mi-TA-chat ein OD", english: "and upon the earth below, there is none else" },
+          { hebrew: "עַל כֵּן נְקַוֶּה לְּךָ יְהוָה אֱלֹהֵינוּ", transliteration: "al kein nekaveh lecha adonai eloheinu", stress: "al KEIN ne-ka-VEH le-CHA a-do-NAI e-lo-HEI-nu", english: "We therefore hope in You, Lord our God" },
+          { hebrew: "לִרְאוֹת מְהֵרָה בְּתִפְאֶרֶת עֻזֶּךָ", transliteration: "lirot mehera betiferet uzecha", stress: "lir-OT me-he-RA be-tif-E-ret u-ZE-cha", english: "to behold soon the glory of Your power" },
+          { hebrew: "לְתַקֵּן עוֹלָם בְּמַלְכוּת שַׁדַּי", transliteration: "letaken olam bemalchut shadai", stress: "le-ta-KEN o-LAM be-mal-CHUT sha-DAI", english: "to repair the world under the kingdom of the Almighty" },
+          { hebrew: "וְכָל בְּנֵי בָשָׂר יִקְרְאוּ בִשְׁמֶךָ", transliteration: "vechol bnei vasar yikreu vishmecha", stress: "ve-CHOL bnei va-SAR yik-RE-u vish-ME-cha", english: "and all creation will call upon Your name" },
+          { hebrew: "לְהַפְנוֹת אֵלֶיךָ כָּל רִשְׁעֵי אָרֶץ", transliteration: "lehafnot elecha kol rishei aretz", stress: "le-haf-NOT e-LE-cha kol rish-EI A-retz", english: "to turn toward You all the wicked of the earth" },
+          { hebrew: "יַכִּירוּ וְיֵדְעוּ כָּל יוֹשְׁבֵי תֵבֵל", transliteration: "yakiru veyedu kol yoshvei tevel", stress: "ya-KI-ru ve-YED-u kol yosh-VEI te-VEL", english: "all the inhabitants of the world shall perceive and know" },
+          { hebrew: "כִּי לְךָ תִּכְרַע כָּל בֶּרֶךְ", transliteration: "ki lecha tichra kol berech", stress: "ki le-CHA tich-RA kol BE-rech", english: "that unto You every knee shall bow" },
+          { hebrew: "תִּשָּׁבַע כָּל לָשׁוֹן", transliteration: "tishava kol lashon", stress: "ti-SHA-va kol la-SHON", english: "every tongue swear allegiance" },
+          { hebrew: "לְפָנֶיךָ יְהוָה אֱלֹהֵינוּ יִכְרְעוּ וְיִפֹּלוּ", transliteration: "lefanecha adonai eloheinu yichreu veyipolu", stress: "le-fa-NE-cha a-do-NAI e-lo-HEI-nu yich-RE-u ve-yi-po-LU", english: "Before You, Lord our God, they shall bow and humble themselves" },
+          { hebrew: "וְלִכְבוֹד שִׁמְךָ יְקָר יִתֵּנוּ", transliteration: "velichvod shimcha yekar yitenu", stress: "ve-lich-VOD shim-CHA ye-KAR yi-TE-nu", english: "and unto Your glorious name they will give honour" },
+          { hebrew: "וִיקַבְּלוּ כֻלָּם אֶת עֹל מַלְכוּתֶךָ", transliteration: "vikablu kulam et ol malchutecha", stress: "vi-kab-LU ku-LAM et ol mal-chu-TE-cha", english: "and they shall all accept the yoke of Your kingdom" },
+          { hebrew: "וְתִמְלֹךְ עֲלֵיהֶם מְהֵרָה לְעוֹלָם וָעֶד", transliteration: "vetimloch aleihem mehera leolam vaed", stress: "ve-tim-LOCH a-lei-HEM me-he-RA le-o-LAM VA-ed", english: "and You shall reign over them soon, forever and ever" },
+          { hebrew: "כִּי הַמַּלְכוּת שֶׁלְּךָ הִיא", transliteration: "ki hamalchut shelcha hi", stress: "ki ha-mal-CHUT shel-CHA HI", english: "for the kingdom is Yours" },
+          { hebrew: "וּלְעוֹלְמֵי עַד תִּמְלֹךְ בְּכָבוֹד", transliteration: "uleolmei ad timloch bechavod", stress: "u-le-ol-MEI ad tim-LOCH be-cha-VOD", english: "and You shall reign in glory forever" },
+          { hebrew: "יְהוָה יִמְלֹךְ לְעֹלָם וָעֶד", transliteration: "adonai yimloch leolam vaed", stress: "a-do-NAI yim-LOCH le-o-LAM VA-ed", english: "The Lord shall reign forever and ever" },
+          { hebrew: "וְהָיָה יְהוָה לְמֶלֶךְ עַל כָּל הָאָרֶץ", transliteration: "vehaya adonai lemelech al kol haaretz", stress: "ve-ha-YA a-do-NAI le-ME-lech al KOL ha-A-retz", english: "And the Lord shall be King over all the earth" },
+          { hebrew: "בַּיּוֹם הַהוּא יִהְיֶה יְהוָה אֶחָד וּשְׁמוֹ אֶחָד", transliteration: "bayom hahu yihye adonai echad ushmo echad", stress: "ba-YOM ha-HU yih-YEH a-do-NAI e-CHAD ush-MO e-CHAD", english: "on that day the Lord shall be One, and His name One" }
+        ]
+      }
+    };
+    // State
+    let currentPrayer = "hadlakat-nerot";
+    let currentLineIndex = 0;
+    let correctCount = 0;
+    let incorrectCount = 0;
+    let recognition = null;
+    let isListening = false;
+
+    // Elements
+    const prayerBtns = document.querySelectorAll('.prayer-btn');
+    const progressText = document.getElementById('progress-text');
+    const progressFill = document.getElementById('progress-fill');
+    const hebrewLine = document.getElementById('hebrew-line');
+    const micBtn = document.getElementById('mic-btn');
+    const micStatus = document.getElementById('mic-status');
+    const resultsArea = document.getElementById('results-area');
+    const heardText = document.getElementById('heard-text');
+    const expectedText = document.getElementById('expected-text');
+    const feedbackMessage = document.getElementById('feedback-message');
+    const transliterationHint = document.getElementById('transliteration-hint');
+    const englishMeaning = document.getElementById('english-meaning');
+    const quizArea = document.getElementById('quiz-area');
+    const completion = document.getElementById('completion');
+    const statGood = document.getElementById('stat-good');
+    const statRetry = document.getElementById('stat-retry');
+    const restartBtn = document.getElementById('restart-btn');
+    const browserWarning = document.getElementById('browser-warning');
+
+    // Check for speech recognition support
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      browserWarning.classList.remove('hidden');
+      micBtn.disabled = true;
+    } else {
+      // Initialize Hebrew speech recognition
+      recognition = new SpeechRecognition();
+      recognition.lang = 'he-IL';
+      recognition.continuous = false;
+      recognition.interimResults = true;
+      recognition.maxAlternatives = 3;
+
+      recognition.onstart = () => {
+        isListening = true;
+        micBtn.classList.add('listening');
+        micStatus.textContent = 'Listening... speak now';
+        micStatus.classList.add('listening');
+        resultsArea.classList.add('hidden');
+      };
+
+      recognition.onresult = (event) => {
+        let finalTranscript = '';
+        let interimTranscript = '';
+        
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalTranscript += transcript;
+          } else {
+            interimTranscript += transcript;
+          }
+        }
+        
+        if (interimTranscript) {
+          micStatus.textContent = 'Hearing: ' + interimTranscript;
+          micStatus.classList.remove('listening');
+          micStatus.classList.add('processing');
+        }
+        
+        if (finalTranscript) {
+          processResult(finalTranscript);
+        }
+      };
+
+      recognition.onerror = (event) => {
+        console.error('Speech recognition error:', event.error);
+        isListening = false;
+        micBtn.classList.remove('listening');
+        
+        if (event.error === 'no-speech') {
+          micStatus.textContent = 'No speech detected. Try again.';
+        } else if (event.error === 'audio-capture') {
+          micStatus.textContent = 'No microphone found. Check your settings.';
+        } else if (event.error === 'not-allowed') {
+          micStatus.textContent = 'Microphone access denied. Please allow access.';
+        } else {
+          micStatus.textContent = 'Error: ' + event.error + '. Try again.';
+        }
+        micStatus.classList.remove('listening', 'processing');
+      };
+
+      recognition.onend = () => {
+        isListening = false;
+        micBtn.classList.remove('listening');
+        if (micStatus.classList.contains('listening')) {
+          micStatus.textContent = 'Click to start recording';
+        }
+        micStatus.classList.remove('listening', 'processing');
+      };
+    }
+
+    // Normalize Hebrew text for comparison
+    function normalizeHebrew(text) {
+      return text
+        // Remove nikkud (vowel marks)
+        .replace(/[\u0591-\u05C7]/g, '')
+        // Normalize Tetragrammaton: יהוה -> אדני (what people actually say)
+        .replace(/יהוה/g, 'אדני')
+        // Also catch if speech recognition heard אדוני
+        .replace(/אדוני/g, 'אדני')
+        // Normalize Elohim/Eloheinu/Elohecha variations (with/without vav)
+        .replace(/אלוהים/g, 'אלהים')
+        .replace(/אלוהינו/g, 'אלהינו')
+        .replace(/אלוהיך/g, 'אלהיך')
+        .replace(/אלוהיכם/g, 'אלהיכם')
+        .replace(/אלוקים/g, 'אלהים')
+        .replace(/אלוקינו/g, 'אלהינו')
+        .replace(/אלוקיך/g, 'אלהיך')
+        // Normalize cholam-vav vs cholam (speech recognition adds vav for "o" sound)
+        .replace(/מאוד/g, 'מאד')
+        .replace(/כול/g, 'כל')
+        .replace(/קול/g, 'כל')
+        .replace(/עולם/g, 'עלם')
+        .replace(/קודש/g, 'כדש')
+        .replace(/שלום/g, 'שלם')
+        .replace(/גדול/g, 'גדל')
+        .replace(/ימלוך/g, 'ימלך')
+        .replace(/הווה/g, 'הוה')
+        .replace(/לחברה/g, 'להחבירה')
+        .replace(/לחפירה/g, 'להחבירה')
+        .replace(/שפתיי/g, 'שפתי')
+        .replace(/תהילתך/g, 'תהלתך')
+        .replace(/ואלוהי/g, 'ואלהי')
+        .replace(/הגיבור/g, 'הגבור')
+        .replace(/גיבור/g, 'גבור')
+        .replace(/ופוקדצרה/g, 'ופוקד שרה')
+        .replace(/מחייה/g, 'מחיה')
+        .replace(/ומקיים/g, 'ומקים')
+        .replace(/לשני עפר/g, 'לישני עפר')
+        .replace(/גואל מביא/g, 'גואל ומביא')
+        .replace(/להודות/g, 'להדות')
+        .replace(/בבוקר/g, 'בבקר')
+        .replace(/היגיון/g, 'הגיון')
+        .replace(/בכינור/g, 'בכנור')
+        .replace(/בפועלך/g, 'בפעלך')
+        .replace(/ולא אבלת/g, 'ולא עולתה')
+        .replace(/גולי/g, 'גואלי')
+        .replace(/ניסי/g, 'נסי')
+        .replace(/באים/g, 'ועם')
+        .replace(/מצווך/g, 'מצוך')
+        .replace(/אנוכי/g, 'אנכי')
+        .replace(/ודיברת/g, 'ודברת')
+        .replace(/ובשכבה/g, 'ובשכבך')
+        .replace(/לטוטפות/g, 'לטטפת')
+        .replace(/מזוזות/g, 'מזזת')
+        .replace(/מזזות/g, 'מזזת')
+        .replace(/במצוותיו/g, 'במצותיו')
+        .replace(/קידשנו/g, 'קדשנו')
+        .replace(/לדורותם/g, 'לדרתם')
+        .replace(/ישראלי/g, 'ישראל')
+        .replace(/אותי/g, 'אות היא')
+        .replace(/מי מלך/g, 'ממלך')
+        // L'cha Dodi normalisers
+        .replace(/בדיבור/g, 'בדבור')
+        .replace(/המיוחד/g, 'המיחד')
+        .replace(/תחילה/g, 'תחלה')
+        .replace(/^לך /, 'לכה ')     // לך at line start → לכה (lecha)
+        .replace(/ לך /, ' לכה ')    // לך mid-line → לכה
+        .replace(/העוז/g, 'העז')
+        .replace(/ולא העז/g, 'ולו העז')
+        .replace(/להמשיל לא/g, 'להמשיל לו')
+        .replace(/והמזרח/g, 'והמשרה')
+        .replace(/אור/g, 'אר')
+        .replace(/יום/g, 'ים')
+        .replace(/טוב/g, 'טב')
+        // Normalize ק → כ (SR often confuses kuf and kaf)
+        .replace(/ק/g, 'כ')
+        // Normalize ח/ה confusion (speech recognition often confuses these)
+        .replace(/ח/g, 'ה')
+        // Normalize yud used for chirik vowel (קידשנו -> קדשנו)
+        .replace(/קיד/g, 'כד')
+        .replace(/מיצ/g, 'מצ')
+        .replace(/ביר/g, 'בר')
+        // Normalize common blessing words that speech recognition mishears
+        .replace(/וצבענו/g, 'וצונו')   // vetzivanu
+        .replace(/וציוונו/g, 'וצונו')  // vetzivanu with extra vav
+        .replace(/וציבנו/g, 'וצונו')   // vetzivanu variant
+        // Normalize לעת - SR hears "et" sound many ways
+        .replace(/לעת/g, 'עת')
+        .replace(/ליד/g, 'עת')
+        .replace(/לית/g, 'עת')
+        .replace(/לאת/g, 'עת')
+        .replace(/לת/g, 'עת')
+        .replace(/^את /, 'עת ')
+        .replace(/ את /g, ' עת ')
+        // Normalize נאסר/נעזר → נעשה (SR mishearings of נַעֲשָׂה)
+        .replace(/נאסר/g, 'נעשה')
+        .replace(/נעזר/g, 'נעשה')
+        // Normalize ו/ב prefix confusion on חפצו/הפצו
+        .replace(/[ובה]חפצו/g, 'הפצו')
+        .replace(/[ובה]הפצו/g, 'הפצו')
+        // Remove punctuation
+        .replace(/[^\u05D0-\u05EA\s]/g, '')
+        // Normalize whitespace
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    // Compare two Hebrew texts and return similarity
+    function compareHebrew(heard, expected) {
+      const heardNorm = normalizeHebrew(heard);
+      const expectedNorm = normalizeHebrew(expected);
+      
+      const heardWords = heardNorm.split(' ').filter(w => w);
+      const expectedWords = expectedNorm.split(' ').filter(w => w);
+      const heardOriginal = heard.replace(/[\u0591-\u05C7]/g, '').split(' ').filter(w => w);
+      const expectedOriginal = expected.split(' ').filter(w => w);
+      
+      // Build similarity matrix
+      const H = heardWords.length;
+      const E = expectedWords.length;
+      
+      function wordSim(hw, ew) {
+        if (hw === ew) return 1.0;
+        const sim = calculateSimilarity(hw, ew);
+        const len = Math.max(hw.length, ew.length);
+        const thresh = len <= 4 ? 1.0 : len <= 6 ? 0.90 : 0.85;
+        if (sim >= thresh) return 1.0;
+        if (sim >= 0.7) return 0.3;
+        return 0;
+      }
+      
+      // Dynamic programming alignment (like diff/LCS but with partial credit)
+      const dp = Array.from({length: H + 1}, () => new Array(E + 1).fill(0));
+      
+      for (let i = 1; i <= H; i++) {
+        for (let j = 1; j <= E; j++) {
+          const sim = wordSim(heardWords[i-1], expectedWords[j-1]);
+          dp[i][j] = Math.max(
+            dp[i-1][j-1] + sim,  // match/substitute
+            dp[i-1][j],           // skip heard word (extra)
+            dp[i][j-1]            // skip expected word (missing)
+          );
+        }
+      }
+      
+      // Traceback
+      const results = [];
+      let i = H, j = E;
+      const aligned = [];
+      
+      while (i > 0 || j > 0) {
+        if (i > 0 && j > 0) {
+          const sim = wordSim(heardWords[i-1], expectedWords[j-1]);
+          if (dp[i][j] === dp[i-1][j-1] + sim) {
+            aligned.unshift({ h: i-1, e: j-1, sim });
+            i--; j--;
+            continue;
+          }
+        }
+        if (j > 0 && (i === 0 || dp[i][j-1] >= dp[i-1][j])) {
+          aligned.unshift({ h: null, e: j-1, sim: 0 }); // missing
+          j--;
+        } else {
+          aligned.unshift({ h: i-1, e: null, sim: 0 }); // extra
+          i--;
+        }
+      }
+      
+      // Build results array
+      let matchCount = 0;
+      for (const a of aligned) {
+        if (a.h !== null && a.e !== null) {
+          const ho = heardOriginal[a.h] || heardWords[a.h];
+          const eo = expectedOriginal[a.e] || expectedWords[a.e];
+          if (a.sim === 1.0) {
+            matchCount++;
+            results.push({ type: 'match', heardOrig: ho, expectedOrig: eo });
+          } else if (a.sim > 0) {
+            matchCount += a.sim;
+            results.push({ type: 'partial', heardOrig: ho, expectedOrig: eo });
+          } else {
+            results.push({ type: 'mismatch', heardOrig: ho, expectedOrig: eo });
+          }
+        } else if (a.h === null) {
+          const eo = expectedOriginal[a.e] || expectedWords[a.e];
+          results.push({ type: 'missing', expectedOrig: eo });
+        } else {
+          const ho = heardOriginal[a.h] || heardWords[a.h];
+          results.push({ type: 'extra', heardOrig: ho });
+        }
+      }
+      
+      const score = E > 0 ? matchCount / E : 0;
+      return { score, results, heardNorm, expectedNorm };
+    }
+
+    // Calculate string similarity (Levenshtein-based)
+    function calculateSimilarity(s1, s2) {
+      const longer = s1.length > s2.length ? s1 : s2;
+      const shorter = s1.length > s2.length ? s2 : s1;
+      
+      if (longer.length === 0) return 1.0;
+      
+      const costs = [];
+      for (let i = 0; i <= shorter.length; i++) {
+        let lastValue = i;
+        for (let j = 0; j <= longer.length; j++) {
+          if (i === 0) {
+            costs[j] = j;
+          } else if (j > 0) {
+            let newValue = costs[j - 1];
+            if (shorter[i - 1] !== longer[j - 1]) {
+              newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1;
+            }
+            costs[j - 1] = lastValue;
+            lastValue = newValue;
+          }
+        }
+        if (i > 0) costs[longer.length] = lastValue;
+      }
+      
+      return (longer.length - costs[longer.length]) / longer.length;
+    }
+
+    // Process speech recognition result
+    function processResult(transcript) {
+      const prayer = prayers[currentPrayer];
+      const line = prayer.lines[currentLineIndex];
+      const expected = line.hebrew;
+      
+      micStatus.textContent = 'Processing...';
+      
+      const comparison = compareHebrew(transcript, expected);
+      
+      // Show detailed results below
+      heardText.innerHTML = renderHeard(comparison.results);
+      expectedText.innerHTML = renderExpected(comparison.results);
+      transliterationHint.textContent = 'Transliteration: ' + (line.stress || line.transliteration);
+      englishMeaning.textContent = 'Meaning: ' + line.english;
+      
+      // Show pronunciation notes if any
+      const notesEl = document.getElementById('pronunciation-notes');
+      if (line.notes && line.notes.length > 0) {
+        notesEl.innerHTML = '<strong>🎯 Pronunciation reminders:</strong><br>' +
+          line.notes.map(n => `<div class="note-item">• ${n}</div>`).join('');
+        notesEl.classList.remove('hidden');
+      } else {
+        notesEl.classList.add('hidden');
+      }
+      
+      const isCorrect = comparison.score >= 0.85;
+      const isPerfect = comparison.score >= 1.0;
+      
+      // Feedback banner
+      feedbackMessage.textContent = isPerfect
+        ? '✓ Perfect!'
+        : isCorrect
+          ? '✓ Good! ' + Math.round(comparison.score * 100) + '% match'
+          : '✗ ' + Math.round(comparison.score * 100) + '% — try again';
+      feedbackMessage.className = 'feedback-message ' + (isCorrect ? 'correct' : 'incorrect');
+      feedbackMessage.classList.remove('hidden');
+      
+      // Show detailed results
+      resultsArea.classList.remove('hidden');
+      
+      micStatus.textContent = 'Click microphone to try again';
+      
+      // Auto-advance on perfect score
+      if (isPerfect) {
+        setTimeout(() => nextLine(), 3000);
+      }
+    }
+
+    // Render comparison with highlighting
+    // Render expected text with highlighting (uses original with nikkud)
+    function renderExpected(results) {
+      return results.map(r => {
+        if (r.type === 'match') {
+          return `<span class="word-match">${r.expectedOrig}</span>`;
+        } else if (r.type === 'partial') {
+          return `<span class="word-match">${r.expectedOrig}</span>`;
+        } else if (r.type === 'mismatch') {
+          return `<span class="word-mismatch">${r.expectedOrig}</span>`;
+        } else if (r.type === 'missing') {
+          return `<span class="word-missing">${r.expectedOrig}</span>`;
+        } else {
+          return ''; // extra words - don't show in expected
+        }
+      }).join(' ');
+    }
+
+    // Convert Hebrew consonants to transliteration (approximate, without nikkud)
+    // Render heard text with highlighting (wrong words in red)
+    function renderHeard(results) {
+      return results.map(r => {
+        if (r.type === 'match') {
+          return `<span class="word-match">${r.heardOrig}</span>`;
+        } else if (r.type === 'partial') {
+          return `<span class="word-partial">${r.heardOrig}</span>`;
+        } else if (r.type === 'mismatch') {
+          return `<span class="word-error">${r.heardOrig}</span>`;
+        } else if (r.type === 'extra') {
+          return `<span class="word-extra">${r.heardOrig}</span>`;
+        } else {
+          return ''; // missing words - don't show in heard
+        }
+      }).join(' ');
+    }
+
+    // Text-to-speech for correct pronunciation
+    // Audio playback - tries MP3 file first, falls back to TTS
+    let currentAudio = null;
+
+    function pad(n) {
+      return String(n).padStart(2, '0');
+    }
+
+    function speakLine() {
+      // Stop any current playback
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio = null;
+      }
+      window.speechSynthesis && window.speechSynthesis.cancel();
+
+      const line = prayers[currentPrayer].lines[currentLineIndex];
+      const audioPath = `audio/${currentPrayer}/${pad(currentLineIndex + 1)}.mp3`;
+
+      const audio = new Audio(audioPath);
+      currentAudio = audio;
+
+      audio.oncanplaythrough = () => {
+        audio.play().catch(() => speakTTS(line.hebrew));
+      };
+
+      audio.onerror = () => {
+        // File not found or error - fall back to TTS
+        speakTTS(line.hebrew);
+      };
+
+      // Trigger load
+      audio.load();
+    }
+
+    function speakTTS(text) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+
+      const speakText = text
+        .replace(/יְהוָה/g, 'אֲדֹנָי')
+        .replace(/יהוה/g, 'אֲדֹנָי');
+
+      const utterance = new SpeechSynthesisUtterance(speakText);
+      utterance.lang = 'he-IL';
+      utterance.rate = 0.5;
+
+      const voices = window.speechSynthesis.getVoices();
+      const hebrewVoice = voices.find(v => v.lang.startsWith('he'));
+      if (hebrewVoice) utterance.voice = hebrewVoice;
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // Keep speakHebrew for any legacy calls
+    function speakHebrew(text) {
+      speakTTS(text);
+    }
+
+    // Show current line
+    function showLine() {
+      // Stop any playing audio
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio = null;
+      }
+      window.speechSynthesis && window.speechSynthesis.cancel();
+      const prayer = prayers[currentPrayer];
+      const line = prayer.lines[currentLineIndex];
+      
+      hebrewLine.textContent = line.hebrew;
+      resultsArea.classList.add('hidden');
+      feedbackMessage.classList.add('hidden');
+      document.getElementById('action-buttons').classList.add('hidden');
+      document.getElementById('pronunciation-notes').classList.add('hidden');
+      micStatus.textContent = 'Click to start recording';
+      micStatus.classList.remove('listening', 'processing');
+      
+      progressText.textContent = `Line ${currentLineIndex + 1} of ${prayer.lines.length}`;
+      progressFill.style.width = `${(currentLineIndex / prayer.lines.length) * 100}%`;
+    }
+
+    // Next line
+    function nextLine() {
+      const prayer = prayers[currentPrayer];
+      
+      // Count this attempt
+      const isCorrect = feedbackMessage.classList.contains('correct');
+      if (isCorrect) {
+        correctCount++;
+      } else {
+        incorrectCount++;
+      }
+      
+      currentLineIndex++;
+      
+      if (currentLineIndex >= prayer.lines.length) {
+        showCompletion();
+      } else {
+        showLine();
+      }
+    }
+
+    // Show completion
+    function showCompletion() {
+      quizArea.classList.add('hidden');
+      completion.classList.remove('hidden');
+      statGood.textContent = correctCount;
+      statRetry.textContent = incorrectCount;
+      progressFill.style.width = '100%';
+    }
+
+    // Switch prayer
+    function switchPrayer(prayerId) {
+      currentPrayer = prayerId;
+      currentLineIndex = 0;
+      correctCount = 0;
+      incorrectCount = 0;
+      
+      prayerBtns.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.prayer === prayerId);
+      });
+      
+      quizArea.classList.remove('hidden');
+      completion.classList.add('hidden');
+      showLine();
+      updateListenButton();
+    }
+
+    // Event listeners
+    prayerBtns.forEach(btn => {
+      btn.addEventListener('click', () => switchPrayer(btn.dataset.prayer));
+    });
+
+    micBtn.addEventListener('click', () => {
+      if (!recognition) return;
+      
+      // Start speech recognition
+      if (isListening) {
+        recognition.stop();
+      } else {
+        resultsArea.classList.add('hidden');
+        recognition.start();
+      }
+    });
+
+
+    document.getElementById('listen-btn-pre').addEventListener('click', () => {
+      speakLine();
+    });
+
+    document.getElementById('back-btn').addEventListener('click', () => {
+      if (currentLineIndex > 0) {
+        currentLineIndex--;
+        showLine();
+      }
+    });
+
+    document.getElementById('skip-btn').addEventListener('click', () => {
+      const prayer = prayers[currentPrayer];
+      currentLineIndex++;
+      if (currentLineIndex >= prayer.lines.length) {
+        currentLineIndex = 0;
+      }
+      showLine();
+    });
+
+    restartBtn.addEventListener('click', () => switchPrayer(currentPrayer));
+
+    // Load voices
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.getVoices();
+      window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+    }
+
+    // Check if audio files are available for current prayer
+    function updateListenButton() {
+      const audioPath = `audio/${currentPrayer}/01.mp3`;
+      const btn = document.getElementById('listen-btn-pre');
+      const testAudio = new Audio(audioPath);
+      testAudio.oncanplaythrough = () => {
+        btn.textContent = '🔊 Listen to this line';
+        btn.title = 'Playing human recording';
+      };
+      testAudio.onerror = () => {
+        btn.textContent = '🔊 Listen (TTS)';
+        btn.title = 'No recording available — using text-to-speech';
+      };
+      testAudio.load();
+    }
+
+    // Initialize
+    showLine();
+    updateListenButton();
+
+    // Welcome screen
+    document.getElementById('continue-btn').addEventListener('click', function() {
+      document.getElementById('welcome-screen').classList.add('hidden');
+      document.getElementById('main-layout').classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>
