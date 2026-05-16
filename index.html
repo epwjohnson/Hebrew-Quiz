@@ -766,7 +766,8 @@
         lines: [
           { hebrew: "עָלֵינוּ לְשַׁבֵּחַ לַאֲדוֹן הַכֹּל", transliteration: "aleinu leshabeach ladon hakol", stress: "a-LEI-nu le-sha-BEI-ach la-a-DON ha-KOL", english: "It is our duty to praise the Lord of all" },
           { hebrew: "לָתֵת גְּדֻלָּה לְיוֹצֵר בְּרֵאשִׁית", transliteration: "latet gedulah leyotzer bereshit", stress: "la-TET ge-du-LA le-yo-TZER be-re-SHIT", english: "to ascribe greatness to the One who formed the world in the beginning" },
-          { hebrew: "שֶׁהוּא נוֹטֶה שָׁמַיִם וְיוֹסֵד אָרֶץ", transliteration: "shehu noteh shamayim veyosed aretz", stress: "she-HU no-TEH sha-MA-yim ve-yo-SED A-retz", english: "who stretches out the heavens and laid the foundations of the earth" },
+          { hebrew: "שֶׁהוּא נוֹטֶה שָׁמַיִם וְיוֹסֵד אָרֶץ", transliteration: "shehu noteh shamayim veyosed aretz", stress: "she-HU no-TEH sha-MA-yim ve-yo-SED A-retz", english: "who stretches out the heavens and laid the foundations of the earth",
+            notes: ["<strong>וְיוֹסֵד</strong> — SR may hear as ויסד. Say clearly: <em>ve-yo-SED</em>"] },
           { hebrew: "הוּא אֱלֹהֵינוּ אֵין עוֹד", transliteration: "hu eloheinu ein od", stress: "HU e-lo-HEI-nu ein OD", english: "He is our God, there is no other" },
           { hebrew: "אֱמֶת מַלְכֵּנוּ אֶפֶס זוּלָתוֹ", transliteration: "emet malkeinu efes zulato", stress: "E-met mal-KEI-nu E-fes zu-la-TO", english: "our King is true, there is none besides Him" },
           { hebrew: "כַּכָּתוּב בְּתוֹרָתוֹ וְיָדַעְתָּ הַיּוֹם", transliteration: "kakatuv betorato veyadata hayom", stress: "ka-ka-TUV be-to-ra-TO ve-ya-DA-ta ha-YOM", english: "as it is written in His Law: know this day" },
@@ -785,7 +786,8 @@
           { hebrew: "וִיקַבְּלוּ כֻלָּם אֶת עֹל מַלְכוּתֶךָ", transliteration: "vikablu kulam et ol malchutecha", stress: "vi-kab-LU ku-LAM et ol mal-chu-TE-cha", english: "and they shall all accept the yoke of Your kingdom" },
           { hebrew: "וְתִמְלֹךְ עֲלֵיהֶם מְהֵרָה לְעוֹלָם וָעֶד", transliteration: "vetimloch aleihem mehera leolam vaed", stress: "ve-tim-LOCH a-lei-HEM me-he-RA le-o-LAM VA-ed", english: "and You shall reign over them soon, forever and ever" },
           { hebrew: "כִּי הַמַּלְכוּת שֶׁלְּךָ הִיא", transliteration: "ki hamalchut shelcha hi", stress: "ki ha-mal-CHUT shel-CHA HI", english: "for the kingdom is Yours" },
-          { hebrew: "וּלְעוֹלְמֵי עַד תִּמְלֹךְ בְּכָבוֹד", transliteration: "uleolmei ad timloch bechavod", stress: "u-le-ol-MEI ad tim-LOCH be-cha-VOD", english: "and You shall reign in glory forever" },
+          { hebrew: "וּלְעוֹלְמֵי עַד תִּמְלֹךְ בְּכָבוֹד", transliteration: "uleolmei ad timloch bechavod", stress: "u-le-ol-MEI ad tim-LOCH be-cha-VOD", english: "and You shall reign in glory forever",
+            notes: ["<strong>וּלְעוֹלְמֵי</strong> — say slowly and clearly, enunciating the ול at the start: <em>u-le-ol-MEI</em>"] },
           { hebrew: "יְהוָה יִמְלֹךְ לְעֹלָם וָעֶד", transliteration: "adonai yimloch leolam vaed", stress: "a-do-NAI yim-LOCH le-o-LAM VA-ed", english: "The Lord shall reign forever and ever" },
           { hebrew: "וְהָיָה יְהוָה לְמֶלֶךְ עַל כָּל הָאָרֶץ", transliteration: "vehaya adonai lemelech al kol haaretz", stress: "ve-ha-YA a-do-NAI le-ME-lech al KOL ha-A-retz", english: "And the Lord shall be King over all the earth" },
           { hebrew: "בַּיּוֹם הַהוּא יִהְיֶה יְהוָה אֶחָד וּשְׁמוֹ אֶחָד", transliteration: "bayom hahu yihye adonai echad ushmo echad", stress: "ba-YOM ha-HU yih-YEH a-do-NAI e-CHAD ush-MO e-CHAD", english: "on that day the Lord shall be One, and His name One" }
@@ -895,13 +897,11 @@
     // Normalize Hebrew text for comparison
     function normalizeHebrew(text) {
       return text
-        // Remove nikkud (vowel marks)
+        // STEP 1: Remove nikkud
         .replace(/[\u0591-\u05C7]/g, '')
-        // Normalize Tetragrammaton: יהוה -> אדני (what people actually say)
+        // STEP 2: Divine names
         .replace(/יהוה/g, 'אדני')
-        // Also catch if speech recognition heard אדוני
         .replace(/אדוני/g, 'אדני')
-        // Normalize Elohim/Eloheinu/Elohecha variations (with/without vav)
         .replace(/אלוהים/g, 'אלהים')
         .replace(/אלוהינו/g, 'אלהינו')
         .replace(/אלוהיך/g, 'אלהיך')
@@ -909,93 +909,72 @@
         .replace(/אלוקים/g, 'אלהים')
         .replace(/אלוקינו/g, 'אלהינו')
         .replace(/אלוקיך/g, 'אלהיך')
-        // Normalize cholam-vav vs cholam (speech recognition adds vav for "o" sound)
-        .replace(/מאוד/g, 'מאד')
-        .replace(/כול/g, 'כל')
-        .replace(/קול/g, 'כל')
-        .replace(/עולם/g, 'עלם')
-        .replace(/קודש/g, 'כדש')
-        .replace(/שלום/g, 'שלם')
-        .replace(/גדול/g, 'גדל')
-        .replace(/ימלוך/g, 'ימלך')
-        .replace(/הווה/g, 'הוה')
-        .replace(/לחברה/g, 'להחבירה')
-        .replace(/לחפירה/g, 'להחבירה')
-        .replace(/שפתיי/g, 'שפתי')
-        .replace(/תהילתך/g, 'תהלתך')
-        .replace(/ואלוהי/g, 'ואלהי')
-        .replace(/הגיבור/g, 'הגבור')
-        .replace(/גיבור/g, 'גבור')
-        .replace(/ופוקדצרה/g, 'ופוקד שרה')
-        .replace(/מחייה/g, 'מחיה')
-        .replace(/ומקיים/g, 'ומקים')
-        .replace(/לשני עפר/g, 'לישני עפר')
-        .replace(/גואל מביא/g, 'גואל ומביא')
-        .replace(/להודות/g, 'להדות')
-        .replace(/בבוקר/g, 'בבקר')
-        .replace(/היגיון/g, 'הגיון')
-        .replace(/בכינור/g, 'בכנור')
-        .replace(/בפועלך/g, 'בפעלך')
-        .replace(/ולא אבלת/g, 'ולא עולתה')
-        .replace(/ברחו/g, 'ברכו')
-        .replace(/המבורך/g, 'המברך')
-        .replace(/את מחליף/g, 'את ומחליף')
-        .replace(/במשמרות הם ברקיע/g, 'במשמרותיהם ברקיע')
-        .replace(/וחושך/g, 'וחשך')
-        .replace(/חוקים/g, 'חקים')
-        .replace(/לימדתה/g, 'למדת')
-        .replace(/ונעלו/g, 'ונעלז')
-        .replace(/ובמצוות/g, 'ובמצותיך')
-        .replace(/חושך/g, 'חשך')
+        // STEP 3: Multi-word scoped rules (must run before any letter changes)
         .replace(/הוא מעביר/g, 'ומעביר')
         .replace(/הוא מביא/g, 'ומביא')
-        .replace(/לימדת/g, 'למדת')
-        .replace(/בשכבת קומינו/g, 'בשכבנו ובקומנו')
-        .replace(/בחוקיך/g, 'בחקיך')
+        .replace(/גואל מביא/g, 'גואל ומביא')
+        .replace(/את מחליף/g, 'את ומחליף')
+        .replace(/במשמרות הם ברקיע/g, 'במשמרותיהם ברקיע')
+        .replace(/במשמרות ברקיע/g, 'במשמרותיהם ברקיע')
+        .replace(/הוא לעולמי/g, 'ולעולמי')
+        .replace(/אולמי עד/g, 'ולעולמי עד')
+        .replace(/את עול/g, 'את על')
+        .replace(/ולא אבלת/g, 'ולא עולתה')
+        .replace(/ולא העז/g, 'ולו העז')
+        .replace(/להמשיל לא/g, 'להמשיל לו')
+        .replace(/ופוקדצרה/g, 'ופוקד שרה')
         .replace(/ונעל לוז/g, 'ונעלז')
-        .replace(/מצוותיך/g, 'ובמצותיך')
-        .replace(/גולי/g, 'גואלי')
-        .replace(/ניסי/g, 'נסי')
-        .replace(/באים/g, 'ועם')
-        .replace(/מצווך/g, 'מצוך')
-        .replace(/אנוכי/g, 'אנכי')
-        .replace(/ודיברת/g, 'ודברת')
-        .replace(/ובשכבה/g, 'ובשכבך')
-        .replace(/לטוטפות/g, 'לטטפת')
-        .replace(/מזוזות/g, 'מזזת')
-        .replace(/מזזות/g, 'מזזת')
-        .replace(/במצוותיו/g, 'במצותיו')
-        .replace(/קידשנו/g, 'קדשנו')
-        .replace(/לדורותם/g, 'לדרתם')
-        .replace(/ישראלי/g, 'ישראל')
-        .replace(/אותי/g, 'אות היא')
         .replace(/מי מלך/g, 'ממלך')
-        // L'cha Dodi normalisers
+        .replace(/בשכבת קומינו/g, 'בשכבנו ובקומנו')
+        .replace(/לשני עפר/g, 'לישני עפר')
+        // STEP 4: Single-word specific rules (before global letter changes)
+        .replace(/ברחו/g, 'ברכו')
+        .replace(/המבורך/g, 'המברך')
+        .replace(/והמזרח/g, 'והמשרה')
+        .replace(/גולי/g, 'גואלי')
+        .replace(/באים/g, 'ועם')
+        .replace(/אותי/g, 'אות היא')
+        .replace(/לחברה/g, 'להחבירה')
+        .replace(/לחפירה/g, 'להחבירה')
+        .replace(/ישראלי/g, 'ישראל')
+        .replace(/ובשכבה/g, 'ובשכבך')
+        .replace(/ונעלו/g, 'ונעלז')
+        .replace(/שמיים/g, 'שמים')
+        .replace(/שפתיי/g, 'שפתי')
+        .replace(/מחייה/g, 'מחיה')
+        .replace(/ומקיים/g, 'ומקים')
+        .replace(/הגיבור/g, 'הגבור')
+        .replace(/גיבור/g, 'גבור')
+        .replace(/גיבר/g, 'גבר')
+        .replace(/היגיון/g, 'הגיון')
+        .replace(/בכינור/g, 'בכנור')
+        .replace(/תהילתך/g, 'תהלתך')
+        .replace(/ואלוהי/g, 'ואלהי')
         .replace(/בדיבור/g, 'בדבור')
         .replace(/המיוחד/g, 'המיחד')
         .replace(/תחילה/g, 'תחלה')
-        .replace(/^לך /, 'לכה ')     // לך at line start → לכה (lecha)
-        .replace(/ לך /, ' לכה ')    // לך mid-line → לכה
-        .replace(/העוז/g, 'העז')
-        .replace(/ולא העז/g, 'ולו העז')
-        .replace(/להמשיל לא/g, 'להמשיל לו')
-        .replace(/והמזרח/g, 'והמשרה')
-        .replace(/אור/g, 'אר')
-        .replace(/יום/g, 'ים')
-        .replace(/טוב/g, 'טב')
-        // Normalize ק → כ (SR often confuses kuf and kaf)
-        .replace(/ק/g, 'כ')
-        // Normalize ח/ה confusion (speech recognition often confuses these)
-        .replace(/ח/g, 'ה')
-        // Normalize yud used for chirik vowel (קידשנו -> קדשנו)
-        .replace(/קיד/g, 'כד')
-        .replace(/מיצ/g, 'מצ')
-        .replace(/ביר/g, 'בר')
-        // Normalize common blessing words that speech recognition mishears
-        .replace(/וצבענו/g, 'וצונו')   // vetzivanu
-        .replace(/וציוונו/g, 'וצונו')  // vetzivanu with extra vav
-        .replace(/וציבנו/g, 'וצונו')   // vetzivanu variant
-        // Normalize לעת - SR hears "et" sound many ways
+        .replace(/להודות/g, 'להדות')
+        .replace(/בבוקר/g, 'בבקר')
+        .replace(/בפועלך/g, 'בפעלך')
+        .replace(/מצוותיך/g, 'מצותיך')
+        .replace(/ובמצוות/g, 'ובמצות')
+        .replace(/במצוותיו/g, 'במצותיו')
+        .replace(/אנוכי/g, 'אנכי')
+        .replace(/ודיברת/g, 'ודברת')
+        .replace(/לדורותם/g, 'לדרתם')
+        .replace(/קידשנו/g, 'קדשנו')
+        .replace(/מזוזות/g, 'מזזת')
+        .replace(/מזזות/g, 'מזזת')
+        .replace(/לטוטפות/g, 'לטטפת')
+        .replace(/חוקים/g, 'חקים')
+        .replace(/בחוקיך/g, 'בחקיך')
+        .replace(/לימדתה/g, 'למדת')
+        .replace(/לימדת/g, 'למדת')
+        .replace(/נקווה/g, 'נקוה')
+        .replace(/עוזך/g, 'עזך')
+        .replace(/וצבענו/g, 'וצונו')
+        .replace(/וציוונו/g, 'וצונו')
+        .replace(/וציבנו/g, 'וצונו')
         .replace(/לעת/g, 'עת')
         .replace(/ליד/g, 'עת')
         .replace(/לית/g, 'עת')
@@ -1003,15 +982,19 @@
         .replace(/לת/g, 'עת')
         .replace(/^את /, 'עת ')
         .replace(/ את /g, ' עת ')
-        // Normalize נאסר/נעזר → נעשה (SR mishearings of נַעֲשָׂה)
         .replace(/נאסר/g, 'נעשה')
         .replace(/נעזר/g, 'נעשה')
-        // Normalize ו/ב prefix confusion on חפצו/הפצו
         .replace(/[ובה]חפצו/g, 'הפצו')
         .replace(/[ובה]הפצו/g, 'הפצו')
-        // Remove punctuation
+        .replace(/^לך /, 'לכה ')
+        .replace(/ לך /g, ' לכה ')
+        // STEP 5: Global rules (run after all specific rules)
+        .replace(/(?<![\s])וו(?![\s])/g, 'ו')
+        .replace(/([\u05D0-\u05EA])\u05D5(?=[\u05D0-\u05EA])/g, '$1')
+        .replace(/ק/g, 'כ')
+        .replace(/ח/g, 'ה')
+        // Clean up
         .replace(/[^\u05D0-\u05EA\s]/g, '')
-        // Normalize whitespace
         .replace(/\s+/g, ' ')
         .trim();
     }
