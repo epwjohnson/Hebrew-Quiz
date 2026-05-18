@@ -402,6 +402,7 @@
           <li style="counter-increment: steps;"><span style="color: var(--gold); font-weight: bold; margin-right: 8px;">4.</span>Click 🎤 and read the line aloud</li>
           <li style="counter-increment: steps;"><span style="color: var(--gold); font-weight: bold; margin-right: 8px;">5.</span>Perfect scores advance automatically</li>
           <li style="counter-increment: steps;"><span style="color: var(--gold); font-weight: bold; margin-right: 8px;">6.</span>Use ← Back and Skip → to navigate freely</li>
+          <li style="counter-increment: steps;"><span style="color: var(--gold); font-weight: bold; margin-right: 8px;">7.</span>Use the <strong>SR Auto / Manual</strong> toggle to control listening — Auto stops after a pause; Manual keeps listening until you click the mic again</li>
         </ol>
         <p style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #30363d; color: #8b949e; font-size: 0.85rem; line-height: 1.6;">
           <strong style="color: var(--silver);">Please note:</strong> this checks words, not pronunciation details. Differences like ח vs ה cannot be detected — use the Listen button to compare your pronunciation.
@@ -418,7 +419,14 @@
         <h1>קריאה בעברית</h1>
         <p class="subtitle">Hebrew Reading Practice with Speech Recognition</p>
       </header>
-    <div class="progress-text" id="progress-text">Line 1 of 6</div>
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+      <div class="progress-text" id="progress-text">Line 1 of 6</div>
+      <div style="display: flex; align-items: center; gap: 5px; background: var(--bg-input); border: 1px solid var(--gold-dim); border-radius: 20px; padding: 3px;">
+        <span style="font-size: 10px; color: var(--silver-dim); padding: 0 3px 0 6px; text-transform: uppercase; letter-spacing: 0.04em;">SR</span>
+        <button id="sr-auto" onclick="setSRMode('auto')" style="font-size: 11px; padding: 3px 10px; border-radius: 14px; border: 1px solid var(--gold-dim); background: var(--bg-card); color: var(--gold); font-family: inherit; cursor: pointer;">Auto</button>
+        <button id="sr-manual" onclick="setSRMode('manual')" style="font-size: 11px; padding: 3px 10px; border-radius: 14px; border: none; background: transparent; color: var(--silver-dim); font-family: inherit; cursor: pointer;">Manual</button>
+      </div>
+    </div>
     <div class="progress-bar">
       <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
     </div>
@@ -798,6 +806,20 @@
     // State
     let currentPrayer = "hadlakat-nerot";
     let currentLineIndex = 0;
+    let srMode = 'auto'; // 'auto' or 'manual'
+
+    function setSRMode(mode) {
+      srMode = mode;
+      const autoBtn = document.getElementById('sr-auto');
+      const manualBtn = document.getElementById('sr-manual');
+      if (mode === 'auto') {
+        autoBtn.style.cssText = 'font-size:11px;padding:3px 10px;border-radius:14px;border:1px solid var(--gold-dim);background:var(--bg-card);color:var(--gold);font-family:inherit;cursor:pointer;';
+        manualBtn.style.cssText = 'font-size:11px;padding:3px 10px;border-radius:14px;border:none;background:transparent;color:var(--silver-dim);font-family:inherit;cursor:pointer;';
+      } else {
+        manualBtn.style.cssText = 'font-size:11px;padding:3px 10px;border-radius:14px;border:1px solid var(--gold-dim);background:var(--bg-card);color:var(--gold);font-family:inherit;cursor:pointer;';
+        autoBtn.style.cssText = 'font-size:11px;padding:3px 10px;border-radius:14px;border:none;background:transparent;color:var(--silver-dim);font-family:inherit;cursor:pointer;';
+      }
+    }
     let correctCount = 0;
     let incorrectCount = 0;
     let recognition = null;
@@ -832,7 +854,7 @@
       // Initialize Hebrew speech recognition
       recognition = new SpeechRecognition();
       recognition.lang = 'he-IL';
-      recognition.continuous = false;
+      recognition.continuous = (srMode === 'manual');
       recognition.interimResults = true;
       recognition.maxAlternatives = 3;
 
@@ -1361,6 +1383,10 @@
         recognition.stop();
       } else {
         resultsArea.classList.add('hidden');
+        feedbackMessage.classList.add('hidden');
+        document.getElementById('action-buttons').classList.add('hidden');
+        document.getElementById('pronunciation-notes').classList.add('hidden');
+        micStatus.textContent = srMode === 'manual' ? 'Listening — click mic to stop' : 'Listening...';
         recognition.start();
       }
     });
