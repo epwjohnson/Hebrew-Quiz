@@ -531,9 +531,10 @@
           { hebrew: "וְהָיוּ הַדְּבָרִים הָאֵלֶּה", transliteration: "vehayu hadvarim haeleh", stress: "ve-HA-yu had-va-RIM ha-E-leh", english: "And these words" },
           { hebrew: "אֲשֶׁר אָנֹכִי מְצַוְּךָ הַיּוֹם עַל לְבָבֶךָ", transliteration: "asher anochi metzavecha hayom al levavecha", stress: "A-sher a-NO-chi me-tza-VE-cha ha-YOM al le-va-VE-cha", english: "which I command you today shall be upon your heart" },
           { hebrew: "וְשִׁנַּנְתָּם לְבָנֶיךָ וְדִבַּרְתָּ בָּם", transliteration: "veshinantam levanecha vedibarta bam", stress: "ve-shi-NAN-tam le-va-NE-cha ve-di-BAR-ta BAM", english: "And you shall teach them diligently to your children, and speak of them" },
-          { hebrew: "בְּשִׁבְתְּךָ בְּבֵיתֶךָ וּבְלֶכְתְּךָ בַדֶּרֶךְ", transliteration: "beshivtecha beveitecha uvlechtecha vaderech", stress: "be-shiv-TE-cha be-vei-TE-cha uv-lech-TE-cha va-DE-rech", english: "when you sit in your house and when you walk on the way" },
+          { hebrew: "בְּשִׁבְתְּךָ בְּבֵיתֶךָ", transliteration: "beshivtecha beveitecha", stress: "be-shiv-TE-cha be-vei-TE-cha", english: "when you sit in your house" },
+          { hebrew: "וּבְלֶכְתְּךָ בַדֶּרֶךְ", transliteration: "uvlechtecha vaderech", stress: "uv-lech-TE-cha va-DE-rech", english: "and when you walk on the way" },
           { hebrew: "וּבְשָׁכְבְּךָ וּבְקוּמֶךָ", transliteration: "uvshochbecha uvkumecha", stress: "uv-shoch-BE-cha uv-ku-ME-cha", english: "when you lie down and when you rise up",
-            notes: ["<strong>וּבְשָׁכְבְּךָ</strong> — say the complete form VERY slowly including prefixes and suffix: <em>uv-shoch-BE-cha</em>. The SR struggles greatly with this word — speak each syllable clearly and deliberately."] },
+            notes: ["<strong>וּבְשָׁכְבְּךָ</strong> — say the complete form VERY slowly including prefixes and suffix: <em>uv-shoch-BE-cha</em>. The SR struggles greatly with this word — speak each syllable clearly and deliberately. <strong>Manual mode recommended</strong> for this line."] },
           { hebrew: "וּקְשַׁרְתָּם לְאוֹת עַל יָדֶךָ", transliteration: "ukshartam leot al yadecha", stress: "uk-shar-TAM le-OT al ya-DE-cha", english: "And you shall bind them as a sign upon your hand" },
           { hebrew: "וְהָיוּ לְטֹטָפֹת בֵּין עֵינֶיךָ", transliteration: "vehayu letotafot bein einecha", stress: "ve-HA-yu le-to-ta-FOT bein ei-NE-cha", english: "and they shall be as frontlets between your eyes" },
           { hebrew: "וּכְתַבְתָּם עַל מְזֻזוֹת בֵּיתֶךָ וּבִשְׁעָרֶיךָ", transliteration: "uchtavtam al mezuzot beitecha uvisharecha", stress: "uch-tav-TAM al me-zu-ZOT bei-TE-cha u-vi-sha-RE-cha", english: "And you shall write them on the doorposts of your house and on your gates" }
@@ -810,6 +811,8 @@
 
     function setSRMode(mode) {
       srMode = mode;
+      // Update recognition continuous setting if it exists
+      if (recognition) recognition.continuous = (mode === 'manual');
       const autoBtn = document.getElementById('sr-auto');
       const manualBtn = document.getElementById('sr-manual');
       if (mode === 'auto') {
@@ -858,36 +861,50 @@
       recognition.interimResults = true;
       recognition.maxAlternatives = 3;
 
+      // Accumulate finals across continuous session
+      let accumulatedFinal = '';
+
       recognition.onstart = () => {
         isListening = true;
+        accumulatedFinal = '';
         micBtn.classList.add('listening');
-        micStatus.textContent = 'Listening... speak now';
+        micStatus.textContent = srMode === 'manual' ? 'Listening — click mic to stop' : 'Listening... speak now';
         micStatus.classList.add('listening');
         resultsArea.classList.add('hidden');
       };
 
       recognition.onresult = (event) => {
-        let finalTranscript = '';
         let interimTranscript = '';
-        
+
         for (let i = event.resultIndex; i < event.results.length; i++) {
           const transcript = event.results[i][0].transcript;
           if (event.results[i].isFinal) {
-            finalTranscript += transcript;
+            accumulatedFinal += ' ' + transcript;
+            accumulatedFinal = accumulatedFinal.trim();
           } else {
             interimTranscript += transcript;
           }
         }
-        
+
         if (interimTranscript) {
-          micStatus.textContent = 'Hearing: ' + interimTranscript;
+          micStatus.textContent = 'Hearing: ' + (accumulatedFinal ? accumulatedFinal + ' ' : '') + interimTranscript;
           micStatus.classList.remove('listening');
           micStatus.classList.add('processing');
         }
-        
-        if (finalTranscript) {
-          processResult(finalTranscript);
+
+        // In auto mode, process as soon as we get a final result
+        // In manual mode, wait until the user stops (mic click triggers processResult)
+        if (!recognition.continuous && accumulatedFinal) {
+          processResult(accumulatedFinal);
+          accumulatedFinal = '';
         }
+      };
+
+      // Expose accumulatedFinal for manual mode processing
+      recognition._getAccumulated = () => {
+        const result = accumulatedFinal;
+        accumulatedFinal = '';
+        return result;
       };
 
       recognition.onerror = (event) => {
@@ -1383,15 +1400,24 @@
     micBtn.addEventListener('click', () => {
       if (!recognition) return;
       
-      // Start speech recognition
       if (isListening) {
-        recognition.stop();
+        // In manual mode, process accumulated results on stop
+        if (srMode === 'manual' && recognition._getAccumulated) {
+          const accumulated = recognition._getAccumulated();
+          try { recognition.stop(); } catch(e) {}
+          if (accumulated) {
+            processResult(accumulated);
+          }
+        } else {
+          try { recognition.stop(); } catch(e) {}
+        }
       } else {
         resultsArea.classList.add('hidden');
         feedbackMessage.classList.add('hidden');
         document.getElementById('action-buttons').classList.add('hidden');
         document.getElementById('pronunciation-notes').classList.add('hidden');
         micStatus.textContent = srMode === 'manual' ? 'Listening — click mic to stop' : 'Listening...';
+        recognition.continuous = (srMode === 'manual');
         recognition.start();
       }
     });
