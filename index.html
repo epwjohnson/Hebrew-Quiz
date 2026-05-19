@@ -533,8 +533,8 @@
           { hebrew: "וְשִׁנַּנְתָּם לְבָנֶיךָ וְדִבַּרְתָּ בָּם", transliteration: "veshinantam levanecha vedibarta bam", stress: "ve-shi-NAN-tam le-va-NE-cha ve-di-BAR-ta BAM", english: "And you shall teach them diligently to your children, and speak of them" },
           { hebrew: "בְּשִׁבְתְּךָ בְּבֵיתֶךָ", transliteration: "beshivtecha beveitecha", stress: "be-shiv-TE-cha be-vei-TE-cha", english: "when you sit in your house" },
           { hebrew: "וּבְלֶכְתְּךָ בַדֶּרֶךְ", transliteration: "uvlechtecha vaderech", stress: "uv-lech-TE-cha va-DE-rech", english: "and when you walk on the way" },
-          { hebrew: "וּבְשָׁכְבְּךָ וּבְקוּמֶךָ", transliteration: "uvshochbecha uvkumecha", stress: "uv-shoch-BE-cha uv-ku-ME-cha", english: "when you lie down and when you rise up",
-            notes: ["<strong>וּבְשָׁכְבְּךָ</strong> — say the complete form VERY slowly including prefixes and suffix: <em>uv-shoch-BE-cha</em>. The SR struggles greatly with this word — speak each syllable clearly and deliberately. <strong>Manual mode recommended</strong> for this line."] },
+          { hebrew: "וּבְ-שָׁכְבְּךָ וּבְקוּמֶךָ", transliteration: "uvshochbecha uvkumecha", stress: "uv-shoch-BE-cha uv-ku-ME-cha", english: "when you lie down and when you rise up",
+            notes: ["<strong>Note:</strong> the hyphen is a reading aid only — the original Hebrew is the single word <strong>וּבְשָׁכְבְּךָ</strong>. Say it VERY slowly: <em>uv-shoch-BE-cha</em>. <strong>Manual mode recommended</strong> for this line."] },
           { hebrew: "וּקְשַׁרְתָּם לְאוֹת עַל יָדֶךָ", transliteration: "ukshartam leot al yadecha", stress: "uk-shar-TAM le-OT al ya-DE-cha", english: "And you shall bind them as a sign upon your hand" },
           { hebrew: "וְהָיוּ לְטֹטָפֹת בֵּין עֵינֶיךָ", transliteration: "vehayu letotafot bein einecha", stress: "ve-HA-yu le-to-ta-FOT bein ei-NE-cha", english: "and they shall be as frontlets between your eyes" },
           { hebrew: "וּכְתַבְתָּם עַל מְזֻזוֹת בֵּיתֶךָ וּבִשְׁעָרֶיךָ", transliteration: "uchtavtam al mezuzot beitecha uvisharecha", stress: "uch-tav-TAM al me-zu-ZOT bei-TE-cha u-vi-sha-RE-cha", english: "And you shall write them on the doorposts of your house and on your gates" }
@@ -867,6 +867,7 @@
       recognition.onstart = () => {
         isListening = true;
         accumulatedFinal = '';
+        recognition._lastInterim = '';
         micBtn.classList.add('listening');
         micStatus.textContent = srMode === 'manual' ? 'Listening — click mic to stop' : 'Listening... speak now';
         micStatus.classList.add('listening');
@@ -886,7 +887,9 @@
           }
         }
 
+        // Track last interim as fallback if no finals committed
         if (interimTranscript) {
+          recognition._lastInterim = interimTranscript;
           micStatus.textContent = 'Hearing: ' + (accumulatedFinal ? accumulatedFinal + ' ' : '') + interimTranscript;
           micStatus.classList.remove('listening');
           micStatus.classList.add('processing');
@@ -894,7 +897,7 @@
 
         // In auto mode, process as soon as we get a final result
         // In manual mode, wait until the user stops (mic click triggers processResult)
-        if (!recognition.continuous && accumulatedFinal) {
+        if (srMode === 'auto' && accumulatedFinal) {
           processResult(accumulatedFinal);
           accumulatedFinal = '';
         }
@@ -902,8 +905,9 @@
 
       // Expose accumulatedFinal for manual mode processing
       recognition._getAccumulated = () => {
-        const result = accumulatedFinal;
+        const result = accumulatedFinal || recognition._lastInterim || '';
         accumulatedFinal = '';
+        recognition._lastInterim = '';
         return result;
       };
 
@@ -927,18 +931,40 @@
       recognition.onend = () => {
         isListening = false;
         micBtn.classList.remove('listening');
-        if (micStatus.classList.contains('listening')) {
-          micStatus.textContent = 'Click to start recording';
-        }
+        micBtn.textContent = '🎤';
         micStatus.classList.remove('listening', 'processing');
+
+        // If this was a manual stop, process whatever was accumulated
+        if (recognition._manualStop && recognition._getAccumulated) {
+          const accumulated = recognition._getAccumulated();
+          recognition._manualStop = false;
+          if (accumulated) {
+            processResult(accumulated);
+            return;
+          }
+        }
+
+        // Auto mode fallback: if SR ended without firing final result, process what we have
+        if (srMode === 'auto' && recognition._getAccumulated) {
+          const accumulated = recognition._getAccumulated();
+          if (accumulated) {
+            processResult(accumulated);
+            return;
+          }
+        }
+
+        if (!feedbackMessage || feedbackMessage.classList.contains('hidden')) {
+          micStatus.textContent = 'Click microphone to start';
+        }
       };
     }
 
     // Normalize Hebrew text for comparison
     function normalizeHebrew(text) {
       return text
-        // STEP 1: Remove nikkud
+        // STEP 1: Remove nikkud and reading aids
         .replace(/[\u0591-\u05C7]/g, '')
+        .replace(/-/g, ' ')  // strip hyphens (reading aids) → space
         // STEP 2: Divine names
         .replace(/יהוה/g, 'אדני')
         .replace(/אדוני/g, 'אדני')
@@ -978,23 +1004,49 @@
         .replace(/לחברה/g, 'להחבירה')
         .replace(/לחפירה/g, 'להחבירה')
         .replace(/ישראלי/g, 'ישראל')
-        .replace(/ובשכבה/g, 'ובשכבך')
+        .replace(/ובשכבה/g, 'שכבך')
         .replace(/ונעלו/g, 'ונעלז')
-        .replace(/שוכב/g, 'ובשכבך')
-        .replace(/שחמט/g, 'ובשכבך')
-        .replace(/שפך/g, 'ובשכבך')
-        .replace(/שכח ובקומך/g, 'ובשכבך ובקומך')
-        .replace(/חופשה ובקומך/g, 'ובשכבך ובקומך')
-        .replace(/הוא שחתך ובקומך/g, 'ובשכבך ובקומך')
-        .replace(/הוא שכחה ובקומך/g, 'ובשכבך ובקומך')
+        // Two-token normalisers for וּבְ-שָׁכְבְּךָ
+        // Token 1: SR outputs for "uv" sound → וב
+        .replace(/\bאוף\b/g, 'וב')
+        .replace(/\bעוף\b/g, 'וב')
+        .replace(/\bאוב\b/g, 'וב')
+        .replace(/\bאב\b/g, 'וב')
+        // Token 2: SR variants of שָׁכְבְּךָ — full-word combined forms first
+        .replace(/ובשוכבך/g, 'וב שכבך')
+        .replace(/ובשכבה/g, 'וב שכבך')
+        .replace(/בשוכבך/g, 'וב שכבך')
+        .replace(/בשכבך/g, 'וב שכבך')
+        .replace(/ובשכבך/g, 'וב שכבך')
+        .replace(/משכבך/g, 'וב שכבך')
+        // שוכבך not already preceded by וב
+        .replace(/(?<!וב )שוכבך/g, 'וב שכבך')
+        // Standalone שכבך not already preceded by וב
+        .replace(/(?<!וב )שכבך/g, 'וב שכבך')
+        // Standalone שוכב → שכבך then re-run above
+        .replace(/(?<![א-ת])שוכב(?![א-ת])/g, 'שכבך')
+        .replace(/(?<!וב )שכבך/g, 'וב שכבך')
+        // Other mishearings
+        .replace(/שחמט/g, 'שכבך')
+        .replace(/(?<!וב )שכבך/g, 'וב שכבך')
+        .replace(/שפך/g, 'שכבך')
+        .replace(/(?<!וב )שכבך/g, 'וב שכבך')
+        .replace(/שך בך/g, 'שכבך')
+        .replace(/(?<!וב )שכבך/g, 'וב שכבך')
+        .replace(/שכח ובקומך/g, 'וב שכבך ובקומך')
+        .replace(/חופשה ובקומך/g, 'וב שכבך ובקומך')
+        .replace(/שכפחה ובקומך/g, 'שכבך ובקומך')
+        .replace(/המשך ובקומך/g, 'וב שכבך ובקומך')
+        .replace(/הוא שחתך ובקומך/g, 'וב שכבך ובקומך')
+        .replace(/הוא שכחה ובקומך/g, 'וב שכבך ובקומך')
+        .replace(/[וא]ו?ב? שכבך ובקומך/g, 'וב שכבך ובקומך')
         .replace(/בשבטך בביתך/g, 'בשבתך בביתך')
         .replace(/עלי אסור ועלי/g, 'עלי עשור ועלי')
         .replace(/שמחתני אדני אליך/g, 'שמחתני אדני בפעלך')
         .replace(/ולא הבלטה/g, 'ולא עולתה')
         .replace(/אולמר לשמך/g, 'ולזמר לשמך')
-        .replace(/זמר לשמך/g, 'ולזמר לשמך')
         .replace(/אול זמר לשמך/g, 'ולזמר לשמך')
-        .replace(/[וא]ו?ב? שכבך ובקומך/g, 'ובשכבך ובקומך')
+        .replace(/(^| )זמר לשמך/g, '$1ולזמר לשמך')
         .replace(/ידיך/g, 'ידך')
         .replace(/שמיים/g, 'שמים')
         .replace(/שפתיי/g, 'שפתי')
@@ -1032,12 +1084,10 @@
         .replace(/וצבענו/g, 'וצונו')
         .replace(/וציוונו/g, 'וצונו')
         .replace(/וציבנו/g, 'וצונו')
-        .replace(/לעת/g, 'עת')
-        .replace(/ליד/g, 'עת')
-        .replace(/לית/g, 'עת')
-        .replace(/לאת/g, 'עת')
-        .replace(/לת/g, 'עת')
-        .replace(/^את /, 'עת ')
+        .replace(/ לעת /g, ' עת ').replace(/^לעת /, 'עת ')
+        .replace(/ ליד /g, ' עת ').replace(/^ליד /, 'עת ')
+        .replace(/ לית /g, ' עת ').replace(/^לית /, 'עת ')
+        .replace(/ לת /g, ' עת ').replace(/^לת /, 'עת ')
         .replace(/ את /g, ' עת ')
         .replace(/נאסר/g, 'נעשה')
         .replace(/נעזר/g, 'נעשה')
@@ -1064,7 +1114,7 @@
       const heardWords = heardNorm.split(' ').filter(w => w);
       const expectedWords = expectedNorm.split(' ').filter(w => w);
       const heardOriginal = heard.replace(/[\u0591-\u05C7]/g, '').split(' ').filter(w => w);
-      const expectedOriginal = expected.split(' ').filter(w => w);
+      const expectedOriginal = expected.replace(/-/g, ' ').split(' ').filter(w => w);
       
       // Build similarity matrix
       const H = heardWords.length;
@@ -1136,8 +1186,8 @@
           const eo = expectedOriginal[a.e] || expectedWords[a.e];
           results.push({ type: 'missing', expectedOrig: eo });
         } else {
-          const ho = heardOriginal[a.h] || heardWords[a.h];
-          results.push({ type: 'extra', heardOrig: ho });
+          const ho = heardOriginal[a.h]; // don't fall back to normalised form
+          if (ho) results.push({ type: 'extra', heardOrig: ho });
         }
       }
       
@@ -1180,11 +1230,17 @@
       const expected = line.hebrew;
       
       micStatus.textContent = 'Processing...';
+      micStatus.classList.remove('listening', 'processing');
+      isListening = false;
+      micBtn.classList.remove('listening');
+      micBtn.textContent = '🎤';
       
       const comparison = compareHebrew(transcript, expected);
-      
+      const isCorrect = comparison.score >= 0.85;
+      const isPerfect = comparison.score >= 1.0;
+
       // Show detailed results below
-      heardText.innerHTML = renderHeard(comparison.results);
+      heardText.innerHTML = renderHeard(comparison.results, isPerfect);
       expectedText.innerHTML = renderExpected(comparison.results);
       transliterationHint.textContent = 'Transliteration: ' + (line.stress || line.transliteration);
       englishMeaning.textContent = 'Meaning: ' + line.english;
@@ -1199,9 +1255,6 @@
         notesEl.classList.add('hidden');
       }
       
-      const isCorrect = comparison.score >= 0.85;
-      const isPerfect = comparison.score >= 1.0;
-
       // In manual mode, stop SR after result is processed
       if (srMode === 'manual' && recognition) {
         try { recognition.stop(); } catch(e) {}
@@ -1220,6 +1273,7 @@
       resultsArea.classList.remove('hidden');
       
       micStatus.textContent = 'Click microphone to try again';
+      micStatus.classList.remove('listening', 'processing');
       
       // Auto-advance on perfect score (auto mode only — manual requires mic click)
       if (isPerfect && srMode === 'auto') {
@@ -1247,7 +1301,7 @@
 
     // Convert Hebrew consonants to transliteration (approximate, without nikkud)
     // Render heard text with highlighting (wrong words in red)
-    function renderHeard(results) {
+    function renderHeard(results, isPerfect) {
       return results.map(r => {
         if (r.type === 'match') {
           return `<span class="word-match">${r.heardOrig}</span>`;
@@ -1256,7 +1310,9 @@
         } else if (r.type === 'mismatch') {
           return `<span class="word-error">${r.heardOrig}</span>`;
         } else if (r.type === 'extra') {
-          return `<span class="word-extra">${r.heardOrig}</span>`;
+          return isPerfect
+            ? `<span class="word-match" style="opacity:0.5;">${r.heardOrig}</span>`
+            : `<span class="word-extra">${r.heardOrig}</span>`;
         } else {
           return ''; // missing words - don't show in heard
         }
@@ -1401,16 +1457,9 @@
       if (!recognition) return;
       
       if (isListening) {
-        // In manual mode, process accumulated results on stop
-        if (srMode === 'manual' && recognition._getAccumulated) {
-          const accumulated = recognition._getAccumulated();
-          try { recognition.stop(); } catch(e) {}
-          if (accumulated) {
-            processResult(accumulated);
-          }
-        } else {
-          try { recognition.stop(); } catch(e) {}
-        }
+        // Flag that this was a manual stop so onend can process
+        recognition._manualStop = (srMode === 'manual');
+        try { recognition.stop(); } catch(e) {}
       } else {
         resultsArea.classList.add('hidden');
         feedbackMessage.classList.add('hidden');
@@ -1418,6 +1467,7 @@
         document.getElementById('pronunciation-notes').classList.add('hidden');
         micStatus.textContent = srMode === 'manual' ? 'Listening — click mic to stop' : 'Listening...';
         recognition.continuous = (srMode === 'manual');
+        recognition._manualStop = false;
         recognition.start();
       }
     });
