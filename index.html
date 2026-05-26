@@ -827,6 +827,7 @@
     let incorrectCount = 0;
     let recognition = null;
     let isListening = false;
+    let accumulatedFinal = '';
 
     // Elements
     const prayerBtns = document.querySelectorAll('.prayer-btn');
@@ -862,8 +863,6 @@
       recognition.maxAlternatives = 3;
 
       // Accumulate finals across continuous session
-      let accumulatedFinal = '';
-
       recognition.onstart = () => {
         isListening = true;
         accumulatedFinal = '';
@@ -1380,7 +1379,11 @@
 
     // Show current line
     function showLine() {
-      // Stop any playing audio
+      // Stop SR and any playing audio
+      if (isListening && recognition) {
+        try { recognition.stop(); } catch(e) {}
+      }
+      accumulatedFinal = '';
       if (currentAudio) {
         currentAudio.pause();
         currentAudio = null;
