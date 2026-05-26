@@ -808,6 +808,7 @@
     let currentPrayer = "hadlakat-nerot";
     let currentLineIndex = 0;
     let srMode = 'auto'; // 'auto' or 'manual'
+    let isAdvancing = false; // true during auto-advance delay, blocks new SR results
 
     function setSRMode(mode) {
       srMode = mode;
@@ -1224,6 +1225,8 @@
 
     // Process speech recognition result
     function processResult(transcript) {
+      // Ignore results during auto-advance delay
+      if (isAdvancing) return;
       const prayer = prayers[currentPrayer];
       const line = prayer.lines[currentLineIndex];
       const expected = line.hebrew;
@@ -1276,6 +1279,7 @@
       
       // Auto-advance on perfect score (auto mode only — manual requires mic click)
       if (isPerfect && srMode === 'auto') {
+        isAdvancing = true;
         setTimeout(() => nextLine(), 3000);
       }
     }
@@ -1380,6 +1384,7 @@
     // Show current line
     function showLine() {
       // Stop SR and any playing audio
+      isAdvancing = false;
       if (isListening && recognition) {
         try { recognition.stop(); } catch(e) {}
       }
