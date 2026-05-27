@@ -898,8 +898,10 @@
         // In auto mode, process as soon as we get a final result
         // In manual mode, wait until the user stops (mic click triggers processResult)
         if (srMode === 'auto' && accumulatedFinal) {
-          processResult(accumulatedFinal);
+          const toProcess = accumulatedFinal;
           accumulatedFinal = '';
+          recognition._lastInterim = '';
+          processResult(toProcess);
         }
       };
 
@@ -945,7 +947,7 @@
         }
 
         // Auto mode fallback: if SR ended without firing final result, process what we have
-        if (srMode === 'auto' && recognition._getAccumulated) {
+        if (srMode === 'auto' && !isAdvancing && recognition._getAccumulated) {
           const accumulated = recognition._getAccumulated();
           if (accumulated) {
             processResult(accumulated);
