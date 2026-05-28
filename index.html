@@ -405,6 +405,9 @@
           <li style="counter-increment: steps;"><span style="color: var(--gold); font-weight: bold; margin-right: 8px;">7.</span>Use the <strong>SR Auto / Manual</strong> toggle to control listening — Auto stops after a pause; Manual keeps listening until you click the mic again</li>
         </ol>
         <p style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #30363d; color: #8b949e; font-size: 0.85rem; line-height: 1.6;">
+          Some prayers have sung versions available — press the <strong style="color: var(--silver);">🎵 Sung Version</strong> button to listen. These are continuous recordings; use <strong style="color: var(--silver);">Skip →</strong> to follow along line by line.
+        </p>
+        <p style="margin-top: 10px; color: #8b949e; font-size: 0.85rem; line-height: 1.6;">
           <strong style="color: var(--silver);">Please note:</strong> this checks words, not pronunciation details. Differences like ח vs ה cannot be detected — use the Listen button to compare your pronunciation.
         </p>
         <div style="text-align: center; margin-top: 24px;">
@@ -453,7 +456,7 @@
 
         <!-- Sung version button - shown only for L'cha Dodi -->
         <div id="sung-version-bar" class="hidden" style="text-align: center; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid #30363d;">
-          <button id="sung-version-btn" style="padding: 8px 22px; border: 1px solid var(--gold-dim); background: transparent; color: var(--gold); font-family: 'Crimson Pro', serif; font-size: 0.95rem; border-radius: 6px; cursor: pointer; transition: all 0.2s;">🎵 Sung version</button>
+          <button id="sung-version-btn" style="padding: 8px 22px; border: 1px solid var(--gold-dim); background: transparent; color: var(--gold); font-family: 'Crimson Pro', serif; font-size: 0.95rem; border-radius: 6px; cursor: pointer; transition: all 0.2s;">🎵 Sung Version</button>
         </div>
 
         <!-- Feedback banner - appears after attempt, above Hebrew -->
@@ -1533,40 +1536,45 @@
       if (currentPrayer === 'lecha-dodi') {
         sungBar.classList.remove('hidden');
         sungBtn.dataset.src = 'audio/lecha-dodi/full.mp3';
-        sungBtn.dataset.label = '🎵 Sung version';
+        sungBtn.dataset.label = '🎵 Sung Version';
         sungBtn.textContent = sungBtn.dataset.label;
       } else if (currentPrayer === 'mizmor-shir') {
         sungBar.classList.remove('hidden');
         sungBtn.dataset.src = 'audio/mizmor-shir/tzadik.mp3';
-        sungBtn.dataset.label = '🎵 Sung version (lines 12–18)';
+        sungBtn.dataset.label = '🎵 Sung Version (lines 12–18)';
         sungBtn.textContent = sungBtn.dataset.label;
       } else if (currentPrayer === 'shalom-aleichem') {
         sungBar.classList.remove('hidden');
         sungBtn.dataset.src = 'audio/shalom-aleichem/full.mp3';
-        sungBtn.dataset.label = '🎵 Sung version';
+        sungBtn.dataset.label = '🎵 Sung Version';
+        sungBtn.textContent = sungBtn.dataset.label;
+      } else if (currentPrayer === 'aleinu') {
+        sungBar.classList.remove('hidden');
+        sungBtn.dataset.src = 'audio/aleinu/full.mp3';
+        sungBtn.dataset.label = '🎵 Sung Version';
         sungBtn.textContent = sungBtn.dataset.label;
       } else {
         sungBar.classList.add('hidden');
         if (sungAudio) { sungAudio.pause(); sungAudio = null; }
-        sungBtn.textContent = '🎵 Sung version';
+        sungBtn.textContent = '🎵 Sung Version';
       }
     }
     sungBtn.addEventListener('click', () => {
       if (sungAudio && !sungAudio.paused) {
         sungAudio.pause();
-        sungBtn.textContent = sungBtn.dataset.label || '🎵 Sung version';
+        sungBtn.textContent = sungBtn.dataset.label || '🎵 Sung Version';
       } else {
         if (!sungAudio) {
           sungAudio = new Audio(sungBtn.dataset.src);
           sungAudio.onended = () => {
-            sungBtn.textContent = sungBtn.dataset.label || '🎵 Sung version';
+            sungBtn.textContent = sungBtn.dataset.label || '🎵 Sung Version';
           };
           sungAudio.onerror = () => {
-            sungBtn.textContent = (sungBtn.dataset.label || '🎵 Sung version') + ' (not yet available)';
+            sungBtn.textContent = (sungBtn.dataset.label || '🎵 Sung Version') + ' (not yet available)';
           };
         }
         sungAudio.play().catch(() => {
-          sungBtn.textContent = (sungBtn.dataset.label || '🎵 Sung version') + ' (not yet available)';
+          sungBtn.textContent = (sungBtn.dataset.label || '🎵 Sung Version') + ' (not yet available)';
         });
         sungBtn.textContent = '⏸ Playing...';
       }
