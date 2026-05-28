@@ -438,6 +438,7 @@
         <button class="prayer-btn" data-prayer="mizmor-shir">Mizmor Shir</button>
         <button class="prayer-btn" data-prayer="lecha-dodi">L'cha Dodi</button>
         <button class="prayer-btn" data-prayer="barchu">Barchu</button>
+        <button class="prayer-btn" data-prayer="ahavat-olam">Ahavat Olam</button>
         <button class="prayer-btn" data-prayer="shema">Shema</button>
         <button class="prayer-btn" data-prayer="vshamru">V'shamru</button>
         <button class="prayer-btn" data-prayer="amida">Amida</button>
@@ -696,7 +697,7 @@
         ]
       },
 
-      "barchu": {
+            "barchu": {
         name: "Barchu",
         lines: [
           { hebrew: "בָּרְכוּ אֶת יְהוָה הַמְּבֹרָךְ", transliteration: "barchu et adonai hamvorach", stress: "bar-CHU et a-do-NAI ham-vo-RACH", english: "Bless the Lord who is blessed" },
@@ -716,7 +717,13 @@
           { hebrew: "וּמַעֲבִיר יוֹם וּמֵבִיא לָיְלָה", transliteration: "umaavir yom umeivi layla", stress: "u-ma-a-VIR yom u-mei-VI LAY-la", english: "He makes the day pass and brings on the night" },
           { hebrew: "וּמַבְדִּיל בֵּין יוֹם וּבֵין לָיְלָה", transliteration: "umavdil bein yom uvein layla", stress: "u-mav-DIL bein yom u-VEIN LAY-la", english: "and separates between day and night" },
           { hebrew: "יְהוָה צְבָאוֹת שְׁמוֹ", transliteration: "adonai tzvaot shmo", stress: "a-do-NAI tzva-OT shMO", english: "Lord of Hosts is His name" },
-          { hebrew: "בָּרוּךְ אַתָּה יְהוָה הַמַּעֲרִיב עֲרָבִים", transliteration: "baruch ata adonai hamaariv aravim", stress: "ba-RUCH a-TA a-do-NAI ha-ma-a-RIV a-ra-VIM", english: "Blessed are You, Lord, who brings on the evening twilight" },
+          { hebrew: "בָּרוּךְ אַתָּה יְהוָה הַמַּעֲרִיב עֲרָבִים", transliteration: "baruch ata adonai hamaariv aravim", stress: "ba-RUCH a-TA a-do-NAI ha-ma-a-RIV a-ra-VIM", english: "Blessed are You, Lord, who brings on the evening twilight" }
+        ]
+      },
+
+      "ahavat-olam": {
+        name: "Ahavat Olam",
+        lines: [
           { hebrew: "אַהֲבַת עוֹלָם בֵּית יִשְׂרָאֵל עַמְּךָ אָהַבְתָּ", transliteration: "ahavat olam beit yisrael amcha ahavta", stress: "a-ha-VAT o-LAM beit yis-ra-EL am-CHA a-hav-TA", english: "With endless love You have loved the house of Israel, Your people" },
           { hebrew: "תּוֹרָה וּמִצְווֹת חֻקִּים וּמִשְׁפָּטִים אוֹתָנוּ לִמַּדְתָּ", transliteration: "torah umitzvot chukim umishpatim otanu limadta", stress: "to-RA u-mitz-VOT chu-KIM u-mish-pa-TIM o-TA-nu li-mad-TA", english: "You have taught us Law and commandments, statutes and judgements" },
           { hebrew: "עַל כֵּן יְהוָה אֱלֹהֵינוּ", transliteration: "al ken adonai eloheinu", stress: "al KEN a-do-NAI e-lo-HEI-nu", english: "Therefore, Lord our God" },
@@ -1520,31 +1527,46 @@
     const sungBtn = document.getElementById('sung-version-btn');
 
     function updateSungVersionBar() {
+      // Stop any playing audio when switching
+      if (sungAudio) { sungAudio.pause(); sungAudio = null; }
+
       if (currentPrayer === 'lecha-dodi') {
         sungBar.classList.remove('hidden');
+        sungBtn.dataset.src = 'audio/lecha-dodi/full.mp3';
+        sungBtn.dataset.label = '🎵 Sung version';
+        sungBtn.textContent = sungBtn.dataset.label;
+      } else if (currentPrayer === 'mizmor-shir') {
+        sungBar.classList.remove('hidden');
+        sungBtn.dataset.src = 'audio/mizmor-shir/tzadik.mp3';
+        sungBtn.dataset.label = '🎵 Sung version (lines 12–18)';
+        sungBtn.textContent = sungBtn.dataset.label;
+      } else if (currentPrayer === 'shalom-aleichem') {
+        sungBar.classList.remove('hidden');
+        sungBtn.dataset.src = 'audio/shalom-aleichem/full.mp3';
+        sungBtn.dataset.label = '🎵 Sung version';
+        sungBtn.textContent = sungBtn.dataset.label;
       } else {
         sungBar.classList.add('hidden');
         if (sungAudio) { sungAudio.pause(); sungAudio = null; }
         sungBtn.textContent = '🎵 Sung version';
       }
     }
-
     sungBtn.addEventListener('click', () => {
       if (sungAudio && !sungAudio.paused) {
         sungAudio.pause();
-        sungBtn.textContent = '🎵 Sung version';
+        sungBtn.textContent = sungBtn.dataset.label || '🎵 Sung version';
       } else {
         if (!sungAudio) {
-          sungAudio = new Audio('audio/lecha-dodi/full.mp3');
+          sungAudio = new Audio(sungBtn.dataset.src);
           sungAudio.onended = () => {
-            sungBtn.textContent = '🎵 Sung version';
+            sungBtn.textContent = sungBtn.dataset.label || '🎵 Sung version';
           };
           sungAudio.onerror = () => {
-            sungBtn.textContent = '🎵 Sung version (not yet available)';
+            sungBtn.textContent = (sungBtn.dataset.label || '🎵 Sung version') + ' (not yet available)';
           };
         }
         sungAudio.play().catch(() => {
-          sungBtn.textContent = '🎵 Sung version (not yet available)';
+          sungBtn.textContent = (sungBtn.dataset.label || '🎵 Sung version') + ' (not yet available)';
         });
         sungBtn.textContent = '⏸ Playing...';
       }
