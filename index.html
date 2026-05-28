@@ -450,6 +450,11 @@
         <div class="quiz-card">
           <div id="quiz-area">
 
+        <!-- Sung version button - shown only for L'cha Dodi -->
+        <div id="sung-version-bar" class="hidden" style="text-align: center; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid #30363d;">
+          <button id="sung-version-btn" style="padding: 8px 22px; border: 1px solid var(--gold-dim); background: transparent; color: var(--gold); font-family: 'Crimson Pro', serif; font-size: 0.95rem; border-radius: 6px; cursor: pointer; transition: all 0.2s;">🎵 Sung version</button>
+        </div>
+
         <!-- Feedback banner - appears after attempt, above Hebrew -->
         <div class="feedback-message hidden" id="feedback-message"></div>
 
@@ -554,10 +559,11 @@
           { hebrew: "כִּי הִיא מְקוֹר הַבְּרָכָה", transliteration: "ki hi mekor habracha", stress: "ki hi me-KOR ha-bra-CHA", english: "For she is the source of blessing" },
           { hebrew: "מֵרֹאשׁ מִקֶּדֶם נְסוּכָה", transliteration: "merosh mikedem nesucha", stress: "me-ROSH mi-KE-dem ne-su-CHA", english: "From the beginning, from of old, she was chosen" },
           { hebrew: "סוֹף מַעֲשֶׂה בְּמַחֲשָׁבָה תְּחִלָּה", transliteration: "sof maaseh bemachshava tchila", stress: "sof ma-a-SEH be-mach-sha-VA tchi-LA", english: "Last in deed, first in thought" },
-          { hebrew: "בָּאִי בְשָׁלוֹם עֲטֶרֶת בַּעְלָהּ", transliteration: "boi veshalom ateret baala", stress: "bo-I ve-sha-LOM a-TE-ret ba-a-LA", english: "Come in peace, crown of her husband" },
+          { hebrew: "בּוֹאִי בְשָׁלוֹם עֲטֶרֶת בַּעְלָהּ", transliteration: "boi veshalom ateret baala", stress: "bo-I ve-sha-LOM a-TE-ret ba-a-LA", english: "Come in peace, crown of her husband" },
           { hebrew: "גַּם בְּשִׂמְחָה וּבְצָהֳלָה", transliteration: "gam besimcha uvtzhala", stress: "gam be-sim-CHA uv-tzha-LA", english: "With joy and jubilation" },
           { hebrew: "תּוֹךְ אֱמוּנֵי עַם סְגֻלָּה", transliteration: "toch emunei am segula", stress: "toch e-mu-NEI am se-gu-LA", english: "Among the faithful of the treasured people" },
-          { hebrew: "בָּאִי כַלָּה בָּאִי כַלָּה", transliteration: "boi chala boi chala", stress: "bo-I cha-LA bo-I cha-LA", english: "Come, O bride! Come, O bride!" }
+          { hebrew: "בּוֹאִי כַלָּה בּוֹאִי כַלָּה", transliteration: "boi chala boi chala", stress: "bo-I cha-LA bo-I cha-LA", english: "Come, O bride! Come, O bride!",
+            notes: ["<strong>כַלָּה</strong> — pronounce <em>cha-LA</em> with a guttural ח, not <em>ka-LA</em>. The quiz cannot distinguish the two, but use ח for correct pronunciation."] }
         ]
       },
       "adon-olam": {
@@ -1043,6 +1049,7 @@
         .replace(/הוא שחתך ובקומך/g, 'וב שכבך ובקומך')
         .replace(/הוא שכחה ובקומך/g, 'וב שכבך ובקומך')
         .replace(/[וא]ו?ב? שכבך ובקומך/g, 'וב שכבך ובקומך')
+        .replace(/ושלום עטרת/g, 'בשלום עטרת')
         .replace(/בשבטך בביתך/g, 'בשבתך בביתך')
         .replace(/עלי אסור ועלי/g, 'עלי עשור ועלי')
         .replace(/שמחתני אדני אליך/g, 'שמחתני אדני בפעלך')
@@ -1457,6 +1464,7 @@
       completion.classList.add('hidden');
       showLine();
       updateListenButton();
+      updateSungVersionBar();
     }
 
     // Event listeners
@@ -1506,6 +1514,42 @@
 
     restartBtn.addEventListener('click', () => switchPrayer(currentPrayer));
 
+    // Sung version button
+    let sungAudio = null;
+    const sungBar = document.getElementById('sung-version-bar');
+    const sungBtn = document.getElementById('sung-version-btn');
+
+    function updateSungVersionBar() {
+      if (currentPrayer === 'lecha-dodi') {
+        sungBar.classList.remove('hidden');
+      } else {
+        sungBar.classList.add('hidden');
+        if (sungAudio) { sungAudio.pause(); sungAudio = null; }
+        sungBtn.textContent = '🎵 Sung version';
+      }
+    }
+
+    sungBtn.addEventListener('click', () => {
+      if (sungAudio && !sungAudio.paused) {
+        sungAudio.pause();
+        sungBtn.textContent = '🎵 Sung version';
+      } else {
+        if (!sungAudio) {
+          sungAudio = new Audio('audio/lecha-dodi/full.mp3');
+          sungAudio.onended = () => {
+            sungBtn.textContent = '🎵 Sung version';
+          };
+          sungAudio.onerror = () => {
+            sungBtn.textContent = '🎵 Sung version (not yet available)';
+          };
+        }
+        sungAudio.play().catch(() => {
+          sungBtn.textContent = '🎵 Sung version (not yet available)';
+        });
+        sungBtn.textContent = '⏸ Playing...';
+      }
+    });
+
     // Load voices
     if ('speechSynthesis' in window) {
       window.speechSynthesis.getVoices();
@@ -1531,6 +1575,7 @@
     // Initialize
     showLine();
     updateListenButton();
+    updateSungVersionBar();
 
     // Welcome screen
   </script>
