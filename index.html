@@ -1583,48 +1583,52 @@
     }
     let sungPlaying = false;
 
-    sungBtn.addEventListener('click', () => {
-      if (sungPlaying && sungAudio) {
-        sungAudio.pause();
-        sungPlaying = false;
-        sungBtn.textContent = sungBtn.dataset.label || '🎵 Sung Version';
+    function resetSungBtn(unavailable) {
+      sungPlaying = false;
+      if (unavailable) {
+        sungBtn.textContent = (sungBtn.dataset.label || '🎵 Sung Version') + ' (not yet available)';
       } else {
-        sungBtn.textContent = '⏸ Playing...';
-        sungPlaying = true;
-        if (!sungAudio) {
-          const src = sungBtn.dataset.src;
-          const srcM4a = src.replace('.mp3', '.m4a');
-          function trySung(path, fallback) {
-            sungAudio = new Audio(path);
-            sungAudio.onended = () => {
-              sungPlaying = false;
-              sungBtn.textContent = sungBtn.dataset.label || '🎵 Sung Version';
-            };
-            sungAudio.onerror = () => {
-              if (fallback) {
-                trySung(fallback, null);
-              } else {
-                sungAudio = null;
-                sungPlaying = false;
-                sungBtn.textContent = (sungBtn.dataset.label || '🎵 Sung Version') + ' (not yet available)';
-              }
-            };
-            sungAudio.play().catch(() => {
-              if (fallback) { trySung(fallback, null); }
-              else {
-                sungAudio = null;
-                sungPlaying = false;
-                sungBtn.textContent = (sungBtn.dataset.label || '🎵 Sung Version') + ' (not yet available)';
-              }
-            });
+        sungBtn.textContent = sungBtn.dataset.label || '🎵 Sung Version';
+      }
+    }
+
+    sungBtn.addEventListener('click', () => {
+      // If playing OR stuck in a playing state, always allow pause/reset
+      if (sungPlaying) {
+        if (sungAudio) sungAudio.pause();
+        resetSungBtn(false);
+        return;
+      }
+
+      sungBtn.textContent = '⏸ Playing...';
+      sungPlaying = true;
+
+      function trySung(path, fallback) {
+        sungAudio = new Audio(path);
+        sungAudio.onended = () => resetSungBtn(false);
+        sungAudio.onerror = () => {
+          if (fallback) {
+            trySung(fallback, null);
+          } else {
+            sungAudio = null;
+            resetSungBtn(true);
           }
-          trySung(src, srcM4a);
-        } else {
-          sungAudio.play().catch(() => {
-            sungPlaying = false;
-            sungBtn.textContent = sungBtn.dataset.label || '🎵 Sung Version';
-          });
-        }
+        };
+        sungAudio.play().catch(() => {
+          if (fallback) {
+            trySung(fallback, null);
+          } else {
+            sungAudio = null;
+            resetSungBtn(true);
+          }
+        });
+      }
+
+      if (!sungAudio) {
+        const src = sungBtn.dataset.src;
+        trySung(src, src.replace('.mp3', '.m4a'));
+      } else {
+        sungAudio.play().catch(() => resetSungBtn(false));
       }
     });
 
