@@ -411,6 +411,9 @@
           Audio recordings of Aleinu, L'cha Dodi, Shalom Aleichem, and Tzadik Katamar are provided courtesy of Yoav Oved, whose beautiful voice continues to inspire us. All rights of reproduction reserved.
         </p>
         <p style="margin-top: 10px; color: #8b949e; font-size: 0.85rem; line-height: 1.6;">
+          Mizmor Shir and other audio kindly provided by Julieta Kunik, <em>la miglior fabbro</em>. All rights reserved.
+        </p>
+        <p style="margin-top: 10px; color: #8b949e; font-size: 0.85rem; line-height: 1.6;">
           <strong style="color: var(--silver);">Please note:</strong> this checks words, not pronunciation details. Differences like ח vs ה cannot be detected — use the Listen button to compare your pronunciation.
         </p>
         <div style="text-align: center; margin-top: 24px;">
@@ -1549,6 +1552,11 @@
       if (currentPrayer === 'lecha-dodi') {
         sungBar.classList.remove('hidden');
         sungBtn.dataset.src = 'audio/lecha-dodi/full.mp3';
+        sungBtn.dataset.label = '🎵 Sung Version';
+        sungBtn.textContent = sungBtn.dataset.label;
+      } else if (currentPrayer === 'mizmor-shir') {
+        sungBar.classList.remove('hidden');
+        sungBtn.dataset.src = 'audio/mizmor-shir/full.mp3';
         sungBtn.dataset.label = '🎵 Sung Version';
         sungBtn.textContent = sungBtn.dataset.label;
       } else if (currentPrayer === 'tzadik-katamar') {
