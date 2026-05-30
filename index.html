@@ -408,16 +408,13 @@
           Some prayers have sung versions available — press the <strong style="color: var(--silver);">🎵 Sung Version</strong> button to listen. These are continuous recordings; use <strong style="color: var(--silver);">Skip →</strong> to follow along line by line.
         </p>
         <p style="margin-top: 10px; color: #8b949e; font-size: 0.85rem; line-height: 1.6;">
-          Audio recordings of Aleinu, L'cha Dodi, Shalom Aleichem, and Tzadik Katamar are provided courtesy of Yoav Oved, whose beautiful voice continues to inspire us. All rights of reproduction reserved.
-        </p>
-        <p style="margin-top: 10px; color: #8b949e; font-size: 0.85rem; line-height: 1.6;">
-          Mizmor Shir and other audio kindly provided by Julieta Kunik, <em>la miglior fabbro</em>. All rights reserved.
+          Audio recordings kindly provided by Yoav Oved and Julieta Kunik.
         </p>
         <p style="margin-top: 10px; color: #8b949e; font-size: 0.85rem; line-height: 1.6;">
           <strong style="color: var(--silver);">Please note:</strong> this checks words, not pronunciation details. Differences like ח vs ה cannot be detected — use the Listen button to compare your pronunciation.
         </p>
         <div style="text-align: center; margin-top: 24px;">
-          <button onclick="document.getElementById('welcome-screen').classList.add('hidden'); document.getElementById('main-layout').classList.remove('hidden');" style="background: var(--gold); color: #000; border: none; border-radius: 8px; padding: 14px 40px; font-size: 1.1rem; font-family: inherit; cursor: pointer;">Begin →</button>
+          <button id="begin-btn" style="background: var(--gold); color: #000; border: none; border-radius: 8px; padding: 14px 40px; font-size: 1.1rem; font-family: inherit; cursor: pointer;">Begin →</button>
         </div>
       </div>
     </div>
@@ -1037,35 +1034,29 @@
         .replace(/לחברה/g, 'להחבירה')
         .replace(/לחפירה/g, 'להחבירה')
         .replace(/ישראלי/g, 'ישראל')
-        .replace(/ובשכבה/g, 'שכבך')
         .replace(/ונעלו/g, 'ונעלז')
-        // Two-token normalisers for וּבְ-שָׁכְבְּךָ
-        // Token 1: SR outputs for "uv" sound → וב
-        .replace(/\bאוף\b/g, 'וב')
-        .replace(/\bעוף\b/g, 'וב')
-        .replace(/\bאוב\b/g, 'וב')
-        .replace(/\bאב\b/g, 'וב')
-        // Token 2: SR variants of שָׁכְבְּךָ — full-word combined forms first
+        // Normalisers for וּבְ-שָׁכְבְּךָ
+        // Token 1: SR outputs for "uv" prefix sound → וב
+        // (\b is ineffective for Hebrew; use space/start-of-string anchors instead)
+        .replace(/(^| )אוף( |$)/g, '$1וב$2')
+        .replace(/(^| )עוף( |$)/g, '$1וב$2')
+        .replace(/(^| )אוב( |$)/g, '$1וב$2')
+        .replace(/(^| )אב( |$)/g, '$1וב$2')
+        // Token 2: SR variants of שָׁכְבְּךָ — combined prefix+root forms first
         .replace(/ובשוכבך/g, 'וב שכבך')
         .replace(/ובשכבה/g, 'וב שכבך')
         .replace(/בשוכבך/g, 'וב שכבך')
         .replace(/בשכבך/g, 'וב שכבך')
         .replace(/ובשכבך/g, 'וב שכבך')
         .replace(/משכבך/g, 'וב שכבך')
-        // שוכבך not already preceded by וב
-        .replace(/(?<!וב )שוכבך/g, 'וב שכבך')
-        // Standalone שכבך not already preceded by וב
-        .replace(/(?<!וב )שכבך/g, 'וב שכבך')
-        // Standalone שוכב → שכבך then re-run above
+        // Standalone root variants → canonical שכבך
         .replace(/(?<![א-ת])שוכב(?![א-ת])/g, 'שכבך')
-        .replace(/(?<!וב )שכבך/g, 'וב שכבך')
-        // Other mishearings
         .replace(/שחמט/g, 'שכבך')
-        .replace(/(?<!וב )שכבך/g, 'וב שכבך')
         .replace(/שפך/g, 'שכבך')
-        .replace(/(?<!וב )שכבך/g, 'וב שכבך')
         .replace(/שך בך/g, 'שכבך')
+        // Final catch-all: any שכבך not already preceded by וב
         .replace(/(?<!וב )שכבך/g, 'וב שכבך')
+        // Multi-word mishearings that include ובקומך
         .replace(/שכח ובקומך/g, 'וב שכבך ובקומך')
         .replace(/חופשה ובקומך/g, 'וב שכבך ובקומך')
         .replace(/שכפחה ובקומך/g, 'שכבך ובקומך')
@@ -1640,6 +1631,10 @@
     updateSungVersionBar();
 
     // Welcome screen
+    document.getElementById('begin-btn').addEventListener('click', () => {
+      document.getElementById('welcome-screen').classList.add('hidden');
+      document.getElementById('main-layout').classList.remove('hidden');
+    });
   </script>
 </body>
 </html>
