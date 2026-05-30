@@ -1558,6 +1558,11 @@
         sungBtn.dataset.src = 'audio/aleinu/full.mp3';
         sungBtn.dataset.label = '🎵 Sung Version';
         sungBtn.textContent = sungBtn.dataset.label;
+      } else if (currentPrayer === 'adon-olam') {
+        sungBar.classList.remove('hidden');
+        sungBtn.dataset.src = 'audio/adon-olam/full.mp3';
+        sungBtn.dataset.label = '🎵 Sung Version';
+        sungBtn.textContent = sungBtn.dataset.label;
       } else {
         sungBar.classList.add('hidden');
         if (sungAudio) { sungAudio.pause(); sungAudio = null; }
