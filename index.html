@@ -408,7 +408,7 @@
           Some prayers have sung versions available — press the <strong style="color: var(--silver);">🎵 Sung Version</strong> button to listen. These are continuous recordings; use <strong style="color: var(--silver);">Skip →</strong> to follow along line by line.
         </p>
         <p style="margin-top: 10px; color: #8b949e; font-size: 0.85rem; line-height: 1.6;">
-          Audio recordings kindly provided by Yoav Oved and Julieta Kunik.
+          Audio recordings kindly provided by Yoav Oved and Julieta Kunik, <em>i migliori fabbri</em>.
         </p>
         <p style="margin-top: 10px; color: #8b949e; font-size: 0.85rem; line-height: 1.6;">
           <strong style="color: var(--silver);">Please note:</strong> this checks words, not pronunciation details. Differences like ח vs ה cannot be detected — use the Listen button to compare your pronunciation.
@@ -1561,6 +1561,11 @@
       } else if (currentPrayer === 'adon-olam') {
         sungBar.classList.remove('hidden');
         sungBtn.dataset.src = 'audio/adon-olam/full.mp3';
+        sungBtn.dataset.label = '🎵 Sung Version';
+        sungBtn.textContent = sungBtn.dataset.label;
+      } else if (currentPrayer === 'hatikva') {
+        sungBar.classList.remove('hidden');
+        sungBtn.dataset.src = 'audio/hatikva/full.mp3';
         sungBtn.dataset.label = '🎵 Sung Version';
         sungBtn.textContent = sungBtn.dataset.label;
       } else {
