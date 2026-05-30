@@ -1375,22 +1375,14 @@
       window.speechSynthesis && window.speechSynthesis.cancel();
 
       const line = prayers[currentPrayer].lines[currentLineIndex];
-      const audioPathMp3 = `audio/${currentPrayer}/${pad(currentLineIndex + 1)}.mp3`;
-      const audioPathM4a = `audio/${currentPrayer}/${pad(currentLineIndex + 1)}.m4a`;
-
-      function tryAudio(path, fallbackPath) {
-        const audio = new Audio(path);
-        currentAudio = audio;
-        audio.oncanplaythrough = () => {
-          audio.play().catch(() => fallbackPath ? tryAudio(fallbackPath, null) : speakTTS(line.hebrew));
-        };
-        audio.onerror = () => {
-          if (fallbackPath) { tryAudio(fallbackPath, null); }
-          else { speakTTS(line.hebrew); }
-        };
-        audio.load();
-      }
-      tryAudio(audioPathMp3, audioPathM4a);
+      const audioPath = `audio/${currentPrayer}/${pad(currentLineIndex + 1)}.mp3`;
+      const audio = new Audio(audioPath);
+      currentAudio = audio;
+      audio.oncanplaythrough = () => {
+        audio.play().catch(() => speakTTS(line.hebrew));
+      };
+      audio.onerror = () => speakTTS(line.hebrew);
+      audio.load();
     }
 
     function speakTTS(text) {
@@ -1603,30 +1595,18 @@
       sungBtn.textContent = '⏸ Playing...';
       sungPlaying = true;
 
-      function trySung(path, fallback) {
-        sungAudio = new Audio(path);
-        sungAudio.onended = () => resetSungBtn(false);
-        sungAudio.onerror = () => {
-          if (fallback) {
-            trySung(fallback, null);
-          } else {
-            sungAudio = null;
-            resetSungBtn(true);
-          }
-        };
-        sungAudio.play().catch(() => {
-          if (fallback) {
-            trySung(fallback, null);
-          } else {
-            sungAudio = null;
-            resetSungBtn(true);
-          }
-        });
-      }
-
       if (!sungAudio) {
         const src = sungBtn.dataset.src;
-        trySung(src, src.replace('.mp3', '.m4a'));
+        sungAudio = new Audio(src);
+        sungAudio.onended = () => resetSungBtn(false);
+        sungAudio.onerror = () => {
+          sungAudio = null;
+          resetSungBtn(true);
+        };
+        sungAudio.play().catch(() => {
+          sungAudio = null;
+          resetSungBtn(true);
+        });
       } else {
         sungAudio.play().catch(() => resetSungBtn(false));
       }
