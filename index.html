@@ -85,6 +85,25 @@
     }
     .prayer-btn:hover { border-color: var(--gold); color: var(--gold); }
     .prayer-btn.active { background: var(--gold-dim); border-color: var(--gold); color: #fff; }
+    .amida-group-toggle { border-style: dashed; }
+    .amida-group-toggle.open { color: var(--gold); border-color: var(--gold); }
+    .amida-group {
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+      padding-left: 8px;
+      border-left: 2px solid var(--gold-dim);
+      margin-left: 4px;
+    }
+    .amida-group.open { display: flex; }
+    .prayer-btn.amida-sub {
+      font-size: 0.85rem;
+      padding: 7px 10px;
+      border-color: transparent;
+      color: var(--silver-dim);
+    }
+    .prayer-btn.amida-sub:hover { border-color: var(--gold-dim); color: var(--gold); }
+    .prayer-btn.amida-sub.active { background: var(--gold-dim); border-color: var(--gold); color: #fff; }
     
     header {
       text-align: center;
@@ -448,7 +467,16 @@
         <button class="prayer-btn" data-prayer="ahavat-olam">Ahavat Olam</button>
         <button class="prayer-btn" data-prayer="shema">Shema</button>
         <button class="prayer-btn" data-prayer="vshamru">V'shamru</button>
-        <button class="prayer-btn" data-prayer="amida">Amida</button>
+        <button class="prayer-btn amida-group-toggle" id="amida-toggle">Amida ▸</button>
+        <div class="amida-group" id="amida-group">
+          <button class="prayer-btn amida-sub" data-prayer="amida-avot">Avot</button>
+          <button class="prayer-btn amida-sub" data-prayer="amida-gevurot">Gevurot</button>
+          <button class="prayer-btn amida-sub" data-prayer="amida-kedushah">Kedushah</button>
+          <button class="prayer-btn amida-sub" data-prayer="amida-kedushat-hayom">Kedushat HaYom</button>
+          <button class="prayer-btn amida-sub" data-prayer="amida-avodah">Avodah</button>
+          <button class="prayer-btn amida-sub" data-prayer="amida-hodaah">Hoda'ah</button>
+          <button class="prayer-btn amida-sub" data-prayer="amida-shalom">Birkat Shalom</button>
+        </div>
         <button class="prayer-btn" data-prayer="aleinu">Aleinu</button>
         <button class="prayer-btn" data-prayer="adon-olam">Adon Olam</button>
         <button class="prayer-btn" data-prayer="kiddush">Kiddush</button>
@@ -774,8 +802,8 @@
         ]
       },
 
-      "amida": {
-        name: "Amida",
+      "amida-avot": {
+        name: "Amida — Avot",
         lines: [
           { hebrew: "אֲדֹנָי שְׂפָתַי תִּפְתָּח וּפִי יַגִּיד תְּהִלָּתֶךָ", transliteration: "adonai sefatai tiftach ufi yagid tehilatecha", stress: "a-do-NAI se-fa-TAI tif-TACH u-FI ya-GID te-hi-la-TE-cha", english: "God, open my lips, and my mouth shall declare Your praise" },
           { hebrew: "בָּרוּךְ אַתָּה יְהוָה אֱלֹהֵינוּ וֵאלֹהֵי אֲבוֹתֵינוּ", transliteration: "baruch ata adonai eloheinu velohei avoteinu", stress: "ba-RUCH a-TA a-do-NAI e-lo-HEI-nu ve-lo-HEI a-vo-TEI-nu", english: "Blessed are You, Lord our God and God of our ancestors" },
@@ -789,7 +817,13 @@
           { hebrew: "וּמֵבִיא גוֹאֵל לִבְנֵי בְנֵיהֶם", transliteration: "umeivi goel livnei vneihem", stress: "u-mei-VI go-EL liv-NEI vnei-HEM", english: "and brings a redeemer to their children's children" },
           { hebrew: "לְמַעַן שְׁמוֹ בְּאַהֲבָה", transliteration: "lemaan shmo beahava", stress: "le-MA-an shmo be-a-ha-VA", english: "for the sake of His name, with love" },
           { hebrew: "מֶלֶךְ עוֹזֵר וּמוֹשִׁיעַ וּמָגֵן", transliteration: "melech ozer umoshia umagen", stress: "ME-lech o-ZER u-mo-SHI-a u-ma-GEN", english: "Sovereign, Helper, Saviour and Shield" },
-          { hebrew: "בָּרוּךְ אַתָּה יְהוָה מָגֵן אַבְרָהָם וּפוֹקֵד שָׂרָה", transliteration: "baruch ata adonai magen avraham ufoked sara", stress: "ba-RUCH a-TA a-do-NAI ma-GEN av-ra-HAM u-fo-KED sa-RA", english: "Blessed are You, Lord, Shield of Abraham and Guardian of Sarah" },
+          { hebrew: "בָּרוּךְ אַתָּה יְהוָה מָגֵן אַבְרָהָם וּפוֹקֵד שָׂרָה", transliteration: "baruch ata adonai magen avraham ufoked sara", stress: "ba-RUCH a-TA a-do-NAI ma-GEN av-ra-HAM u-fo-KED sa-RA", english: "Blessed are You, Lord, Shield of Abraham and Guardian of Sarah" }
+        ]
+      },
+
+      "amida-gevurot": {
+        name: "Amida — Gevurot",
+        lines: [
           { hebrew: "אַתָּה גִּבּוֹר לְעוֹלָם אֲדֹנָי", transliteration: "ata gibor leolam adonai", stress: "a-TA gi-BOR le-o-LAM a-do-NAI", english: "You are forever mighty, Lord" },
           { hebrew: "מְחַיֵּה מֵתִים אַתָּה רַב לְהוֹשִׁיעַ", transliteration: "mechaye meitim ata rav lehoshia", stress: "me-cha-YEH mei-TIM a-TA rav le-ho-SHI-a", english: "You revive the dead and are great to save" },
           { hebrew: "מְכַלְכֵּל חַיִּים בְּחֶסֶד", transliteration: "mechalkel chayim bechesed", stress: "me-chal-KEL cha-YIM be-CHE-sed", english: "You sustain the living with kindness" },
@@ -801,6 +835,108 @@
           { hebrew: "וְנֶאֱמָן אַתָּה לְהַחֲיוֹת מֵתִים", transliteration: "veneeman ata lehachayot meitim", stress: "ve-ne-e-MAN a-TA le-ha-cha-YOT mei-TIM", english: "You are faithful to bring life to the dead",
             notes: ["<strong>מֵתִים</strong> — SR struggles with this word in this position. Say it slowly and clearly: <em>mei-TIM</em>"] },
           { hebrew: "בָּרוּךְ אַתָּה יְהוָה מְחַיֵּה הַמֵּתִים", transliteration: "baruch ata adonai mechaye hameitim", stress: "ba-RUCH a-TA a-do-NAI me-cha-YEH ha-mei-TIM", english: "Blessed are You, Lord, who brings life to the dead" }
+        ]
+      },
+
+      "amida-kedushah": {
+        name: "Amida — Kedushah",
+        lines: [
+          { hebrew: "וְאַתָּה קָדוֹשׁ יוֹשֵׁב תְּהִלּוֹת יִשְׂרָאֵל", transliteration: "veatah kadosh yoshev tehilot yisrael", stress: "ve-a-TA ka-DOSH yo-SHEV te-hi-LOT yis-ra-EL", english: "And You are holy, enthroned on the praises of Israel" },
+          { hebrew: "קָדוֹשׁ קָדוֹשׁ קָדוֹשׁ יְהוָה צְבָאוֹת", transliteration: "kadosh kadosh kadosh adonai tzvaot", stress: "ka-DOSH ka-DOSH ka-DOSH a-do-NAI tzva-OT", english: "Holy, holy, holy is the Lord of Hosts" },
+          { hebrew: "מְלֹא כָל הָאָרֶץ כְּבוֹדוֹ", transliteration: "melo chol haaretz kevodo", stress: "me-LO chol ha-A-retz ke-vo-DO", english: "the whole earth is full of His glory" },
+          { hebrew: "בָּרוּךְ כְּבוֹד יְהוָה מִמְּקוֹמוֹ", transliteration: "baruch kevod adonai mimkomo", stress: "ba-RUCH ke-VOD a-do-NAI mim-ko-MO", english: "Blessed is the glory of the Lord from His place" },
+          { hebrew: "יִמְלֹךְ יְהוָה לְעוֹלָם אֱלֹהַיִךְ צִיּוֹן", transliteration: "yimloch adonai leolam elohayich tziyon", stress: "yim-LOCH a-do-NAI le-o-LAM e-lo-ha-YICH tzi-YON", english: "The Lord shall reign forever, your God, O Zion" },
+          { hebrew: "לְדֹר וָדֹר הַלְלוּיָהּ", transliteration: "ledor vador halleluyah", stress: "le-DOR va-DOR ha-le-lu-YAH", english: "throughout all generations, Halleluyah" },
+          { hebrew: "בָּרוּךְ אַתָּה יְיָ הָאֵל הַקָּדוֹשׁ", transliteration: "baruch ata adonai hael hakadosh", stress: "ba-RUCH a-TA a-do-NAI ha-EL ha-ka-DOSH", english: "Blessed are You, Lord, the holy God" }
+        ]
+      },
+
+      "amida-kedushat-hayom": {
+        name: "Amida — Kedushat HaYom",
+        lines: [
+          { hebrew: "אֱלֹהֵינוּ וֵאלֹהֵי אֲבוֹתֵינוּ", transliteration: "eloheinu velohei avoteinu", stress: "e-lo-HEI-nu ve-lo-HEI a-vo-TEI-nu", english: "Our God and God of our ancestors" },
+          { hebrew: "רְצֵה נָא בִמְנוּחָתֵנוּ", transliteration: "retzeh na bimnuchatenu", stress: "re-TZEH na vim-nu-cha-TEI-nu", english: "accept our days of rest" },
+          { hebrew: "קַדְּשֵׁנוּ בְּמִצְוֹתֶיךָ", transliteration: "kadsheinu bemitzvotecha", stress: "kad-SHEI-nu be-mitz-vo-TE-cha", english: "Sanctify us with Your commandments" },
+          { hebrew: "שִׂים חֶלְקֵנוּ בְּתוֹרָתֶךָ", transliteration: "sim chelkeinu betoratecha", stress: "SIM chel-KEI-nu be-to-ra-TE-cha", english: "grant us our portion in Your Torah" },
+          { hebrew: "שַׂבְּעֵנוּ מִטּוּבֶךָ", transliteration: "sabeinu mituvecha", stress: "sab-EI-nu mi-tu-VE-cha", english: "satisfy us with Your goodness" },
+          { hebrew: "שַׂמַּח נַפְשֵׁנוּ בִּישׁוּעָתֶךָ", transliteration: "sameach nafsheinu bishuatecha", stress: "sa-MACH naf-SHEI-nu bi-shu-a-TE-cha", english: "let our souls find joy in Your salvation" },
+          { hebrew: "וְטַהֵר לִבֵּנוּ לְעָבְדְּךָ בֶּאֱמֶת", transliteration: "vetaher libeinu leovdecha beemet", stress: "ve-ta-HER li-BEI-nu le-ov-DE-cha be-e-MET", english: "purify our hearts to serve You in truth" },
+          { hebrew: "וְהַנְחִילֵנוּ יְיָ אֱלֹהֵינוּ", transliteration: "vehanchilenu adonai eloheinu", stress: "ve-han-chi-LEI-nu a-do-NAI e-lo-HEI-nu", english: "Cause us to inherit, Lord our God" },
+          { hebrew: "בְּאַהֲבָה וּבְרָצוֹן שַׁבַּת קָדְשֶׁךָ", transliteration: "beahava uveratzon shabat kodshecha", stress: "be-a-ha-VA u-ve-ra-TZON sha-BAT kod-SHE-cha", english: "in love and favour Your holy Sabbath" },
+          { hebrew: "וְיָנוּחוּ בָהּ כָּל יִשְׂרָאֵל", transliteration: "veyanuchu vah kol yisrael", stress: "ve-ya-NU-chu VAH kol yis-ra-EL", english: "and may all Israel who sanctify Your name rest thereon" },
+          { hebrew: "מְקַדְּשֵׁי שְׁמֶךָ", transliteration: "mekadshei shemecha", stress: "me-kad-SHEI she-ME-cha", english: "those who sanctify Your name" },
+          { hebrew: "בָּרוּךְ אַתָּה יְיָ מְקַדֵּשׁ הַשַּׁבָּת", transliteration: "baruch ata adonai mekadesh hashabat", stress: "ba-RUCH a-TA a-do-NAI me-ka-DESH ha-sha-BAT", english: "Blessed are You, Lord, who sanctifies the Sabbath" }
+        ]
+      },
+
+      "amida-avodah": {
+        name: "Amida — Avodah",
+        lines: [
+          { hebrew: "רְצֵה יְיָ אֱלֹהֵינוּ בְּעַמְּךָ יִשְׂרָאֵל", transliteration: "retzeh adonai eloheinu beamcha yisrael", stress: "re-TZEH a-do-NAI e-lo-HEI-nu be-am-CHA yis-ra-EL", english: "Accept, Lord our God, Your people Israel" },
+          { hebrew: "וְלִתְפִלָּתָם שְׁעֵה", transliteration: "velitfilatam sheeh", stress: "ve-lit-fi-la-TAM she-EH", english: "and hear their prayer" },
+          { hebrew: "וּבְרַחֲמֶיךָ הָרַבִּים תַּחְפֹּץ בָּנוּ", transliteration: "uvrachamecha harabim tachpotz banu", stress: "uv-ra-cha-ME-cha ha-ra-BIM tach-POTZ BA-nu", english: "and in Your great mercy look upon us graciously" },
+          { hebrew: "וְתַשְׁרֶה שְׁכִינָתְךָ עַל צִיּוֹן", transliteration: "vetashre shchinatcha al tziyon", stress: "ve-tash-REH shchi-nat-CHA al tzi-YON", english: "and may Your divine presence rest upon Zion" },
+          { hebrew: "בָּרוּךְ אַתָּה יְיָ הַמַּשְׁרֶה שְׁכִינָתוֹ עַל צִיּוֹן", transliteration: "baruch ata adonai hamashre shchinato al tziyon", stress: "ba-RUCH a-TA a-do-NAI ha-mash-REH shchi-na-TO al tzi-YON", english: "Blessed are You, Lord, who spreads the divine Presence on Zion" }
+        ]
+      },
+
+      "amida-hodaah": {
+        name: "Amida — Hoda'ah",
+        lines: [
+          { hebrew: "מוֹדִים אֲנַחְנוּ לָךְ", transliteration: "modim anachnu lach", stress: "mo-DIM a-NACH-nu LACH", english: "We give thanks to You" },
+          { hebrew: "שֶׁאַתָּה הוּא יְיָ אֱלֹהֵינוּ", transliteration: "sheata hu adonai eloheinu", stress: "she-a-TA HU a-do-NAI e-lo-HEI-nu", english: "that You are the Lord our God" },
+          { hebrew: "וֵאלֹהֵי אֲבוֹתֵינוּ לְעוֹלָם וָעֶד", transliteration: "velohei avoteinu leolam vaed", stress: "ve-lo-HEI a-vo-TEI-nu le-o-LAM VA-ed", english: "and God of our ancestors forever and ever" },
+          { hebrew: "צוּרֵנוּ צוּר חַיֵּינוּ וּמָגֵן יִשְׁעֵנוּ", transliteration: "tzureinu tzur chayeinu umagen yisheinu", stress: "tzu-REI-nu TZUR cha-YEI-nu u-ma-GEN yish-EI-nu", english: "You are our Rock, the Rock of our lives, Shield of our salvation" },
+          { hebrew: "אַתָּה הוּא לְדוֹר וָדוֹר", transliteration: "ata hu ledor vador", stress: "a-TA HU le-DOR va-DOR", english: "You are so throughout all generations" },
+          { hebrew: "נוֹדֶה לְּךָ וּנְסַפֵּר תְּהִלָּתֶךָ", transliteration: "nodeh lecha unsaper tehilatecha", stress: "no-DEH le-CHA un-sa-PER te-hi-la-TE-cha", english: "We thank You and declare Your praise" },
+          { hebrew: "עַל חַיֵּינוּ הַמְּסוּרִים בְּיָדֶךָ", transliteration: "al chayeinu hamesurim beyadecha", stress: "al cha-YEI-nu ha-me-su-RIM be-ya-DE-cha", english: "for our lives which are in Your hand" },
+          { hebrew: "וְעַל נִשְׁמוֹתֵינוּ הַפְּקוּדוֹת לָךְ", transliteration: "veal nishmoteinu hapekudot lach", stress: "ve-AL nish-mo-TEI-nu ha-pe-ku-DOT LACH", english: "and for our souls which are in Your charge" },
+          { hebrew: "וְעַל נִסֶּיךָ שֶׁבְּכָל יוֹם עִמָּנוּ", transliteration: "veal nisecha shebechol yom imanu", stress: "ve-AL ni-SE-cha she-be-CHOL yom i-MA-nu", english: "and for Your miracles which surround us every day" },
+          { hebrew: "וְעַל נִפְלְאוֹתֶיךָ וְטוֹבוֹתֶיךָ", transliteration: "veal niflotecha vetovotecha", stress: "ve-AL nif-le-o-TE-cha ve-to-vo-TE-cha", english: "and for Your wonders and Your goodness" },
+          { hebrew: "שֶׁבְּכָל עֵת עֶרֶב וָבֹקֶר וְצָהֳרָיִם", transliteration: "shebechol et erev vavoker vetzohorayim", stress: "she-be-CHOL et E-rev va-VO-ker ve-tzo-ho-RA-yim", english: "which are with us at all times, evening, morning and noon" },
+          { hebrew: "הַטּוֹב כִּי לֹא כָלוּ רַחֲמֶיךָ", transliteration: "hatov ki lo chalu rachamecha", stress: "ha-TOV ki lo cha-LU ra-cha-ME-cha", english: "You are good, for Your mercy never fails" },
+          { hebrew: "הַמְרַחֵם כִּי לֹא תַמּוּ חֲסָדֶיךָ", transliteration: "hamrachem ki lo tamu chasadecha", stress: "ha-mra-CHEM ki lo ta-MU cha-sa-DE-cha", english: "You are merciful, for Your lovingkindness never ends" },
+          { hebrew: "כִּי מֵעוֹלָם קִוִּינוּ לָךְ", transliteration: "ki meolam kivinu lach", stress: "ki me-o-LAM ki-VI-nu LACH", english: "forever we place our trust in You" },
+          { hebrew: "וְעַל כֻּלָּם יִתְבָּרַךְ וְיִתְרוֹמֵם", transliteration: "veal kulam yitbarach veyitromem", stress: "ve-AL ku-LAM yit-ba-RACH ve-yit-ro-MEM", english: "For all this may Your name be blessed and rise ever higher" },
+          { hebrew: "וְיִתְנַשֵּׂא תָּמִיד שִׁמְךָ מַלְכֵּנוּ", transliteration: "veyitnase tamid shimcha malkeinu", stress: "ve-yit-na-SE ta-MID shim-CHA mal-KEI-nu", english: "may Your name, our Ruler, be ever exalted" },
+          { hebrew: "לְעוֹלָם וָעֶד", transliteration: "leolam vaed", stress: "le-o-LAM VA-ed", english: "forever and ever" },
+          { hebrew: "וְכָל הַחַיִּים יוֹדוּךָ סֶּלָה", transliteration: "vechol hachayim yoducha selah", stress: "ve-CHOL ha-cha-YIM yo-DU-cha SE-la", english: "All that lives shall thank You, Selah" },
+          { hebrew: "וִיהַלְלוּ וִיבָרְכוּ אֶת שִׁמְךָ הַגָּדוֹל", transliteration: "vihalelu vivarchu et shimcha hagadol", stress: "vi-ha-le-LU vi-var-CHU et shim-CHA ha-ga-DOL", english: "and shall praise and bless Your great name" },
+          { hebrew: "בֶּאֱמֶת הָאֵל יְשׁוּעָתֵנוּ וְעֶזְרָתֵנוּ סֶלָה", transliteration: "beemet hael yeshuatenu veezratenu selah", stress: "be-e-MET ha-EL ye-shu-a-TEI-nu ve-ez-ra-TEI-nu SE-la", english: "in truth, O God our salvation and our help, Selah" },
+          { hebrew: "בָּרוּךְ אַתָּה יְיָ הַטּוֹב שִׁמְךָ", transliteration: "baruch ata adonai hatov shimcha", stress: "ba-RUCH a-TA a-do-NAI ha-TOV shim-CHA", english: "Blessed are You, Lord, Your name is goodness" },
+          { hebrew: "וּלְךָ נָאֶה לְהוֹדוֹת", transliteration: "ulecha naeh lehodot", stress: "u-le-CHA NA-eh le-ho-DOT", english: "and unto You all thanks are due" }
+        ]
+      },
+
+      "amida-shalom": {
+        name: "Amida — Birkat Shalom",
+        lines: [
+          { hebrew: "שִׂים שָׁלוֹם טוֹבָה וּבְרָכָה חַיִּים", transliteration: "sim shalom tova uveracha chayim", stress: "SIM sha-LOM to-VA u-ve-ra-CHA cha-YIM", english: "Grant peace, happiness and blessing, life" },
+          { hebrew: "חֵן וָחֶסֶד צְדָקָה וְרַחֲמִים", transliteration: "chen vachesed tzedakah verachamim", stress: "CHEN va-CHE-sed tze-da-KA ve-ra-cha-MIM", english: "grace and lovingkindness, justice and mercy" },
+          { hebrew: "עָלֵינוּ וּבָרְכֵנוּ אָבִינוּ כֻּלָּנוּ יַחַד", transliteration: "aleinu uvarkeinu avinu kulanu yachad", stress: "a-LEI-nu u-var-KEI-nu a-VI-nu ku-LA-nu ya-CHAD", english: "upon us; bless us all together, our Creator" },
+          { hebrew: "בְּאוֹר פָּנֶיךָ", transliteration: "beor panecha", stress: "be-OR pa-NE-cha", english: "with the light of Your countenance" },
+          { hebrew: "כִּי בְאוֹר פָּנֶיךָ נָתַתָּ לָנוּ", transliteration: "ki veor panecha natata lanu", stress: "ki ve-OR pa-NE-cha na-TA-ta LA-nu", english: "for in Your light You give us" },
+          { hebrew: "יְיָ אֱלֹהֵינוּ תּוֹרָה וְחַיִּים", transliteration: "adonai eloheinu torah vechayim", stress: "a-do-NAI e-lo-HEI-nu to-RA ve-cha-YIM", english: "Lord our God, Torah and life" },
+          { hebrew: "אַהֲבָה וָחֶסֶד צְדָקָה וְרַחֲמִים", transliteration: "ahava vachesed tzedakah verachamim", stress: "a-ha-VA va-CHE-sed tze-da-KA ve-ra-cha-MIM", english: "love and kindness, justice and mercy" },
+          { hebrew: "בְּרָכָה וְשָׁלוֹם", transliteration: "bracha veshalom", stress: "bra-CHA ve-sha-LOM", english: "blessing and peace" },
+          { hebrew: "וְטוֹב בְּעֵינֶיךָ לְבָרֵךְ", transliteration: "vetov beeinecha levarech", stress: "ve-TOV be-ei-NE-cha le-va-RECH", english: "May Your eyes find favour to bless" },
+          { hebrew: "אֶת עַמְּךָ יִשְׂרָאֵל בְּרַב עוֹז וּבְשָׁלוֹם", transliteration: "et amcha yisrael berav oz uveshalom", stress: "et am-CHA yis-ra-EL be-RAV oz u-ve-sha-LOM", english: "Your people Israel with great strength and peace" },
+          { hebrew: "בָּרוּךְ אַתָּה יְיָ הַמְבָרֵךְ אֶת עַמּוֹ יִשְׂרָאֵל בַּשָּׁלוֹם", transliteration: "baruch ata adonai hamvarech et amo yisrael bashalom", stress: "ba-RUCH a-TA a-do-NAI ha-mva-RECH et a-MO yis-ra-EL ba-sha-LOM", english: "Blessed are You, Lord, who blesses Your people Israel with peace" },
+          { hebrew: "אֱלֹהַי נְצוֹר לְשׁוֹנִי מֵרָע", transliteration: "elohai netzor leshoni merah", stress: "e-lo-HAI ne-TZOR le-sho-NI me-RAH", english: "My God, guard my tongue from evil" },
+          { hebrew: "וּשְׂפָתַי מִדַּבֵּר מִרְמָה", transliteration: "usfatai midaber mirma", stress: "us-fa-TAI mi-da-BER mir-MA", english: "and my lips from speaking deceit" },
+          { hebrew: "וְלִמְקַלְלַי נַפְשִׁי תִדּוֹם", transliteration: "velimkalelai nafshi tidom", stress: "ve-lim-ka-le-LAI naf-SHI ti-DOM", english: "to those who curse me may my soul be silent" },
+          { hebrew: "וְנַפְשִׁי כֶּעָפָר לַכֹּל תִּהְיֶה", transliteration: "venafshi keafar lakol tihye", stress: "ve-naf-SHI ke-a-FAR la-KOL tih-YEH", english: "and may my soul be as dust to all" },
+          { hebrew: "פְּתַח לִבִּי בְּתוֹרָתֶךָ", transliteration: "petach libi betoratecha", stress: "pe-TACH li-BI be-to-ra-TE-cha", english: "Open my heart to Your Torah" },
+          { hebrew: "וְאַחֲרֵי מִצְוֹתֶיךָ תִּרְדֹּף נַפְשִׁי", transliteration: "veacharei mitzvotecha tirdof nafshi", stress: "ve-a-cha-REI mitz-vo-TE-cha tir-DOF naf-SHI", english: "and may my soul pursue Your commandments" },
+          { hebrew: "וְכָל הַקָּמִים עָלַי לְרָעָה", transliteration: "vechol hakamim alai leraah", stress: "ve-CHOL ha-ka-MIM a-LAI le-ra-AH", english: "As for all those who rise up against me for evil" },
+          { hebrew: "מְהֵרָה הָפֵר עֲצָתָם וְקַלְקֵל מַחְשְׁבוֹתָם", transliteration: "mehera hafer atzatam vekalkel machshevotam", stress: "me-he-RA ha-FER a-tza-TAM ve-kal-KEL mach-she-vo-TAM", english: "swiftly nullify their counsel and confound their plans" },
+          { hebrew: "יִהְיוּ לְרָצוֹן אִמְרֵי פִי", transliteration: "yihyu leratzon imrei fi", stress: "yih-YU le-ra-TZON im-REI FI", english: "May the words of my mouth" },
+          { hebrew: "וְהֶגְיוֹן לִבִּי לְפָנֶיךָ", transliteration: "vehegyon libi lefanecha", stress: "ve-heg-YON li-BI le-fa-NE-cha", english: "and the meditation of my heart be acceptable before You" },
+          { hebrew: "יְהוָה צוּרִי וְגוֹאֲלִי", transliteration: "adonai tzuri vegoali", stress: "a-do-NAI tzu-RI ve-go-a-LI", english: "Lord, my Rock and my Redeemer" },
+          { hebrew: "עֹשֶׂה שָׁלוֹם בִּמְרוֹמָיו", transliteration: "oseh shalom bimromav", stress: "o-SEH sha-LOM bim-ro-MAV", english: "May the One who makes peace in the highest places" },
+          { hebrew: "הוּא יַעֲשֶׂה שָׁלוֹם עָלֵינוּ", transliteration: "hu yaase shalom aleinu", stress: "HU ya-a-SEH sha-LOM a-LEI-nu", english: "make peace for us" },
+          { hebrew: "וְעַל כָּל יִשְׂרָאֵל", transliteration: "veal kol yisrael", stress: "ve-AL kol yis-ra-EL", english: "and for all Israel" },
+          { hebrew: "וְאִמְרוּ אָמֵן", transliteration: "veimru amen", stress: "ve-im-RU a-MEN", english: "and let us say, Amen" }
         ]
       },
 
@@ -853,7 +989,15 @@
     let accumulatedFinal = '';
 
     // Elements
-    const prayerBtns = document.querySelectorAll('.prayer-btn');
+    const prayerBtns = document.querySelectorAll('.prayer-btn[data-prayer]');
+    const amidaToggle = document.getElementById('amida-toggle');
+    const amidaGroup = document.getElementById('amida-group');
+
+    amidaToggle.addEventListener('click', () => {
+      const isOpen = amidaGroup.classList.toggle('open');
+      amidaToggle.classList.toggle('open', isOpen);
+      amidaToggle.textContent = isOpen ? 'Amida ▾' : 'Amida ▸';
+    });
     const progressText = document.getElementById('progress-text');
     const progressFill = document.getElementById('progress-fill');
     const hebrewLine = document.getElementById('hebrew-line');
@@ -1459,10 +1603,17 @@
       currentLineIndex = 0;
       correctCount = 0;
       incorrectCount = 0;
-      
+
       prayerBtns.forEach(btn => {
         btn.classList.toggle('active', btn.dataset.prayer === prayerId);
       });
+
+      // Auto-open Amida group if an Amida sub-section is selected
+      if (prayerId.startsWith('amida-')) {
+        amidaGroup.classList.add('open');
+        amidaToggle.classList.add('open');
+        amidaToggle.textContent = 'Amida ▾';
+      }
       
       quizArea.classList.remove('hidden');
       completion.classList.add('hidden');
