@@ -85,8 +85,7 @@
     }
     .prayer-btn:hover { border-color: var(--gold); color: var(--gold); }
     .prayer-btn.active { background: var(--gold-dim); border-color: var(--gold); color: #fff; }
-    .amida-group-toggle { border-style: dashed; }
-    .amida-group-toggle.open { color: var(--gold); border-color: var(--gold); }
+    .amida-group-toggle { border-style: dashed; }    .amida-group-toggle.open { color: var(--gold); border-color: var(--gold); }
     .amida-group {
       display: none;
       flex-direction: column;
@@ -104,6 +103,25 @@
     }
     .prayer-btn.amida-sub:hover { border-color: var(--gold-dim); color: var(--gold); }
     .prayer-btn.amida-sub.active { background: var(--gold-dim); border-color: var(--gold); color: #fff; }
+    /* Amida landing page */
+    .amida-landing-header { text-align: center; margin-bottom: 20px; }
+    .amida-landing-title { font-family: 'David Libre', serif; font-size: 2rem; color: var(--gold); direction: rtl; }
+    .amida-landing-subtitle { font-size: 1rem; color: var(--silver-dim); font-style: italic; margin-top: 4px; }
+    .amida-landing-intro { color: var(--silver); line-height: 1.7; margin-bottom: 12px; font-size: 1rem; }
+    .amida-sections-list { display: flex; flex-direction: column; gap: 0; margin-top: 16px; }
+    .amida-section-item {
+      padding: 14px 16px;
+      border-left: 3px solid var(--gold-dim);
+      margin-bottom: 10px;
+      cursor: pointer;
+      border-radius: 0 6px 6px 0;
+      transition: all 0.2s;
+      background: transparent;
+    }
+    .amida-section-item:hover { border-left-color: var(--gold); background: var(--bg-input); }
+    .amida-section-name { font-size: 1.05rem; font-weight: 600; color: var(--gold); margin-bottom: 4px; }
+    .amida-section-num { color: var(--gold-dim); margin-right: 2px; }
+    .amida-section-desc { font-size: 0.92rem; color: var(--silver-dim); line-height: 1.6; }
     
     header {
       text-align: center;
@@ -484,6 +502,47 @@
       </div>
       <div class="main-column">
         <div class="quiz-card">
+
+          <!-- Amida landing page -->
+          <div id="amida-landing" class="hidden">
+            <div class="amida-landing-header">
+              <div class="amida-landing-title">הָעֲמִידָה</div>
+              <div class="amida-landing-subtitle">The Standing Prayer</div>
+            </div>
+            <p class="amida-landing-intro">The Amida — literally "the standing one" — is the central prayer of every Jewish service. It is said silently, standing, facing Jerusalem. On Friday night it consists of seven blessings, each ending with <em>Baruch atah Adonai...</em> — the formula that marks the close of a blessing.</p>
+            <p class="amida-landing-intro">Select a section to begin practising:</p>
+            <div class="amida-sections-list">
+              <div class="amida-section-item" data-prayer="amida-avot">
+                <div class="amida-section-name"><span class="amida-section-num">1.</span> Avot — Ancestors</div>
+                <div class="amida-section-desc">The opening blessing, invoking the God of Abraham, Isaac and Jacob, and of Sarah, Rebecca, Leah and Rachel. It establishes who we are addressing and why we have the right to do so.</div>
+              </div>
+              <div class="amida-section-item" data-prayer="amida-gevurot">
+                <div class="amida-section-name"><span class="amida-section-num">2.</span> Gevurot — the Power of the Divine</div>
+                <div class="amida-section-desc">A meditation on divine strength — not military might, but the power to sustain life, heal the sick, support the fallen, and ultimately to bring resurrection. The repeated phrase <em>mechayeh meitim</em> — "who revives the dead" — runs through it like a heartbeat.</div>
+              </div>
+              <div class="amida-section-item" data-prayer="amida-kedushah">
+                <div class="amida-section-name"><span class="amida-section-num">3.</span> Kedushah — Holiness</div>
+                <div class="amida-section-desc">The sanctification of the Divine, drawing on the vision of Isaiah: <em>Kadosh, kadosh, kadosh</em> — "Holy, holy, holy is the Lord of Hosts." On Friday night this is a shorter, quieter version than the full Kedushah of Shabbat morning.</div>
+              </div>
+              <div class="amida-section-item" data-prayer="amida-kedushat-hayom">
+                <div class="amida-section-name"><span class="amida-section-num">4.</span> Kedushat HaYom — The Holiness of the Day</div>
+                <div class="amida-section-desc">The blessing unique to Friday night, asking the Divine to accept our rest and sanctify our Shabbat. It ends with the blessing that gives the whole service its name: <em>mekadesh haShabbat</em> — "who sanctifies the Sabbath."</div>
+              </div>
+              <div class="amida-section-item" data-prayer="amida-avodah">
+                <div class="amida-section-name"><span class="amida-section-num">5.</span> Avodah — Service</div>
+                <div class="amida-section-desc">A short blessing asking the Divine to accept our prayers and rest the divine presence on Zion — an echo of the Temple service, reframed as the service of the heart.</div>
+              </div>
+              <div class="amida-section-item" data-prayer="amida-hodaah">
+                <div class="amida-section-name"><span class="amida-section-num">6.</span> Hoda'ah — Thanksgiving</div>
+                <div class="amida-section-desc"><em>Modim anachnu lach</em> — "We give thanks to You." A full accounting of what we are grateful for: our lives, our souls, the miracles that surround us daily, morning, noon and evening.</div>
+              </div>
+              <div class="amida-section-item" data-prayer="amida-shalom">
+                <div class="amida-section-name"><span class="amida-section-num">7.</span> Birkat Shalom — The Blessing of Peace</div>
+                <div class="amida-section-desc">The Amida closes with <em>Sim shalom</em> — "Grant peace" — followed by a personal meditation, <em>Elohay netzor</em>, asking the Divine to guard our tongue from evil and open our hearts to Torah. It ends with <em>Oseh shalom</em>, the prayer for peace that closes many Jewish services.</div>
+              </div>
+            </div>
+          </div>
+
           <div id="quiz-area">
 
         <!-- Sung version button - shown only for L'cha Dodi -->
@@ -992,11 +1051,34 @@
     const prayerBtns = document.querySelectorAll('.prayer-btn[data-prayer]');
     const amidaToggle = document.getElementById('amida-toggle');
     const amidaGroup = document.getElementById('amida-group');
+    const amidaLanding = document.getElementById('amida-landing');
+
+    function showAmidaLanding() {
+      amidaLanding.classList.remove('hidden');
+      document.getElementById('quiz-area').classList.add('hidden');
+      document.getElementById('completion').classList.add('hidden');
+      // Clear active state from all prayer buttons
+      prayerBtns.forEach(btn => btn.classList.remove('active'));
+      amidaToggle.classList.add('open');
+      amidaToggle.textContent = 'Amida ▾';
+      amidaGroup.classList.add('open');
+      updateSungVersionBar();
+    }
 
     amidaToggle.addEventListener('click', () => {
-      const isOpen = amidaGroup.classList.toggle('open');
-      amidaToggle.classList.toggle('open', isOpen);
-      amidaToggle.textContent = isOpen ? 'Amida ▾' : 'Amida ▸';
+      const isOpen = amidaGroup.classList.contains('open');
+      if (!isOpen) {
+        showAmidaLanding();
+      } else {
+        amidaGroup.classList.remove('open');
+        amidaToggle.classList.remove('open');
+        amidaToggle.textContent = 'Amida ▸';
+      }
+    });
+
+    // Clickable section items on the landing page
+    document.querySelectorAll('.amida-section-item').forEach(item => {
+      item.addEventListener('click', () => switchPrayer(item.dataset.prayer));
     });
     const progressText = document.getElementById('progress-text');
     const progressFill = document.getElementById('progress-fill');
@@ -1610,9 +1692,14 @@
 
       // Auto-open Amida group if an Amida sub-section is selected
       if (prayerId.startsWith('amida-')) {
+        amidaLanding.classList.add('hidden');
+        document.getElementById('quiz-area').classList.remove('hidden');
         amidaGroup.classList.add('open');
         amidaToggle.classList.add('open');
         amidaToggle.textContent = 'Amida ▾';
+      } else {
+        amidaLanding.classList.add('hidden');
+        document.getElementById('quiz-area').classList.remove('hidden');
       }
       
       quizArea.classList.remove('hidden');
