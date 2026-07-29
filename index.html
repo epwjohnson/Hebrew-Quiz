@@ -489,6 +489,7 @@
         <button class="prayer-btn" data-prayer="vshamru">V'shamru</button>
         <button class="prayer-btn amida-group-toggle" id="amida-toggle">Amida ▸</button>
         <div class="amida-group" id="amida-group">
+          <button class="prayer-btn amida-sub" data-prayer="amida-petichah">Petichah</button>
           <button class="prayer-btn amida-sub" data-prayer="amida-avot">Avot</button>
           <button class="prayer-btn amida-sub" data-prayer="amida-gevurot">Gevurot</button>
           <button class="prayer-btn amida-sub" data-prayer="amida-kedushah">Kedushah</button>
@@ -513,9 +514,13 @@
               <div class="amida-landing-subtitle">The Standing Prayer</div>
             </div>
             <p class="amida-landing-intro">The Amida — literally "the standing one" — is the central prayer of every Jewish service. As the name suggests, we pray standing and face Jerusalem. The following is the Amidah we say on Friday nights, in seven sections.</p>
-            <p class="amida-landing-intro">Before beginning, we traditionally recite a verse of preparation:<br><em>יְהוָה שְׂפָתַי תִּפְתָּח וּפִי יַגִּיד תְּהִלָּתֶךָ</em><br>(<em>Adonai sefatai tiftach, ufi yagid tehilatecha</em>)<br>"Lord, open my lips, and my mouth shall declare Your praise."<br>This is not formally part of the Amida itself, and is not included in the sections below.</p>
+            <p class="amida-landing-intro">Before beginning, we traditionally recite a verse of preparation — the <strong>Petichah</strong>. This is not formally part of the Amida itself, but is included below as its own section.</p>
             <p class="amida-landing-intro">Select a section to begin practising:</p>
             <div class="amida-sections-list">
+              <div class="amida-section-item" data-prayer="amida-petichah">
+                <div class="amida-section-name"><span class="amida-section-num">✦</span> Petichah — Opening Verse</div>
+                <div class="amida-section-desc"><em>יְהוָה שְׂפָתַי תִּפְתָּח וּפִי יַגִּיד תְּהִלָּתֶךָ</em><br>(<em>Adonai sefatai tiftach, ufi yagid tehilatecha</em>)<br>"Lord, open my lips, and my mouth shall declare Your praise."</div>
+              </div>
               <div class="amida-section-item" data-prayer="amida-avot">
                 <div class="amida-section-name"><span class="amida-section-num">1.</span> Avot — Ancestors</div>
                 <div class="amida-section-desc">The opening blessing, invoking the God of Abraham, Isaac and Jacob, and of Sarah, Rebecca, Leah and Rachel. It establishes who we are addressing and why we have the right to do so.</div>
@@ -546,7 +551,7 @@
               </div>
               <div class="amida-section-item" data-prayer="amida-elohai-netzor">
                 <div class="amida-section-name"><span class="amida-section-num">8.</span> Elohai Netzor — Personal Meditation</div>
-                <div class="amida-section-desc">A personal meditation that follows the Amida itself — a cooling-down counterpart to the opening verse of preparation. We ask the Divine to guard our tongue from evil, open our hearts to Torah, and bring peace to us and to all Israel.</div>
+                <div class="amida-section-desc">A personal meditation that follows the Amida itself — a cooling-down counterpart to the Petichah. We ask the Divine to guard our tongue from evil, open our hearts to Torah, and bring peace to us and to all Israel.</div>
               </div>
             </div>
           </div>
@@ -866,6 +871,13 @@
           { hebrew: "כִּי שֵׁשֶׁת יָמִים עָשָׂה יְהוָה", transliteration: "ki sheishet yamim asa adonai", stress: "ki SHEI-shet ya-MIM a-SA a-do-NAI", english: "for in six days God made" },
           { hebrew: "אֶת הַשָּׁמַיִם וְאֶת הָאָרֶץ", transliteration: "et hashamayim veet haaretz", stress: "et ha-sha-MA-yim ve-ET ha-A-retz", english: "the heavens and the earth" },
           { hebrew: "וּבַיּוֹם הַשְּׁבִיעִי שָׁבַת וַיִּנָּפַשׁ", transliteration: "uvayom hashvii shavat vayinafash", stress: "u-va-YOM hash-vi-I sha-VAT va-yi-NA-fash", english: "and on the seventh day God rested and was refreshed" }
+        ]
+      },
+
+      "amida-petichah": {
+        name: "Amida — Petichah",
+        lines: [
+          { hebrew: "יְהוָה שְׂפָתַי תִּפְתָּח וּפִי יַגִּיד תְּהִלָּתֶךָ", transliteration: "adonai sefatai tiftach ufi yagid tehilatecha", stress: "a-do-NAI se-fa-TAI tif-TACH u-FI ya-GID te-hi-la-TE-cha", english: "Lord, open my lips, and my mouth shall declare Your praise" }
         ]
       },
 
@@ -1828,6 +1840,11 @@
         sungBar.classList.remove('hidden');
         sungBtn.dataset.src = 'audio/hatikva/full.mp3';
         sungBtn.dataset.label = '🎵 Sung Version';
+        sungBtn.textContent = sungBtn.dataset.label;
+      } else if (currentPrayer === 'amida-petichah') {
+        sungBar.classList.remove('hidden');
+        sungBtn.dataset.src = 'audio/amida-petichah/full.mp3';
+        sungBtn.dataset.label = '🎵 Recording';
         sungBtn.textContent = sungBtn.dataset.label;
       } else {
         sungBar.classList.add('hidden');
