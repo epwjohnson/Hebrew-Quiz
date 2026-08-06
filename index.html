@@ -492,7 +492,8 @@
           <button class="prayer-btn amida-sub" data-prayer="amida-petichah">Petichah</button>
           <button class="prayer-btn amida-sub" data-prayer="amida-avot">Avot</button>
           <button class="prayer-btn amida-sub" data-prayer="amida-gevurot">Gevurot</button>
-          <button class="prayer-btn amida-sub" data-prayer="amida-kedushah">Kedushah</button>
+          <button class="prayer-btn amida-sub" data-prayer="amida-kedushah-friday">Kedushah (Fri)</button>
+          <button class="prayer-btn amida-sub" data-prayer="amida-kedushah-saturday">Kedushah (Sat)</button>
           <button class="prayer-btn amida-sub" data-prayer="amida-kedushat-hayom">Kedushat HaYom</button>
           <button class="prayer-btn amida-sub" data-prayer="amida-avodah">Avodah</button>
           <button class="prayer-btn amida-sub" data-prayer="amida-hodaah">Hoda'ah</button>
@@ -515,6 +516,7 @@
             </div>
             <p class="amida-landing-intro">The Amida — literally "the standing one" — is the central prayer of every Jewish service. As the name suggests, we pray standing and face Jerusalem. The following is the Amidah we say on Friday nights, in seven sections.</p>
             <p class="amida-landing-intro">Before beginning, we traditionally recite a verse of preparation — the <strong>Petichah</strong>. This is not formally part of the Amida itself, but is included below as its own section.</p>
+            <p class="amida-landing-intro">Note: the Kedushah differs between Friday evening and Saturday morning — both versions are included below.</p>
             <p class="amida-landing-intro">Select a section to begin practising:</p>
             <div class="amida-sections-list">
               <div class="amida-section-item" data-prayer="amida-petichah">
@@ -529,9 +531,13 @@
                 <div class="amida-section-name"><span class="amida-section-num">2.</span> Gevurot — the Power of the Divine</div>
                 <div class="amida-section-desc">A meditation on divine strength — not military might, but the power to sustain life, heal the sick, support the fallen, and ultimately to bring resurrection. The repeated phrase <em>mechayeh meitim</em> — "who revives the dead" — runs through it like a heartbeat.</div>
               </div>
-              <div class="amida-section-item" data-prayer="amida-kedushah">
-                <div class="amida-section-name"><span class="amida-section-num">3.</span> Kedushah — Holiness</div>
-                <div class="amida-section-desc">The sanctification of the Divine, drawing on the vision of Isaiah: <em>Kadosh, kadosh, kadosh</em> — "Holy, holy, holy is the Lord of Hosts." On Friday night the Amida is said silently, so this is a simpler, personal acknowledgement of holiness rather than the full congregational Kedushah of Shabbat morning.</div>
+              <div class="amida-section-item" data-prayer="amida-kedushah-friday">
+                <div class="amida-section-name"><span class="amida-section-num">3a.</span> Kedushah — Friday Evening</div>
+                <div class="amida-section-desc">The sanctification of the Divine. On Friday night the Amida is said silently, so this is a simpler, personal acknowledgement of holiness rather than the full congregational Kedushah of Shabbat morning.</div>
+              </div>
+              <div class="amida-section-item" data-prayer="amida-kedushah-saturday">
+                <div class="amida-section-name"><span class="amida-section-num">3b.</span> Kedushah — Saturday Morning</div>
+                <div class="amida-section-desc">The full congregational Kedushah, drawing on the vision of Isaiah: <em>Kadosh, kadosh, kadosh</em> — "Holy, holy, holy is the Lord of Hosts."</div>
               </div>
               <div class="amida-section-item" data-prayer="amida-kedushat-hayom">
                 <div class="amida-section-name"><span class="amida-section-num">4.</span> Kedushat HaYom — The Holiness of the Day</div>
@@ -916,8 +922,17 @@
         ]
       },
 
-      "amida-kedushah": {
-        name: "Amida — Kedushah",
+      "amida-kedushah-friday": {
+        name: "Amida — Kedushah (Friday Evening)",
+        lines: [
+          { hebrew: "אַתָּה קָדוֹשׁ וְשִׁמְךָ קָדוֹשׁ", transliteration: "ata kadosh veshimcha kadosh", stress: "a-TA ka-DOSH ve-shim-CHA ka-DOSH", english: "You are holy and Your name is holy" },
+          { hebrew: "וּקְדוֹשִׁים בְּכָל יוֹם יְהַלְלוּךָ סֶּלָה", transliteration: "ukdoshim bechol yom yehaleluchah selah", stress: "uk-do-SHIM be-CHOL yom ye-ha-le-LU-cha SE-la", english: "and holy beings praise You every day, forever" },
+          { hebrew: "בָּרוּךְ אַתָּה יְהוָה הָאֵל הַקָּדוֹשׁ", transliteration: "baruch ata adonai hael hakadosh", stress: "ba-RUCH a-TA a-do-NAI ha-EL ha-ka-DOSH", english: "Blessed are You, Lord, the Almighty, the Holy One" }
+        ]
+      },
+
+      "amida-kedushah-saturday": {
+        name: "Amida — Kedushah (Saturday Morning)",
         lines: [
           { hebrew: "וְאַתָּה קָדוֹשׁ יוֹשֵׁב תְּהִלּוֹת יִשְׂרָאֵל", transliteration: "veatah kadosh yoshev tehilot yisrael", stress: "ve-a-TA ka-DOSH yo-SHEV te-hi-LOT yis-ra-EL", english: "And You are holy, enthroned on the praises of Israel" },
           { hebrew: "קָדוֹשׁ קָדוֹשׁ קָדוֹשׁ יְהוָה צְבָאוֹת", transliteration: "kadosh kadosh kadosh adonai tzvaot", stress: "ka-DOSH ka-DOSH ka-DOSH a-do-NAI tzva-OT", english: "Holy, holy, holy is the Lord of Hosts" },
