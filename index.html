@@ -122,6 +122,26 @@
     .amida-section-name { font-size: 1.05rem; font-weight: 600; color: var(--gold); margin-bottom: 4px; }
     .amida-section-num { color: var(--gold-dim); margin-right: 2px; }
     .amida-section-desc { font-size: 0.92rem; color: var(--silver-dim); line-height: 1.6; }
+    /* Peek buttons */
+    .peek-btn {
+      font-size: 0.75rem;
+      padding: 3px 10px;
+      border: 1px solid var(--gold-dim);
+      background: transparent;
+      color: var(--silver-dim);
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+    .peek-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .peek-content {
+      text-align: center;
+      font-size: 0.88rem;
+      color: var(--silver-dim);
+      margin: 2px 0;
+      font-style: italic;
+    }
     
     header {
       text-align: center;
@@ -501,6 +521,7 @@
           <button class="prayer-btn amida-sub" data-prayer="amida-elohai-netzor">Elohai Netzor</button>
         </div>
         <button class="prayer-btn" data-prayer="aleinu">Aleinu</button>
+        <button class="prayer-btn" data-prayer="kaddish">Kaddish</button>
         <button class="prayer-btn" data-prayer="adon-olam">Adon Olam</button>
         <button class="prayer-btn" data-prayer="kiddush">Kiddush</button>
         <button class="prayer-btn" data-prayer="hatikva">Hatikva</button>
@@ -569,6 +590,9 @@
           <button id="sung-version-btn" style="padding: 8px 22px; border: 1px solid var(--gold-dim); background: transparent; color: var(--gold); font-family: 'Crimson Pro', serif; font-size: 0.95rem; border-radius: 6px; cursor: pointer; transition: all 0.2s;">🎵 Sung Version</button>
         </div>
 
+        <!-- Prayer-level note - shown for prayers with a note field -->
+        <div id="prayer-note" class="hidden" style="margin-bottom: 12px; padding: 8px 14px; background: rgba(184,134,11,0.08); border-left: 3px solid var(--gold-dim); border-radius: 0 6px 6px 0; font-size: 0.88rem; color: var(--silver-dim); font-style: italic;"></div>
+
         <!-- Feedback banner - appears after attempt, above Hebrew -->
         <div class="feedback-message hidden" id="feedback-message"></div>
 
@@ -590,6 +614,14 @@
           <button class="action-btn secondary" id="back-btn" style="padding: 8px 16px; font-size: 0.95rem; line-height: 1.2; background: #1a3a5c; color: #7eb8e0; border-color: #2a5a8c;">← Back</button>
           <button class="action-btn secondary" id="skip-btn" style="padding: 8px 16px; font-size: 0.95rem; line-height: 1.2; background: #1a3a2a; color: #5cb87a; border-color: #2a6a40;">Skip →</button>
         </div>
+
+        <!-- Peek buttons - shown before attempt -->
+        <div id="peek-buttons" style="text-align: center; margin-top: 10px; display: flex; justify-content: center; gap: 10px;">
+          <button id="peek-translit-btn" class="peek-btn">Show Transliteration</button>
+          <button id="peek-meaning-btn" class="peek-btn">Show Meaning</button>
+        </div>
+        <div id="peek-translit" class="peek-content hidden"></div>
+        <div id="peek-meaning" class="peek-content hidden"></div>
 
         <!-- Detailed results - below fold, user doesn't need to scroll here to continue -->
         <div class="results-area hidden" id="results-area">
@@ -680,6 +712,38 @@
             notes: ["<strong>כַלָּה</strong> — pronounce <em>cha-LA</em> with a guttural ח, not <em>ka-LA</em>. The quiz cannot distinguish the two, but use ח for correct pronunciation."] }
         ]
       },
+      "kaddish": {
+        name: "Kaddish",
+        note: "Kaddish is in Aramaic, not Hebrew. Speech recognition may find it harder than Hebrew — speak slowly and clearly.",
+        lines: [
+          { hebrew: "יִתְגַּדַּל וְיִתְקַדַּשׁ שְׁמֵהּ רַבָּא", transliteration: "yitgadal veyitkadash shmeih raba", stress: "yit-ga-DAL ve-yit-ka-DASH shmei-H ra-BA", english: "Magnified and sanctified be His great name" },
+          { hebrew: "בְּעָלְמָא דִּי בְרָא כִרְעוּתֵהּ", transliteration: "beolma di vera chiruteih", stress: "be-ol-MA di ve-RA chi-ru-TEI-h", english: "in the world which He created according to His will" },
+          { hebrew: "וְיַמְלִיךְ מַלְכוּתֵהּ", transliteration: "veyamlich malchuteih", stress: "ve-yam-LICH mal-chu-TEI-h", english: "and may He establish His kingdom" },
+          { hebrew: "בְּחַיֵּיכוֹן וּבְיוֹמֵיכוֹן", transliteration: "bechayeichon uvyomeichon", stress: "be-cha-yei-CHON uv-yo-mei-CHON", english: "in your lifetime and in your days" },
+          { hebrew: "וּבְחַיֵּי דְכָל בֵּית יִשְׂרָאֵל", transliteration: "uvchayei dechol beit yisrael", stress: "uv-cha-YEI de-CHOL beit yis-ra-EL", english: "and in the life of all the house of Israel" },
+          { hebrew: "בַּעֲגָלָא וּבִזְמַן קָרִיב", transliteration: "baagala uvizman kariv", stress: "ba-a-ga-LA u-viz-MAN ka-RIV", english: "speedily and soon" },
+          { hebrew: "וְאִמְרוּ אָמֵן", transliteration: "veimru amen", stress: "ve-im-RU a-MEN", english: "and say, Amen" },
+          { hebrew: "יְהֵא שְׁמֵהּ רַבָּא מְבָרַךְ", transliteration: "yehei shmeih raba mevorach", stress: "ye-HEI shmei-H ra-BA me-vo-RACH", english: "May His great name be blessed" },
+          { hebrew: "לְעָלַם וּלְעָלְמֵי עָלְמַיָּא", transliteration: "lealam ulalmei almaya", stress: "le-a-LAM ul-al-MEI al-ma-YA", english: "forever and ever" },
+          { hebrew: "יִתְבָּרַךְ וְיִשְׁתַּבַּח", transliteration: "yitbarach veyishtabach", stress: "yit-ba-RACH ve-yish-ta-BACH", english: "Blessed and praised" },
+          { hebrew: "וְיִתְפָּאַר וְיִתְרוֹמַם", transliteration: "veyitpaar veyitromam", stress: "ve-yit-pa-AR ve-yit-ro-MAM", english: "glorified and exalted" },
+          { hebrew: "וְיִתְנַשֵּׂא וְיִתְהַדָּר", transliteration: "veyitnase veyithadar", stress: "ve-yit-na-SE ve-yit-ha-DAR", english: "extolled and honoured" },
+          { hebrew: "וְיִתְעַלֶּה וְיִתְהַלָּל", transliteration: "veyitale veyithalal", stress: "ve-yit-a-LEH ve-yit-ha-LAL", english: "adored and lauded" },
+          { hebrew: "שְׁמֵהּ דְּקֻדְשָׁא בְּרִיךְ הוּא", transliteration: "shmeih dekudsha brich hu", stress: "shmei-H de-kud-SHA b-RICH HU", english: "be the name of the Holy One, blessed be He" },
+          { hebrew: "לְעֵלָּא מִן כָּל בִּרְכָתָא", transliteration: "leela min kol birchata", stress: "le-EI-la min KOL bir-cha-TA", english: "beyond all blessings" },
+          { hebrew: "וְשִׁירָתָא תֻּשְׁבְּחָתָא וְנֶחֱמָתָא", transliteration: "veshirata tushbechata venechamata", stress: "ve-shi-ra-TA tush-be-cha-TA ve-ne-che-ma-TA", english: "hymns, praises and consolations" },
+          { hebrew: "דַּאֲמִירָן בְּעָלְמָא", transliteration: "daamiran beolma", stress: "da-a-mi-RAN be-ol-MA", english: "that are uttered in the world" },
+          { hebrew: "וְאִמְרוּ אָמֵן", transliteration: "veimru amen", stress: "ve-im-RU a-MEN", english: "and say, Amen" },
+          { hebrew: "יְהֵא שְׁלָמָא רַבָּא מִן שְׁמַיָּא", transliteration: "yehei shelama raba min shemaya", stress: "ye-HEI she-la-MA ra-BA min she-ma-YA", english: "May there be great peace from heaven" },
+          { hebrew: "וְחַיִּים עָלֵינוּ וְעַל כָּל יִשְׂרָאֵל", transliteration: "vechayim aleinu veal kol yisrael", stress: "ve-cha-YIM a-LEI-nu ve-AL kol yis-ra-EL", english: "and life for us and for all Israel" },
+          { hebrew: "וְאִמְרוּ אָמֵן", transliteration: "veimru amen", stress: "ve-im-RU a-MEN", english: "and say, Amen" },
+          { hebrew: "עֹשֶׂה שָׁלוֹם בִּמְרוֹמָיו", transliteration: "oseh shalom bimromav", stress: "o-SEH sha-LOM bim-ro-MAV", english: "May the One who makes peace in the highest places" },
+          { hebrew: "הוּא יַעֲשֶׂה שָׁלוֹם עָלֵינוּ", transliteration: "hu yaase shalom aleinu", stress: "HU ya-a-SEH sha-LOM a-LEI-nu", english: "make peace for us" },
+          { hebrew: "וְעַל כָּל יִשְׂרָאֵל", transliteration: "veal kol yisrael", stress: "ve-AL kol yis-ra-EL", english: "and for all Israel" },
+          { hebrew: "וְאִמְרוּ אָמֵן", transliteration: "veimru amen", stress: "ve-im-RU a-MEN", english: "and say, Amen" }
+        ]
+      },
+
       "adon-olam": {
         name: "Adon Olam",
         lines: [
@@ -1542,6 +1606,11 @@
       const isCorrect = comparison.score >= 0.85;
       const isPerfect = comparison.score >= 1.0;
 
+      // Hide peek buttons — content now shown in results area
+      document.getElementById('peek-buttons').classList.add('hidden');
+      document.getElementById('peek-translit').classList.add('hidden');
+      document.getElementById('peek-meaning').classList.add('hidden');
+
       // Show detailed results below
       heardText.innerHTML = renderHeard(comparison.results, isPerfect);
       expectedText.innerHTML = renderExpected(comparison.results);
@@ -1695,6 +1764,29 @@
       feedbackMessage.classList.add('hidden');
       document.getElementById('action-buttons').classList.add('hidden');
       document.getElementById('pronunciation-notes').classList.add('hidden');
+
+      // Prayer-level note
+      const prayerNoteEl = document.getElementById('prayer-note');
+      if (prayer.note) {
+        prayerNoteEl.textContent = prayer.note;
+        prayerNoteEl.classList.remove('hidden');
+      } else {
+        prayerNoteEl.classList.add('hidden');
+      }
+
+      // Reset peek buttons
+      const peekButtons = document.getElementById('peek-buttons');
+      const peekTranslit = document.getElementById('peek-translit');
+      const peekMeaning = document.getElementById('peek-meaning');
+      const peekTranslitBtn = document.getElementById('peek-translit-btn');
+      const peekMeaningBtn = document.getElementById('peek-meaning-btn');
+      peekTranslit.textContent = line.stress || line.transliteration;
+      peekMeaning.textContent = line.english;
+      peekTranslit.classList.add('hidden');
+      peekMeaning.classList.add('hidden');
+      peekTranslitBtn.textContent = 'Show Transliteration';
+      peekMeaningBtn.textContent = 'Show Meaning';
+      peekButtons.classList.remove('hidden');
       micStatus.textContent = 'Click to start recording';
       micStatus.classList.remove('listening', 'processing');
       
@@ -1932,6 +2024,20 @@
     showLine();
     updateListenButton();
     updateSungVersionBar();
+
+    // Peek buttons
+    document.getElementById('peek-translit-btn').addEventListener('click', () => {
+      const el = document.getElementById('peek-translit');
+      const btn = document.getElementById('peek-translit-btn');
+      const hidden = el.classList.toggle('hidden');
+      btn.textContent = hidden ? 'Show Transliteration' : 'Hide Transliteration';
+    });
+    document.getElementById('peek-meaning-btn').addEventListener('click', () => {
+      const el = document.getElementById('peek-meaning');
+      const btn = document.getElementById('peek-meaning-btn');
+      const hidden = el.classList.toggle('hidden');
+      btn.textContent = hidden ? 'Show Meaning' : 'Hide Meaning';
+    });
 
     // Welcome screen
     document.getElementById('begin-btn').addEventListener('click', () => {
