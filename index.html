@@ -135,6 +135,26 @@
       transition: all 0.2s;
     }
     .peek-btn:hover { border-color: var(--gold); color: var(--gold); }
+    /* Full text modal toggle buttons */
+    .ft-toggle-btn {
+      font-size: 0.75rem;
+      padding: 4px 12px;
+      border: 1px solid var(--gold-dim);
+      background: transparent;
+      color: var(--silver-dim);
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+    .ft-toggle-btn.active { background: rgba(184,134,11,0.15); color: var(--gold); border-color: var(--gold); }
+    .ft-line { padding: 10px 20px; border-bottom: 1px solid #131f33; }
+    .ft-line:last-child { border-bottom: none; }
+    .ft-hebrew { text-align: right; direction: rtl; font-size: 1.3rem; color: #e8e8e8; line-height: 1.5; font-family: 'David Libre', serif; }
+    .ft-translit { font-size: 0.85rem; color: var(--gold); font-style: italic; margin-top: 3px; display: none; }
+    .ft-meaning { font-size: 0.82rem; color: #6a7a8a; margin-top: 2px; display: none; }
+    .ft-show-translit .ft-translit { display: block; }
+    .ft-show-meaning .ft-meaning { display: block; }
     .peek-content {
       text-align: center;
       font-size: 0.88rem;
@@ -586,8 +606,26 @@
           <div id="quiz-area">
 
         <!-- Sung version button - shown only for L'cha Dodi -->
-        <div id="sung-version-bar" class="hidden" style="text-align: center; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid #30363d;">
+        <div id="sung-version-bar" class="hidden" style="text-align: center; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid #30363d; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
           <button id="sung-version-btn" style="padding: 8px 22px; border: 1px solid var(--gold-dim); background: transparent; color: var(--gold); font-family: 'Crimson Pro', serif; font-size: 0.95rem; border-radius: 6px; cursor: pointer; transition: all 0.2s;">🎵 Sung Version</button>
+          <button id="full-text-btn" style="padding: 8px 22px; border: 1px solid var(--gold-dim); background: transparent; color: var(--gold); font-family: 'Crimson Pro', serif; font-size: 0.95rem; border-radius: 6px; cursor: pointer; transition: all 0.2s;">📖 Full Text</button>
+        </div>
+
+        <!-- Full text modal -->
+        <div id="full-text-modal" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; display: flex; align-items: flex-start; justify-content: center; padding-top: 40px; padding-bottom: 40px;">
+          <div style="background: #0f1f3d; border: 1px solid #2a3f5f; border-radius: 12px; width: 600px; max-width: 94vw; max-height: 80vh; display: flex; flex-direction: column; overflow: hidden;">
+            <!-- Modal header -->
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid #1e3050; flex-shrink: 0;">
+              <span id="full-text-title" style="font-size: 1rem; font-weight: 600; color: var(--gold); letter-spacing: 0.03em;"></span>
+              <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                <button id="ft-translit-btn" class="ft-toggle-btn">Show Transliteration</button>
+                <button id="ft-meaning-btn" class="ft-toggle-btn">Show Meaning</button>
+                <button id="full-text-close" style="font-size: 1.2rem; background: none; border: none; color: var(--silver-dim); cursor: pointer; padding: 0 4px; line-height: 1;">✕</button>
+              </div>
+            </div>
+            <!-- Modal body -->
+            <div id="full-text-body" style="overflow-y: auto; flex: 1; padding: 4px 0;"></div>
+          </div>
         </div>
 
         <!-- Prayer-level note - shown for prayers with a note field -->
@@ -1174,6 +1212,7 @@
       document.getElementById('quiz-area').classList.add('hidden');
       document.getElementById('completion').classList.add('hidden');
       document.getElementById('quiz-controls').classList.add('hidden');
+      document.getElementById('sung-version-bar').classList.add('hidden');
       // Clear active state from all prayer buttons
       prayerBtns.forEach(btn => btn.classList.remove('active'));
       amidaToggle.classList.add('open');
@@ -1653,6 +1692,14 @@
         isAdvancing = true;
         setTimeout(() => nextLine(), 3000);
       }
+
+      // In manual mode on a perfect score, change Skip to Proceed and show action-buttons
+      if (isPerfect && srMode === 'manual') {
+        const skipBtn = document.getElementById('skip-btn');
+        skipBtn.textContent = 'Proceed →';
+        skipBtn.dataset.proceed = 'true';
+        document.getElementById('action-buttons').classList.remove('hidden');
+      }
     }
 
     // Render comparison with highlighting
@@ -1788,6 +1835,11 @@
       peekTranslitBtn.textContent = 'Show Transliteration';
       peekMeaningBtn.textContent = 'Show Meaning';
       peekButtons.classList.remove('hidden');
+
+      // Reset skip button
+      const skipBtn = document.getElementById('skip-btn');
+      skipBtn.textContent = 'Skip →';
+      skipBtn.dataset.proceed = 'false';
       micStatus.textContent = 'Click to start recording';
       micStatus.classList.remove('listening', 'processing');
       
@@ -1841,6 +1893,7 @@
         amidaLanding.classList.add('hidden');
         document.getElementById('quiz-area').classList.remove('hidden');
         document.getElementById('quiz-controls').classList.remove('hidden');
+        document.getElementById('sung-version-bar').classList.remove('hidden');
         amidaGroup.classList.add('open');
         amidaToggle.classList.add('open');
         amidaToggle.textContent = 'Amida ▾';
@@ -1848,6 +1901,7 @@
         amidaLanding.classList.add('hidden');
         document.getElementById('quiz-area').classList.remove('hidden');
         document.getElementById('quiz-controls').classList.remove('hidden');
+        document.getElementById('sung-version-bar').classList.remove('hidden');
       }
       
       quizArea.classList.remove('hidden');
@@ -1894,12 +1948,19 @@
     });
 
     document.getElementById('skip-btn').addEventListener('click', () => {
-      const prayer = prayers[currentPrayer];
-      currentLineIndex++;
-      if (currentLineIndex >= prayer.lines.length) {
-        currentLineIndex = 0;
+      const skipBtn = document.getElementById('skip-btn');
+      if (skipBtn.dataset.proceed === 'true') {
+        // Acting as Proceed — score the line and advance
+        nextLine();
+      } else {
+        // Acting as Skip — advance without scoring
+        const prayer = prayers[currentPrayer];
+        currentLineIndex++;
+        if (currentLineIndex >= prayer.lines.length) {
+          currentLineIndex = 0;
+        }
+        showLine();
       }
-      showLine();
     });
 
     restartBtn.addEventListener('click', () => switchPrayer(currentPrayer));
@@ -1918,44 +1979,53 @@
         sungBar.classList.remove('hidden');
         sungBtn.dataset.src = 'audio/lecha-dodi/full.mp3';
         sungBtn.dataset.label = '🎵 Sung Version';
+        sungBtn.style.display = '';
         sungBtn.textContent = sungBtn.dataset.label;
       } else if (currentPrayer === 'mizmor-shir') {
         sungBar.classList.remove('hidden');
         sungBtn.dataset.src = 'audio/mizmor-shir/full.mp3';
         sungBtn.dataset.label = '🎵 Sung Version';
+        sungBtn.style.display = '';
         sungBtn.textContent = sungBtn.dataset.label;
       } else if (currentPrayer === 'tzadik-katamar') {
         sungBar.classList.remove('hidden');
         sungBtn.dataset.src = 'audio/tzadik-katamar/full.mp3';
         sungBtn.dataset.label = '🎵 Sung Version';
+        sungBtn.style.display = '';
         sungBtn.textContent = sungBtn.dataset.label;
       } else if (currentPrayer === 'shalom-aleichem') {
         sungBar.classList.remove('hidden');
         sungBtn.dataset.src = 'audio/shalom-aleichem/full.mp3';
         sungBtn.dataset.label = '🎵 Sung Version';
+        sungBtn.style.display = '';
         sungBtn.textContent = sungBtn.dataset.label;
       } else if (currentPrayer === 'aleinu') {
         sungBar.classList.remove('hidden');
         sungBtn.dataset.src = 'audio/aleinu/full.mp3';
         sungBtn.dataset.label = '🎵 Sung Version';
+        sungBtn.style.display = '';
         sungBtn.textContent = sungBtn.dataset.label;
       } else if (currentPrayer === 'adon-olam') {
         sungBar.classList.remove('hidden');
         sungBtn.dataset.src = 'audio/adon-olam/full.mp3';
         sungBtn.dataset.label = '🎵 Sung Version';
+        sungBtn.style.display = '';
         sungBtn.textContent = sungBtn.dataset.label;
       } else if (currentPrayer === 'hatikva') {
         sungBar.classList.remove('hidden');
         sungBtn.dataset.src = 'audio/hatikva/full.mp3';
         sungBtn.dataset.label = '🎵 Sung Version';
+        sungBtn.style.display = '';
         sungBtn.textContent = sungBtn.dataset.label;
       } else if (currentPrayer === 'amida-petichah') {
         sungBar.classList.remove('hidden');
         sungBtn.dataset.src = 'audio/amida-petichah/full.mp3';
         sungBtn.dataset.label = '🎵 Recording';
+        sungBtn.style.display = '';
         sungBtn.textContent = sungBtn.dataset.label;
       } else {
-        sungBar.classList.add('hidden');
+        sungBar.classList.remove('hidden');
+        sungBtn.style.display = 'none';
         if (sungAudio) { sungAudio.pause(); sungAudio = null; }
         sungBtn.textContent = '🎵 Sung Version';
       }
@@ -2038,6 +2108,69 @@
       const btn = document.getElementById('peek-meaning-btn');
       const hidden = el.classList.toggle('hidden');
       btn.textContent = hidden ? 'Show Meaning' : 'Hide Meaning';
+    });
+
+    // Full text modal
+    const fullTextModal = document.getElementById('full-text-modal');
+    const fullTextBody = document.getElementById('full-text-body');
+    const fullTextTitle = document.getElementById('full-text-title');
+    const ftTranslitBtn = document.getElementById('ft-translit-btn');
+    const ftMeaningBtn = document.getElementById('ft-meaning-btn');
+    let ftShowTranslit = false;
+    let ftShowMeaning = false;
+
+    function openFullText() {
+      const prayer = prayers[currentPrayer];
+      fullTextTitle.textContent = prayer.name;
+      fullTextBody.innerHTML = prayer.lines.map(line => `
+        <div class="ft-line">
+          <div class="ft-hebrew">${line.hebrew}</div>
+          <div class="ft-translit">${line.stress || line.transliteration}</div>
+          <div class="ft-meaning">${line.english}</div>
+        </div>
+      `).join('');
+      ftShowTranslit = false;
+      ftShowMeaning = false;
+      ftTranslitBtn.classList.remove('active');
+      ftMeaningBtn.classList.remove('active');
+      ftTranslitBtn.textContent = 'Show Transliteration';
+      ftMeaningBtn.textContent = 'Show Meaning';
+      applyFtClasses();
+      fullTextModal.classList.remove('hidden');
+      fullTextModal.style.display = 'flex';
+    }
+
+    function applyFtClasses() {
+      fullTextBody.classList.toggle('ft-show-translit', ftShowTranslit);
+      fullTextBody.classList.toggle('ft-show-meaning', ftShowMeaning);
+    }
+
+    document.getElementById('full-text-btn').addEventListener('click', openFullText);
+
+    document.getElementById('full-text-close').addEventListener('click', () => {
+      fullTextModal.classList.add('hidden');
+      fullTextModal.style.display = 'none';
+    });
+
+    fullTextModal.addEventListener('click', (e) => {
+      if (e.target === fullTextModal) {
+        fullTextModal.classList.add('hidden');
+        fullTextModal.style.display = 'none';
+      }
+    });
+
+    ftTranslitBtn.addEventListener('click', () => {
+      ftShowTranslit = !ftShowTranslit;
+      ftTranslitBtn.classList.toggle('active', ftShowTranslit);
+      ftTranslitBtn.textContent = ftShowTranslit ? 'Hide Transliteration' : 'Show Transliteration';
+      applyFtClasses();
+    });
+
+    ftMeaningBtn.addEventListener('click', () => {
+      ftShowMeaning = !ftShowMeaning;
+      ftMeaningBtn.classList.toggle('active', ftShowMeaning);
+      ftMeaningBtn.textContent = ftShowMeaning ? 'Hide Meaning' : 'Show Meaning';
+      applyFtClasses();
     });
 
     // Welcome screen
