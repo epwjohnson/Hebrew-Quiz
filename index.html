@@ -526,6 +526,7 @@
         <button class="prayer-btn" data-prayer="barchu">Barchu</button>
         <button class="prayer-btn" data-prayer="ahavat-olam">Ahavat Olam</button>
         <button class="prayer-btn" data-prayer="shema">Shema</button>
+        <button class="prayer-btn" data-prayer="shema-full">Shema (Full)</button>
         <button class="prayer-btn" data-prayer="vshamru">V'shamru</button>
         <button class="prayer-btn amida-group-toggle" id="amida-toggle">Amida ▸</button>
         <div class="amida-group" id="amida-group">
@@ -729,6 +730,84 @@
           { hebrew: "וּכְתַבְתָּם עַל מְזֻזוֹת בֵּיתֶךָ וּבִשְׁעָרֶיךָ", transliteration: "uchtavtam al mezuzot beitecha uvisharecha", stress: "uch-tav-TAM al me-zu-ZOT bei-TE-cha u-vi-sha-RE-cha", english: "And you shall write them on the doorposts of your house and on your gates" }
         ]
       },
+
+      "shema-full": {
+        name: "Shema (Full)",
+        lines: [
+          // Paragraph 1 — V'ahavta (Deuteronomy 6:4-9) — repeated from Shema (Initial)
+          { hebrew: "שְׁמַע יִשְׂרָאֵל יְהוָה אֱלֹהֵינוּ יְהוָה אֶחָד", transliteration: "shma yisrael adonai eloheinu adonai echad", stress: "SHMA yis-RA-el a-do-NAI e-lo-HEI-nu a-do-NAI e-CHAD", english: "Hear, O Israel: the Lord is our God, the Lord is One",
+            notes: ["<strong>יִשְׂרָאֵל</strong> — <em>yis</em>-ra-el, not <em>is</em>-ra-el (י = y sound)", "<strong>אֶחָד</strong> — e-<em>chad</em>, not e-<em>had</em> (ח = guttural ch)"] },
+          { hebrew: "בָּרוּךְ שֵׁם כְּבוֹד מַלְכוּתוֹ לְעוֹלָם וָעֶד", transliteration: "baruch shem kvod malchuto leolam vaed", stress: "ba-RUCH shem KVOD mal-chu-TO le-o-LAM VA-ed", english: "Blessed be the name of His glorious kingdom forever and ever" },
+          { hebrew: "וְאָהַבְתָּ אֵת יְהוָה אֱלֹהֶיךָ", transliteration: "veahavta et adonai elohecha", stress: "ve-a-HAV-ta et a-do-NAI e-lo-HE-cha", english: "And you shall love the Lord your God" },
+          { hebrew: "בְּכָל לְבָבְךָ וּבְכָל נַפְשְׁךָ וּבְכָל מְאֹדֶךָ", transliteration: "bechol levavcha uvchol nafshecha uvchol meodecha", stress: "be-CHOL le-VAV-cha uv-CHOL naf-SHE-cha uv-CHOL me-O-de-cha", english: "with all your heart, with all your soul, and with all your might" },
+          { hebrew: "וְהָיוּ הַדְּבָרִים הָאֵלֶּה", transliteration: "vehayu hadvarim haeleh", stress: "ve-HA-yu had-va-RIM ha-E-leh", english: "And these words" },
+          { hebrew: "אֲשֶׁר אָנֹכִי מְצַוְּךָ הַיּוֹם עַל לְבָבֶךָ", transliteration: "asher anochi metzavecha hayom al levavecha", stress: "A-sher a-NO-chi me-tza-VE-cha ha-YOM al le-va-VE-cha", english: "which I command you today shall be upon your heart" },
+          { hebrew: "וְשִׁנַּנְתָּם לְבָנֶיךָ וְדִבַּרְתָּ בָּם", transliteration: "veshinantam levanecha vedibarta bam", stress: "ve-shi-NAN-tam le-va-NE-cha ve-di-BAR-ta BAM", english: "And you shall teach them diligently to your children, and speak of them" },
+          { hebrew: "בְּשִׁבְתְּךָ בְּבֵיתֶךָ", transliteration: "beshivtecha beveitecha", stress: "be-shiv-TE-cha be-vei-TE-cha", english: "when you sit in your house" },
+          { hebrew: "וּבְלֶכְתְּךָ בַדֶּרֶךְ", transliteration: "uvlechtecha vaderech", stress: "uv-lech-TE-cha va-DE-rech", english: "and when you walk on the way" },
+          { hebrew: "וּבְ-שָׁכְבְּךָ וּבְקוּמֶךָ", transliteration: "uvshochbecha uvkumecha", stress: "uv-shoch-BE-cha uv-ku-ME-cha", english: "when you lie down and when you rise up" },
+          { hebrew: "וּקְשַׁרְתָּם לְאוֹת עַל יָדֶךָ", transliteration: "ukshartam leot al yadecha", stress: "uk-shar-TAM le-OT al ya-DE-cha", english: "And you shall bind them as a sign upon your hand" },
+          { hebrew: "וְהָיוּ לְטֹטָפֹת בֵּין עֵינֶיךָ", transliteration: "vehayu letotafot bein einecha", stress: "ve-HA-yu le-to-ta-FOT bein ei-NE-cha", english: "and they shall be as frontlets between your eyes" },
+          { hebrew: "וּכְתַבְתָּם עַל מְזֻזוֹת בֵּיתֶךָ וּבִשְׁעָרֶיךָ", transliteration: "uchtavtam al mezuzot beitecha uvisharecha", stress: "uch-tav-TAM al me-zu-ZOT bei-TE-cha u-vi-sha-RE-cha", english: "And you shall write them on the doorposts of your house and on your gates" },
+          // Paragraph 2 — V'haya im shamoa (Deuteronomy 11:13-21)
+          { hebrew: "וְהָיָה אִם שָׁמֹעַ תִּשְׁמְעוּ", transliteration: "vehaya im shamoa tishmeyu", stress: "ve-ha-YA im sha-MO-a tish-me-YU", english: "And it shall come to pass, if you diligently hearken" },
+          { hebrew: "אֶל מִצְוֹתַי אֲשֶׁר אָנֹכִי מְצַוֶּה אֶתְכֶם הַיּוֹם", transliteration: "el mitzvotai asher anochi metzaveh etchem hayom", stress: "el mitz-vo-TAI a-sher a-NO-chi me-tza-VEH et-CHEM ha-YOM", english: "to My commandments which I command you this day" },
+          { hebrew: "לְאַהֲבָה אֶת יְהוָה אֱלֹהֵיכֶם", transliteration: "leahava et adonai eloheichem", stress: "le-a-ha-VA et a-do-NAI e-lo-hei-CHEM", english: "to love the Lord your God" },
+          { hebrew: "וּלְעָבְדוֹ בְּכָל לְבַבְכֶם וּבְכָל נַפְשְׁכֶם", transliteration: "ulevodo bechol levavchem uvchol nafshechem", stress: "u-le-av-DO be-CHOL le-vav-CHEM uv-CHOL naf-she-CHEM", english: "and to serve Him with all your heart and with all your soul" },
+          { hebrew: "וְנָתַתִּי מְטַר אַרְצְכֶם בְּעִתּוֹ", transliteration: "venatati metar artzechem beito", stress: "ve-na-ta-TI me-TAR artz-CHEM be-i-TO", english: "that I will give rain for your land in its season" },
+          { hebrew: "יוֹרֶה וּמַלְקוֹשׁ", transliteration: "yoreh umalkosh", stress: "yo-REH u-mal-KOSH", english: "the early rain and the latter rain" },
+          { hebrew: "וְאָסַפְתָּ דְגָנֶךָ וְתִירֹשְׁךָ וְיִצְהָרֶךָ", transliteration: "veasafta deganecha vetiroshecha veyitzharecha", stress: "ve-a-saf-TA de-ga-NE-cha ve-ti-ro-SHE-cha ve-yitz-ha-RE-cha", english: "that you may gather in your corn, your wine, and your oil" },
+          { hebrew: "וְנָתַתִּי עֵשֶׂב בְּשָׂדְךָ לִבְהֶמְתֶּךָ", transliteration: "venatati esev besadecha livhemtecha", stress: "ve-na-ta-TI E-sev be-sad-CHA liv-hem-TE-cha", english: "and I will give grass in your fields for your cattle" },
+          { hebrew: "וְאָכַלְתָּ וְשָׂבָעְתָּ", transliteration: "veachalta vesavata", stress: "ve-a-chal-TA ve-sa-va-TA", english: "and you shall eat and be satisfied" },
+          { hebrew: "הִשָּׁמְרוּ לָכֶם פֶּן יִפְתֶּה לְבַבְכֶם", transliteration: "hishameru lachem pen yifteh levavchem", stress: "hi-sha-me-RU la-CHEM pen yif-TEH le-vav-CHEM", english: "Take heed to yourselves, lest your heart be deceived" },
+          { hebrew: "וְסַרְתֶּם וַעֲבַדְתֶּם אֱלֹהִים אֲחֵרִים", transliteration: "vesartem vaavadtem elohim acherim", stress: "ve-sar-TEM va-a-vad-TEM e-lo-HIM a-che-RIM", english: "and you turn aside, and serve other gods" },
+          { hebrew: "וְהִשְׁתַּחֲוִיתֶם לָהֶם", transliteration: "vehishtachavitem lahem", stress: "ve-hish-ta-cha-vi-TEM la-HEM", english: "and worship them" },
+          { hebrew: "וְחָרָה אַף יְהוָה בָּכֶם", transliteration: "vecharah af adonai bachem", stress: "ve-cha-RA af a-do-NAI ba-CHEM", english: "and the anger of the Lord be kindled against you" },
+          { hebrew: "וְעָצַר אֶת הַשָּׁמַיִם וְלֹא יִהְיֶה מָטָר", transliteration: "veatsar et hashamayim velo yihyeh matar", stress: "ve-a-TZAR et ha-sha-MA-yim ve-LO yih-YEH ma-TAR", english: "and He shut up the heaven, that there be no rain" },
+          { hebrew: "וְהָאֲדָמָה לֹא תִתֵּן אֶת יְבוּלָהּ", transliteration: "vehaadama lo titen et yevulah", stress: "ve-ha-a-da-MA lo ti-TEN et ye-vu-LA", english: "and the ground yield not her fruit" },
+          { hebrew: "וַאֲבַדְתֶּם מְהֵרָה מֵעַל הָאָרֶץ הַטֹּבָה", transliteration: "vaavadtem mehera meal haaretz hatova", stress: "va-a-vad-TEM me-he-RA me-AL ha-A-retz ha-to-VA", english: "and you perish quickly from off the good land" },
+          { hebrew: "אֲשֶׁר יְהוָה נֹתֵן לָכֶם", transliteration: "asher adonai noten lachem", stress: "a-SHER a-do-NAI no-TEN la-CHEM", english: "which the Lord gives you" },
+          { hebrew: "וְשַׂמְתֶּם אֶת דְּבָרַי אֵלֶּה עַל לְבַבְכֶם", transliteration: "vesamtem et devarai eleh al levavchem", stress: "ve-sam-TEM et de-va-RAI E-leh al le-vav-CHEM", english: "Therefore you shall lay up these words of Mine in your heart" },
+          { hebrew: "וְעַל נַפְשְׁכֶם", transliteration: "veal nafshechem", stress: "ve-AL naf-she-CHEM", english: "and in your soul" },
+          { hebrew: "וּקְשַׁרְתֶּם אֹתָם לְאוֹת עַל יֶדְכֶם", transliteration: "uksharten otam leot al yedchem", stress: "uk-shar-TEM o-TAM le-OT al yed-CHEM", english: "and bind them for a sign upon your hand" },
+          { hebrew: "וְהָיוּ לְטוֹטָפֹת בֵּין עֵינֵיכֶם", transliteration: "vehayu letotafot bein eineichem", stress: "ve-HA-yu le-to-ta-FOT bein ei-nei-CHEM", english: "and they shall be as frontlets between your eyes" },
+          { hebrew: "וְלִמַּדְתֶּם אֹתָם אֶת בְּנֵיכֶם לְדַבֵּר בָּם", transliteration: "velimadtem otam et beneichem ledaber bam", stress: "ve-li-mad-TEM o-TAM et be-nei-CHEM le-da-BER BAM", english: "And you shall teach them your children, speaking of them" },
+          { hebrew: "בְּשִׁבְתְּךָ בְּבֵיתֶךָ וּבְלֶכְתְּךָ בַדֶּרֶךְ", transliteration: "beshivtecha beveitecha uvlechtecha vaderech", stress: "be-shiv-TE-cha be-vei-TE-cha uv-lech-TE-cha va-DE-rech", english: "when you sit in your house and when you walk by the way" },
+          { hebrew: "וּבְשָׁכְבְּךָ וּבְקוּמֶךָ", transliteration: "uvshochbecha uvkumecha", stress: "uv-shoch-BE-cha uv-ku-ME-cha", english: "when you lie down and when you rise up" },
+          { hebrew: "וּכְתַבְתָּם עַל מְזוּזוֹת בֵּיתֶךָ וּבִשְׁעָרֶיךָ", transliteration: "uchtavtam al mezuzot beitecha uvisharecha", stress: "uch-tav-TAM al me-zu-ZOT bei-TE-cha u-vi-sha-RE-cha", english: "And you shall write them on the doorposts of your house and on your gates" },
+          { hebrew: "לְמַעַן יִרְבּוּ יְמֵיכֶם וִימֵי בְנֵיכֶם", transliteration: "lemaan yirbu yemeichem vimei beneichem", stress: "le-MA-an yir-BU ye-mei-CHEM vi-mei be-nei-CHEM", english: "that your days and the days of your children may be multiplied" },
+          { hebrew: "עַל הָאֲדָמָה אֲשֶׁר נִשְׁבַּע יְהוָה לַאֲבֹתֵיכֶם לָתֵת לָהֶם", transliteration: "al haadama asher nishba adonai laavoteichem latet lahem", stress: "al ha-a-da-MA a-SHER nish-BA a-do-NAI la-a-vo-tei-CHEM la-TET la-HEM", english: "in the land which the Lord swore to your fathers to give them" },
+          { hebrew: "כִּימֵי הַשָּׁמַיִם עַל הָאָרֶץ", transliteration: "kimei hashamayim al haaretz", stress: "ki-MEI ha-sha-MA-yim al ha-A-retz", english: "as the days of heaven upon the earth" },
+          // Paragraph 3 — Vayomer (Numbers 15:37-41)
+          { hebrew: "וַיֹּאמֶר יְהוָה אֶל מֹשֶׁה לֵּאמֹר", transliteration: "vayomer adonai el moshe lemor", stress: "va-YO-mer a-do-NAI el mo-SHE le-MOR", english: "And the Lord spoke to Moses, saying" },
+          { hebrew: "דַּבֵּר אֶל בְּנֵי יִשְׂרָאֵל", transliteration: "daber el bnei yisrael", stress: "da-BER el bnei yis-ra-EL", english: "Speak to the children of Israel" },
+          { hebrew: "וְאָמַרְתָּ אֲלֵהֶם וְעָשׂוּ לָהֶם צִיצִת", transliteration: "veamarta aleihem veasu lahem tzitzit", stress: "ve-a-mar-TA a-lei-HEM ve-A-su la-HEM tzi-TZIT", english: "and tell them to make fringes on the corners of their garments" },
+          { hebrew: "עַל כַּנְפֵי בִגְדֵיהֶם לְדֹרֹתָם", transliteration: "al kanfei vigdeihem ledorotam", stress: "al kan-FEI vig-dei-HEM le-do-ro-TAM", english: "throughout their generations" },
+          { hebrew: "וְנָתְנוּ עַל צִיצִת הַכָּנָף פְּתִיל תְּכֵלֶת", transliteration: "venatnu al tzitzit hakanaf petil techelet", stress: "ve-nat-NU al tzi-TZIT ha-ka-NAF pe-TIL te-CHE-let", english: "and put on the fringe of each corner a thread of blue" },
+          { hebrew: "וְהָיָה לָכֶם לְצִיצִת", transliteration: "vehaya lachem letzitzit", stress: "ve-ha-YA la-CHEM le-tzi-TZIT", english: "And it shall be to you for a fringe" },
+          { hebrew: "וּרְאִיתֶם אֹתוֹ וּזְכַרְתֶּם", transliteration: "uritem oto uzchartem", stress: "u-ri-TEM o-TO uz-char-TEM", english: "that you may look upon it and remember" },
+          { hebrew: "אֶת כָּל מִצְוֹת יְהוָה וַעֲשִׂיתֶם אֹתָם", transliteration: "et kol mitzvot adonai vaasitem otam", stress: "et KOL mitz-VOT a-do-NAI va-a-si-TEM o-TAM", english: "all the commandments of the Lord, and do them" },
+          { hebrew: "וְלֹא תָתוּרוּ אַחֲרֵי לְבַבְכֶם", transliteration: "velo taturu acharei levavchem", stress: "ve-LO ta-tu-RU a-cha-REI le-vav-CHEM", english: "and that you seek not after your own heart" },
+          { hebrew: "וְאַחֲרֵי עֵינֵיכֶם אֲשֶׁר אַתֶּם זֹנִים אַחֲרֵיהֶם", transliteration: "veacharei eineichem asher atem zonim achareihem", stress: "ve-a-cha-REI ei-nei-CHEM a-SHER a-TEM zo-NIM a-cha-rei-HEM", english: "and your own eyes, after which you used to go astray" },
+          { hebrew: "לְמַעַן תִּזְכְּרוּ וַעֲשִׂיתֶם אֶת כָּל מִצְוֹתָי", transliteration: "lemaan tizcheru vaasitem et kol mitzvotai", stress: "le-MA-an tiz-ke-RU va-a-si-TEM et KOL mitz-vo-TAI", english: "so that you may remember and do all My commandments" },
+          { hebrew: "וִהְיִיתֶם קְדֹשִׁים לֵאלֹהֵיכֶם", transliteration: "viheyitem kedoshim leiloheichem", stress: "vi-he-yi-TEM ke-do-SHIM lei-lo-hei-CHEM", english: "and be holy to your God" },
+          { hebrew: "אֲנִי יְהוָה אֱלֹהֵיכֶם", transliteration: "ani adonai eloheichem", stress: "a-NI a-do-NAI e-lo-hei-CHEM", english: "I am the Lord your God" },
+          { hebrew: "אֲשֶׁר הוֹצֵאתִי אֶתְכֶם מֵאֶרֶץ מִצְרַיִם", transliteration: "asher hotzeti etchem meeretz mitzrayim", stress: "a-SHER ho-tze-TI et-CHEM me-E-retz mitz-ra-YIM", english: "who brought you out of the land of Egypt" },
+          { hebrew: "לִהְיוֹת לָכֶם לֵאלֹהִים", transliteration: "lihyot lachem leilohim", stress: "li-HY-ot la-CHEM lei-lo-HIM", english: "to be your God" },
+          { hebrew: "אֲנִי יְהוָה אֱלֹהֵיכֶם", transliteration: "ani adonai eloheichem", stress: "a-NI a-do-NAI e-lo-hei-CHEM", english: "I am the Lord your God" },
+          // Closing — Mi chamocha and Gaal Yisrael
+          { hebrew: "מֹשֶׁה וּבְנֵי יִשְׂרָאֵל לְךָ עָנוּ שִׁירָה", transliteration: "moshe uvnei yisrael lecha anu shira", stress: "mo-SHE uv-nei yis-ra-EL le-CHA a-NU shi-RA", english: "Moses and the children of Israel sang to You a song" },
+          { hebrew: "בְּשִׂמְחָה רַבָּה וְאָמְרוּ כֻלָּם", transliteration: "besimcha raba veameru kulam", stress: "be-sim-CHA ra-BA ve-a-me-RU ku-LAM", english: "with great joy, and they all said" },
+          { hebrew: "מִי כָמֹכָה בָּאֵלִם יְהוָה", transliteration: "mi chamocha baelim adonai", stress: "MI cha-mo-CHA ba-E-lim a-do-NAI", english: "Who is like You among the mighty, O Lord" },
+          { hebrew: "מִי כָּמֹכָה נֶאְדָּר בַּקֹּדֶשׁ", transliteration: "mi kamocha nedar bakodesh", stress: "MI ka-mo-CHA ne-DAR ba-KO-desh", english: "Who is like You, majestic in holiness" },
+          { hebrew: "נוֹרָא תְהִלֹּת עֹשֵׂה פֶלֶא", transliteration: "nora tehilot oseh feleh", stress: "no-RA te-hi-LOT o-SEH PE-leh", english: "awesome in praises, doing wonders" },
+          { hebrew: "מַלְכוּתְךָ רָאוּ בָנֶיךָ בֹּקֵעַ יָם לִפְנֵי מֹשֶׁה", transliteration: "malchutecha rau vanecha boka yam lifnei moshe", stress: "mal-chu-TE-cha ra-U va-NE-cha bo-KEA yam lif-NEI mo-SHE", english: "Your children saw Your kingdom as You split the sea before Moses" },
+          { hebrew: "זֶה אֵלִי עָנוּ וְאָמְרוּ", transliteration: "zeh eli anu veameru", stress: "ZEH E-li a-NU ve-a-me-RU", english: "This is my God, they cried and said" },
+          { hebrew: "יְהוָה יִמְלֹךְ לְעֹלָם וָעֶד", transliteration: "adonai yimloch leolam vaed", stress: "a-do-NAI yim-LOCH le-o-LAM VA-ed", english: "The Lord shall reign forever and ever" },
+          { hebrew: "בָּרוּךְ אַתָּה יְהוָה גָּאַל יִשְׂרָאֵל", transliteration: "baruch ata adonai gaal yisrael", stress: "ba-RUCH a-TA a-do-NAI ga-AL yis-ra-EL", english: "Blessed are You, Lord, who has redeemed Israel" }
+        ]
+      },
+
       "lecha-dodi": {
         name: "L'cha Dodi",
         lines: [
