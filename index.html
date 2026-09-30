@@ -621,6 +621,7 @@
               <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
                 <button id="ft-translit-btn" class="ft-toggle-btn">Show Transliteration</button>
                 <button id="ft-meaning-btn" class="ft-toggle-btn">Show Meaning</button>
+                <button id="ft-listen-btn" class="ft-toggle-btn" style="color: var(--gold); border-color: var(--gold);">▶ Listen</button>
                 <button id="full-text-close" style="font-size: 1.2rem; background: none; border: none; color: var(--silver-dim); cursor: pointer; padding: 0 4px; line-height: 1;">✕</button>
               </div>
             </div>
@@ -2208,6 +2209,7 @@
           <div class="ft-meaning">${line.english}</div>
         </div>
       `).join('');
+      ftStop();
       ftShowTranslit = false;
       ftShowMeaning = false;
       ftTranslitBtn.classList.remove('active');
@@ -2227,14 +2229,99 @@
     document.getElementById('full-text-btn').addEventListener('click', openFullText);
 
     document.getElementById('full-text-close').addEventListener('click', () => {
+      ftStop();
       fullTextModal.classList.add('hidden');
       fullTextModal.style.display = 'none';
     });
 
     fullTextModal.addEventListener('click', (e) => {
       if (e.target === fullTextModal) {
+        ftStop();
         fullTextModal.classList.add('hidden');
         fullTextModal.style.display = 'none';
+      }
+    });
+
+    // Full text sequential playback
+    const ftListenBtn = document.getElementById('ft-listen-btn');
+    let ftPlaying = false;
+    let ftCurrentAudio = null;
+    let ftSessionId = 0; // incremented on each play/stop to cancel stale callbacks
+
+    function ftStop() {
+      ftPlaying = false;
+      ftSessionId++;
+      if (ftCurrentAudio) { ftCurrentAudio.pause(); ftCurrentAudio = null; }
+      window.speechSynthesis.cancel();
+      document.querySelectorAll('.ft-line').forEach(el => el.style.background = '');
+      ftListenBtn.textContent = '▶ Listen';
+    }
+
+    function ftHighlightLine(index) {
+      document.querySelectorAll('.ft-line').forEach((el, i) => {
+        el.style.background = i === index ? 'rgba(184,134,11,0.1)' : '';
+      });
+      const lines = document.querySelectorAll('.ft-line');
+      if (lines[index]) lines[index].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function ftPlayLine(prayer, prayerId, lineIndex, sessionId) {
+      // Stale callback guard
+      if (sessionId !== ftSessionId || lineIndex >= prayer.lines.length) {
+        if (sessionId === ftSessionId) ftStop();
+        return;
+      }
+
+      ftHighlightLine(lineIndex);
+      const line = prayer.lines[lineIndex];
+      const next = () => ftPlayLine(prayer, prayerId, lineIndex + 1, sessionId);
+
+      function ftTTS() {
+        if (sessionId !== ftSessionId) return;
+        ftCurrentAudio = null;
+        window.speechSynthesis.cancel();
+        const utt = new SpeechSynthesisUtterance(
+          line.hebrew
+            .replace(/יְהוָה/g, 'אֲדֹנָי')
+            .replace(/יהוה/g, 'אֲדֹנָי')
+        );
+        utt.lang = 'he-IL';
+        utt.rate = 0.5;
+        const voices = window.speechSynthesis.getVoices();
+        const hebrewVoice = voices.find(v => v.lang.startsWith('he'));
+        if (hebrewVoice) utt.voice = hebrewVoice;
+        let ttsEnded = false;
+        const ttsNext = () => { if (!ttsEnded && sessionId === ftSessionId) { ttsEnded = true; next(); } };
+        utt.onend = ttsNext;
+        // Safety timeout: ~150ms per character at rate 0.5, minimum 2s
+        const safetyMs = Math.max(2000, line.hebrew.length * 150);
+        setTimeout(ttsNext, safetyMs);
+        window.speechSynthesis.speak(utt);
+      }
+
+      // Exact same pattern as speakLine which works
+      const lineNum = String(lineIndex + 1).padStart(2, '0');
+      const mp3url = `audio/${prayerId}/${lineNum}.mp3`;
+      const audio = new Audio(mp3url);
+      ftCurrentAudio = audio;
+      audio.oncanplaythrough = () => {
+        if (sessionId !== ftSessionId) return;
+        audio.onended = () => { ftCurrentAudio = null; next(); };
+        audio.play().catch(() => ftTTS());
+      };
+      audio.onerror = () => ftTTS();
+      audio.load();
+    }
+
+    ftListenBtn.addEventListener('click', () => {
+      if (ftPlaying) {
+        ftStop();
+      } else {
+        ftPlaying = true;
+        ftSessionId++;
+        ftListenBtn.textContent = '⏹ Stop';
+        const prayer = prayers[currentPrayer];
+        ftPlayLine(prayer, currentPrayer, 0, ftSessionId);
       }
     });
 
