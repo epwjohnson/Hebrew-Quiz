@@ -1475,11 +1475,12 @@
     }
 
     shemaToggle.addEventListener('click', () => {
-      const isOpen = shemaGroup.classList.contains('open');
-      if (!isOpen) {
-        showShemaLanding();
-      } else {
-        closeAllGroups();
+      const willOpen = !shemaGroup.classList.contains('open');
+      showShemaLanding();
+      if (!willOpen) {
+        shemaGroup.classList.remove('open');
+        shemaToggle.classList.remove('open');
+        shemaToggle.textContent = 'Shema ▸';
       }
     });
 
@@ -1507,11 +1508,12 @@
     }
 
     chanukahToggle.addEventListener('click', () => {
-      const isOpen = chanukahGroup.classList.contains('open');
-      if (!isOpen) {
-        showChanukahLanding();
-      } else {
-        closeAllGroups();
+      const willOpen = !chanukahGroup.classList.contains('open');
+      showChanukahLanding();
+      if (!willOpen) {
+        chanukahGroup.classList.remove('open');
+        chanukahToggle.classList.remove('open');
+        chanukahToggle.textContent = 'Chanukah ▸';
       }
     });
 
@@ -1534,11 +1536,12 @@
     }
 
     amidaToggle.addEventListener('click', () => {
-      const isOpen = amidaGroup.classList.contains('open');
-      if (!isOpen) {
-        showAmidaLanding();
-      } else {
-        closeAllGroups();
+      const willOpen = !amidaGroup.classList.contains('open');
+      showAmidaLanding();
+      if (!willOpen) {
+        amidaGroup.classList.remove('open');
+        amidaToggle.classList.remove('open');
+        amidaToggle.textContent = 'Amida ▸';
       }
     });
 
