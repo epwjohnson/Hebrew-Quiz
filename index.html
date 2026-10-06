@@ -108,6 +108,11 @@
     .amida-landing-title { font-family: 'David Libre', serif; font-size: 2rem; color: var(--gold); direction: rtl; }
     .amida-landing-subtitle { font-size: 1rem; color: var(--silver-dim); font-style: italic; margin-top: 4px; }
     .amida-landing-intro { color: var(--silver); line-height: 1.7; margin-bottom: 12px; font-size: 1rem; }
+    .amida-landing-intro strong { color: var(--gold); font-weight: 600; }
+    .amida-landing-intro em { color: var(--silver); font-style: italic; }
+    .amida-landing-intro .heb-inline { font-family: 'David Libre', serif; font-size: 1.1rem; direction: rtl; display: inline-block; color: #e8e8e8; letter-spacing: 0.02em; }
+    .amida-landing-lead { font-size: 1.05rem; color: var(--silver); line-height: 1.8; margin-bottom: 16px; }
+    .amida-landing-divider { border: none; border-top: 1px solid var(--gold-dim); margin: 18px 0 14px; opacity: 0.5; }
     .amida-sections-list { display: flex; flex-direction: column; gap: 0; margin-top: 16px; }
     .amida-section-item {
       padding: 14px 16px;
@@ -525,8 +530,12 @@
         <button class="prayer-btn" data-prayer="lecha-dodi">L'cha Dodi</button>
         <button class="prayer-btn" data-prayer="barchu">Barchu</button>
         <button class="prayer-btn" data-prayer="ahavat-olam">Ahavat Olam</button>
-        <button class="prayer-btn" data-prayer="shema">Shema</button>
-        <button class="prayer-btn" data-prayer="shema-full">Shema (Full)</button>
+        <button class="prayer-btn amida-group-toggle" id="shema-toggle">Shema ▸</button>
+        <div class="amida-group" id="shema-group">
+          <button class="prayer-btn amida-sub" data-prayer="shema">Shema</button>
+          <button class="prayer-btn amida-sub" data-prayer="shema-full">Shema (Full)</button>
+          <button class="prayer-btn amida-sub" data-prayer="shema-mi-chamocha">Mi chamocha</button>
+        </div>
         <button class="prayer-btn" data-prayer="vshamru">V'shamru</button>
         <button class="prayer-btn amida-group-toggle" id="amida-toggle">Amida ▸</button>
         <div class="amida-group" id="amida-group">
@@ -547,9 +556,69 @@
         <button class="prayer-btn" data-prayer="yigdal">Yigdal</button>
         <button class="prayer-btn" data-prayer="kiddush">Kiddush</button>
         <button class="prayer-btn" data-prayer="hatikva">Hatikva</button>
+        <button class="prayer-btn amida-group-toggle" id="chanukah-toggle">Chanukah ▸</button>
+        <div class="amida-group" id="chanukah-group">
+          <button class="prayer-btn amida-sub" data-prayer="chanukah-lehadlik">Lehadlik Ner</button>
+          <button class="prayer-btn amida-sub" data-prayer="chanukah-nisim">She'asa Nisim</button>
+          <button class="prayer-btn amida-sub" data-prayer="chanukah-shehecheyanu">Shehecheyanu</button>
+        </div>
       </div>
       <div class="main-column">
         <div class="quiz-card">
+
+          <!-- Shema landing page -->
+          <div id="shema-landing" class="hidden">
+            <div class="amida-landing-header">
+              <div class="amida-landing-title">שְׁמַע</div>
+              <div class="amida-landing-subtitle">Hear</div>
+            </div>
+            <p class="amida-landing-lead">The Shema is the central declaration of Jewish faith — perhaps the most important prayer in all of Judaism. Its opening verse, from Deuteronomy 6:4, is a statement of absolute theological conviction: that the divine is one, indivisible, and unique. The word <em>Shema</em> means "hear" or "listen" — and the command is addressed to Israel as a whole, not to the individual alone.</p>
+            <p class="amida-landing-intro"><strong>Its roots.</strong> The verse itself is from the Torah, but its place as a twice-daily prayer is rabbinic, drawn from the commandment in V'ahavta to speak of these words "when you lie down and when you rise up." Jews have recited the Shema at every significant moment — in daily prayer, at life's threshold, and as a final act — for over two millennia.</p>
+            <p class="amida-landing-intro"><strong>Why it matters.</strong> The Shema is not merely a prayer but an act of witness. In the Torah scroll, the last letter of <span class="heb-inline">שְׁמַע</span> (ע, ayin) and the last letter of <span class="heb-inline">אֶחָד</span> (ד, dalet) are written larger than the surrounding text. Together they spell <span class="heb-inline">עֵד</span> — <em>witness</em>. To say the Shema is to bear witness to the unity of the divine.</p>
+            <p class="amida-landing-intro"><strong>The three paragraphs.</strong> The full Shema comprises three passages from the Torah: <em>V'ahavta</em> (Deuteronomy 6:5–9) on the love of the divine and its transmission; <em>V'haya im shamoa</em> (Deuteronomy 11:13–21) on consequence and faithfulness; and <em>Vayomer</em> (Numbers 15:37–41) on the tzitzit as a physical reminder of all the commandments.</p>
+            <p class="amida-landing-intro"><strong>The response.</strong> <span class="heb-inline">בָּרוּךְ שֵׁם כְּבוֹד מַלְכוּתוֹ לְעוֹלָם וָעֶד</span> is said in a whisper — tradition holds it was what Jacob's sons said to him as he lay dying, and as it was not spoken aloud by Moses in the Torah, it is whispered rather than said aloud.</p>
+            <p class="amida-landing-intro"><strong>Mi chamocha.</strong> The passage comes from the Song of the Sea (Exodus 15), sung by Moses and the Israelites after crossing the Red Sea — one of the oldest pieces of Hebrew poetry in the Torah. In the evening service it bridges the Shema and the Amida, a connection the rabbis called <em>geulah</em> — redemption. The link between the Shema (faith) and the Amida (prayer) through the memory of the Exodus is deliberate and theologically significant. The closing blessing — <em>Baruch atah Adonai gaal Yisrael</em>, "who has redeemed Israel" — uses the past tense deliberately: redemption has already happened, and we carry its memory forward.</p>
+            <hr class="amida-landing-divider">
+            <p class="amida-landing-intro">Select a version to begin practising:</p>
+            <div class="amida-sections-list">
+              <div class="amida-section-item" data-prayer="shema">
+                <div class="amida-section-name"><span class="amida-section-num">1.</span> Shema</div>
+                <div class="amida-section-desc">The opening declaration and V'ahavta — the first paragraph. This is the version with recorded audio.</div>
+              </div>
+              <div class="amida-section-item" data-prayer="shema-full">
+                <div class="amida-section-name"><span class="amida-section-num">2.</span> Shema (Full)</div>
+                <div class="amida-section-desc">All three paragraphs — V'ahavta, V'haya im shamoa, and Vayomer — plus the closing Mi chamocha and Gaal Yisrael blessing.</div>
+              </div>
+              <div class="amida-section-item" data-prayer="shema-mi-chamocha">
+                <div class="amida-section-name"><span class="amida-section-num">3.</span> Mi chamocha</div>
+                <div class="amida-section-desc">The Song of the Sea, bridging the Shema to the Amida. Practice this passage on its own.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chanukah landing page -->
+          <div id="chanukah-landing" class="hidden">
+            <div class="amida-landing-header">
+              <div class="amida-landing-title">חֲנֻכָּה</div>
+              <div class="amida-landing-subtitle">The Festival of Lights</div>
+            </div>
+            <p class="amida-landing-intro">Chanukah commemorates the rededication of the Temple in Jerusalem and the miracle of the oil that burned for eight days. Candles are lit at nightfall on each of the eight nights, with blessings recited before lighting.</p>
+            <p class="amida-landing-intro">Three blessings are said, in order:</p>
+            <div class="amida-sections-list">
+              <div class="amida-section-item" data-prayer="chanukah-lehadlik">
+                <div class="amida-section-name"><span class="amida-section-num">1.</span> Lehadlik Ner — To kindle the light</div>
+                <div class="amida-section-desc">Said on all eight nights. The blessing for the commandment of lighting the Chanukah candles.</div>
+              </div>
+              <div class="amida-section-item" data-prayer="chanukah-nisim">
+                <div class="amida-section-name"><span class="amida-section-num">2.</span> She'asa Nisim — Who performed miracles</div>
+                <div class="amida-section-desc">Said on all eight nights. A blessing of thanksgiving for the miracles performed for our ancestors in those days at this season.</div>
+              </div>
+              <div class="amida-section-item" data-prayer="chanukah-shehecheyanu">
+                <div class="amida-section-name"><span class="amida-section-num">3.</span> Shehecheyanu — Who has kept us alive</div>
+                <div class="amida-section-desc">Said on the first night only. A blessing of gratitude for reaching this season, recited whenever we perform a mitzvah for the first time in the year.</div>
+              </div>
+            </div>
+          </div>
 
           <!-- Amida landing page -->
           <div id="amida-landing" class="hidden">
@@ -605,7 +674,7 @@
             </div>
           </div>
 
-          <div id="quiz-area">
+          <div id="quiz-area" class="hidden">
 
         <!-- Sung version button - shown only for L'cha Dodi -->
         <div id="sung-version-bar" class="hidden" style="text-align: center; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid #30363d; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
@@ -810,6 +879,21 @@
         ]
       },
 
+      "shema-mi-chamocha": {
+        name: "Mi chamocha",
+        lines: [
+          { hebrew: "מֹשֶׁה וּבְנֵי יִשְׂרָאֵל לְךָ עָנוּ שִׁירָה", transliteration: "moshe uvnei yisrael lecha anu shira", stress: "mo-SHE uv-nei yis-ra-EL le-CHA a-NU shi-RA", english: "Moses and the children of Israel sang to You a song" },
+          { hebrew: "בְּשִׂמְחָה רַבָּה וְאָמְרוּ כֻלָּם", transliteration: "besimcha raba veameru kulam", stress: "be-sim-CHA ra-BA ve-a-me-RU ku-LAM", english: "with great joy, and they all said" },
+          { hebrew: "מִי כָמֹכָה בָּאֵלִם יְהוָה", transliteration: "mi chamocha baelim adonai", stress: "MI cha-mo-CHA ba-E-lim a-do-NAI", english: "Who is like You among the mighty, O Lord" },
+          { hebrew: "מִי כָּמֹכָה נֶאְדָּר בַּקֹּדֶשׁ", transliteration: "mi kamocha nedar bakodesh", stress: "MI ka-mo-CHA ne-DAR ba-KO-desh", english: "Who is like You, majestic in holiness" },
+          { hebrew: "נוֹרָא תְהִלֹּת עֹשֵׂה פֶלֶא", transliteration: "nora tehilot oseh feleh", stress: "no-RA te-hi-LOT o-SEH PE-leh", english: "awesome in praises, doing wonders" },
+          { hebrew: "מַלְכוּתְךָ רָאוּ בָנֶיךָ בֹּקֵעַ יָם לִפְנֵי מֹשֶׁה", transliteration: "malchutecha rau vanecha boka yam lifnei moshe", stress: "mal-chu-TE-cha ra-U va-NE-cha bo-KEA yam lif-NEI mo-SHE", english: "Your children saw Your kingdom as You split the sea before Moses" },
+          { hebrew: "זֶה אֵלִי עָנוּ וְאָמְרוּ", transliteration: "zeh eli anu veameru", stress: "ZEH E-li a-NU ve-a-me-RU", english: "This is my God, they cried and said" },
+          { hebrew: "יְהוָה יִמְלֹךְ לְעֹלָם וָעֶד", transliteration: "adonai yimloch leolam vaed", stress: "a-do-NAI yim-LOCH le-o-LAM VA-ed", english: "The Lord shall reign forever and ever" },
+          { hebrew: "בָּרוּךְ אַתָּה יְהוָה גָּאַל יִשְׂרָאֵל", transliteration: "baruch ata adonai gaal yisrael", stress: "ba-RUCH a-TA a-do-NAI ga-AL yis-ra-EL", english: "Blessed are You, Lord, who has redeemed Israel" }
+        ]
+      },
+
       "lecha-dodi": {
         name: "L'cha Dodi",
         lines: [
@@ -920,6 +1004,34 @@
           { hebrew: "לִפְדּוֹת מְחַכֵּי קֵץ יְשׁוּעָתוֹ", transliteration: "lifdot mechakei ketz yeshuato", stress: "lif-DOT me-cha-KEI KETZ ye-shu-a-TO", english: "to redeem those who await His final salvation" },
           { hebrew: "מֵתִים יְחַיֶּה אֵל בְּרֹב חַסְדּוֹ", transliteration: "meitim yechayeh el berov chasdo", stress: "mei-TIM ye-cha-YEH el be-ROV chas-DO", english: "God will revive the dead in His great kindness" },
           { hebrew: "בָּרוּךְ עֲדֵי עַד שֵׁם תְּהִלָּתוֹ", transliteration: "baruch adei ad shem tehilato", stress: "ba-RUCH a-dei AD shem te-hi-la-TO", english: "Blessed forever is His glorious name" }
+        ]
+      },
+
+      "chanukah-lehadlik": {
+        name: "Chanukah — Lehadlik Ner",
+        lines: [
+          { hebrew: "בָּרוּךְ אַתָּה יְהוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם", transliteration: "baruch ata adonai eloheinu melech haolam", stress: "ba-RUCH a-TA a-do-NAI e-lo-HEI-nu ME-lech ha-o-LAM", english: "Blessed are You, Lord our God, King of the universe" },
+          { hebrew: "אֲשֶׁר קִדְּשָׁנוּ בְּמִצְוֹתָיו וְצִוָּנוּ", transliteration: "asher kidshanu bemitzvotav vetzivanu", stress: "A-sher kid-SHA-nu be-mitz-vo-TAV ve-tzi-VA-nu", english: "who has sanctified us with His commandments and commanded us" },
+          { hebrew: "לְהַדְלִיק נֵר שֶׁל חֲנֻכָּה", transliteration: "lehadlik ner shel chanukah", stress: "le-had-LIK NER shel cha-nu-KA", english: "to kindle the Chanukah light" }
+        ]
+      },
+
+      "chanukah-nisim": {
+        name: "Chanukah — She'asa Nisim",
+        lines: [
+          { hebrew: "בָּרוּךְ אַתָּה יְהוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם", transliteration: "baruch ata adonai eloheinu melech haolam", stress: "ba-RUCH a-TA a-do-NAI e-lo-HEI-nu ME-lech ha-o-LAM", english: "Blessed are You, Lord our God, King of the universe" },
+          { hebrew: "שֶׁעָשָׂה נִסִּים לַאֲבוֹתֵינוּ", transliteration: "sheasah nisim laavoteinu", stress: "she-a-SA ni-SIM la-a-vo-TEI-nu", english: "who performed miracles for our ancestors" },
+          { hebrew: "בַּיָּמִים הָהֵם בַּזְּמַן הַזֶּה", transliteration: "bayamim hahem bazman hazeh", stress: "ba-ya-MIM ha-HEM baz-MAN ha-ZEH", english: "in those days at this season" }
+        ]
+      },
+
+      "chanukah-shehecheyanu": {
+        name: "Chanukah — Shehecheyanu",
+        note: "This blessing is said on the first night only.",
+        lines: [
+          { hebrew: "בָּרוּךְ אַתָּה יְהוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם", transliteration: "baruch ata adonai eloheinu melech haolam", stress: "ba-RUCH a-TA a-do-NAI e-lo-HEI-nu ME-lech ha-o-LAM", english: "Blessed are You, Lord our God, King of the universe" },
+          { hebrew: "שֶׁהֶחֱיָנוּ וְקִיְּמָנוּ וְהִגִּיעָנוּ", transliteration: "shehecheyanu vekiyemanu vehigianu", stress: "she-he-che-YA-nu ve-ki-ye-MA-nu ve-hi-gi-A-nu", english: "who has kept us alive, sustained us" },
+          { hebrew: "לַזְּמַן הַזֶּה", transliteration: "lazman hazeh", stress: "laz-MAN ha-ZEH", english: "and brought us to this season" }
         ]
       },
 
@@ -1321,13 +1433,99 @@
     const amidaGroup = document.getElementById('amida-group');
     const amidaLanding = document.getElementById('amida-landing');
 
+    // Close all collapsible groups and their landing pages
+    function closeAllGroups() {
+      // Groups
+      ['amida-group','shema-group','chanukah-group'].forEach(id => {
+        document.getElementById(id).classList.remove('open');
+      });
+      // Toggles
+      [
+        {id:'amida-toggle', label:'Amida ▸'},
+        {id:'shema-toggle', label:'Shema ▸'},
+        {id:'chanukah-toggle', label:'Chanukah ▸'}
+      ].forEach(({id, label}) => {
+        const el = document.getElementById(id);
+        el.classList.remove('open');
+        el.textContent = label;
+      });
+      // Landing pages
+      ['amida-landing','shema-landing','chanukah-landing'].forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+      });
+    }
+
+    // Shema group
+    const shemaToggle = document.getElementById('shema-toggle');
+    const shemaGroup = document.getElementById('shema-group');
+    const shemaLanding = document.getElementById('shema-landing');
+
+    function showShemaLanding() {
+      closeAllGroups();
+      shemaLanding.classList.remove('hidden');
+      document.getElementById('quiz-area').classList.add('hidden');
+      document.getElementById('completion').classList.add('hidden');
+      document.getElementById('quiz-controls').classList.add('hidden');
+      document.getElementById('sung-version-bar').classList.add('hidden');
+      prayerBtns.forEach(btn => btn.classList.remove('active'));
+      shemaToggle.classList.add('open');
+      shemaToggle.textContent = 'Shema ▾';
+      shemaGroup.classList.add('open');
+      updateSungVersionBar();
+    }
+
+    shemaToggle.addEventListener('click', () => {
+      const isOpen = shemaGroup.classList.contains('open');
+      if (!isOpen) {
+        showShemaLanding();
+      } else {
+        closeAllGroups();
+      }
+    });
+
+    document.querySelectorAll('#shema-landing .amida-section-item').forEach(item => {
+      item.addEventListener('click', () => switchPrayer(item.dataset.prayer));
+    });
+
+    // Chanukah group
+    const chanukahToggle = document.getElementById('chanukah-toggle');
+    const chanukahGroup = document.getElementById('chanukah-group');
+    const chanukahLanding = document.getElementById('chanukah-landing');
+
+    function showChanukahLanding() {
+      closeAllGroups();
+      chanukahLanding.classList.remove('hidden');
+      document.getElementById('quiz-area').classList.add('hidden');
+      document.getElementById('completion').classList.add('hidden');
+      document.getElementById('quiz-controls').classList.add('hidden');
+      document.getElementById('sung-version-bar').classList.add('hidden');
+      prayerBtns.forEach(btn => btn.classList.remove('active'));
+      chanukahToggle.classList.add('open');
+      chanukahToggle.textContent = 'Chanukah ▾';
+      chanukahGroup.classList.add('open');
+      updateSungVersionBar();
+    }
+
+    chanukahToggle.addEventListener('click', () => {
+      const isOpen = chanukahGroup.classList.contains('open');
+      if (!isOpen) {
+        showChanukahLanding();
+      } else {
+        closeAllGroups();
+      }
+    });
+
+    document.querySelectorAll('#chanukah-landing .amida-section-item').forEach(item => {
+      item.addEventListener('click', () => switchPrayer(item.dataset.prayer));
+    });
+
     function showAmidaLanding() {
+      closeAllGroups();
       amidaLanding.classList.remove('hidden');
       document.getElementById('quiz-area').classList.add('hidden');
       document.getElementById('completion').classList.add('hidden');
       document.getElementById('quiz-controls').classList.add('hidden');
       document.getElementById('sung-version-bar').classList.add('hidden');
-      // Clear active state from all prayer buttons
       prayerBtns.forEach(btn => btn.classList.remove('active'));
       amidaToggle.classList.add('open');
       amidaToggle.textContent = 'Amida ▾';
@@ -1340,14 +1538,12 @@
       if (!isOpen) {
         showAmidaLanding();
       } else {
-        amidaGroup.classList.remove('open');
-        amidaToggle.classList.remove('open');
-        amidaToggle.textContent = 'Amida ▸';
+        closeAllGroups();
       }
     });
 
-    // Clickable section items on the landing page
-    document.querySelectorAll('.amida-section-item').forEach(item => {
+    // Clickable section items on the Amida landing page only
+    document.querySelectorAll('#amida-landing .amida-section-item').forEach(item => {
       item.addEventListener('click', () => switchPrayer(item.dataset.prayer));
     });
     const progressText = document.getElementById('progress-text');
@@ -2002,23 +2198,27 @@
         btn.classList.toggle('active', btn.dataset.prayer === prayerId);
       });
 
-      // Auto-open Amida group if an Amida sub-section is selected
+      // Close all groups/landings, then reopen the relevant one
+      closeAllGroups();
+      document.getElementById('quiz-area').classList.remove('hidden');
+      document.getElementById('quiz-controls').classList.remove('hidden');
+      document.getElementById('sung-version-bar').classList.remove('hidden');
+
+      // Reopen the relevant group
       if (prayerId.startsWith('amida-')) {
-        amidaLanding.classList.add('hidden');
-        document.getElementById('quiz-area').classList.remove('hidden');
-        document.getElementById('quiz-controls').classList.remove('hidden');
-        document.getElementById('sung-version-bar').classList.remove('hidden');
         amidaGroup.classList.add('open');
         amidaToggle.classList.add('open');
         amidaToggle.textContent = 'Amida ▾';
-      } else {
-        amidaLanding.classList.add('hidden');
-        document.getElementById('quiz-area').classList.remove('hidden');
-        document.getElementById('quiz-controls').classList.remove('hidden');
-        document.getElementById('sung-version-bar').classList.remove('hidden');
+      } else if (prayerId.startsWith('chanukah-')) {
+        chanukahGroup.classList.add('open');
+        chanukahToggle.classList.add('open');
+        chanukahToggle.textContent = 'Chanukah ▾';
+      } else if (prayerId.startsWith('shema')) {
+        shemaGroup.classList.add('open');
+        shemaToggle.classList.add('open');
+        shemaToggle.textContent = 'Shema ▾';
       }
       
-      quizArea.classList.remove('hidden');
       completion.classList.add('hidden');
       showLine();
       updateListenButton();
@@ -2377,6 +2577,7 @@
     document.getElementById('begin-btn').addEventListener('click', () => {
       document.getElementById('welcome-screen').classList.add('hidden');
       document.getElementById('main-layout').classList.remove('hidden');
+      switchPrayer(currentPrayer);
     });
   </script>
 </body>
