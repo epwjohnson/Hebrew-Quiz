@@ -156,6 +156,18 @@
     .ft-line { padding: 10px 20px; border-bottom: 1px solid #131f33; }
     .ft-line:last-child { border-bottom: none; }
     .ft-hebrew { text-align: right; direction: rtl; font-size: 1.3rem; color: #e8e8e8; line-height: 1.5; font-family: 'David Libre', serif; }
+    /* Vocab modal */
+    .vocab-row { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; padding: 10px 20px; border-bottom: 1px solid #131f33; }
+    .vocab-row:last-child { border-bottom: none; }
+    .vocab-hebrew { text-align: right; direction: rtl; font-size: 1.4rem; color: #e8e8e8; font-family: 'David Libre', serif; line-height: 1.4; }
+    .vocab-pronun { font-size: 0.78rem; color: var(--gold); font-style: italic; text-align: right; display: none; margin-top: 2px; }
+    .vocab-divider { width: 1px; background: #2a3f5f; align-self: stretch; min-height: 28px; }
+    .vocab-english { font-size: 0.95rem; color: var(--silver); font-family: 'Crimson Pro', serif; line-height: 1.4; }
+    .vocab-note-row { padding: 0 20px 8px 20px; display: none; }
+    .vocab-note-text { font-size: 0.82rem; color: var(--silver-dim); font-style: italic; background: rgba(255,255,255,0.03); border-radius: 4px; padding: 5px 10px; line-height: 1.5; }
+    .vocab-note-btn { background: none; border: none; color: var(--silver-dim); cursor: pointer; font-size: 0.8rem; padding: 0 0 0 6px; vertical-align: middle; }
+    .vocab-note-btn:hover { color: var(--gold); }
+    .vocab-also { font-size: 0.8rem; color: var(--silver-dim); margin-top: 2px; }
     .ft-translit { font-size: 0.85rem; color: var(--gold); font-style: italic; margin-top: 3px; display: none; }
     .ft-meaning { font-size: 0.82rem; color: #6a7a8a; margin-top: 2px; display: none; }
     .ft-show-translit .ft-translit { display: block; }
@@ -490,6 +502,9 @@
           Some prayers have sung versions available — press the <strong style="color: var(--silver);">🎵 Sung Version</strong> button to listen. These are continuous recordings; use <strong style="color: var(--silver);">Skip →</strong> to follow along line by line.
         </p>
         <p style="margin-top: 10px; color: #8b949e; font-size: 0.85rem; line-height: 1.6;">
+          <strong style="color: var(--silver);">📖 Full Text</strong> shows the whole prayer at once with transliteration and translations — useful for reading ahead or reviewing. <strong style="color: var(--silver);">📚 Key Vocabulary</strong> opens a glossary of the most important words in that prayer, with pronunciations and notes on their meaning and significance.
+        </p>
+        <p style="margin-top: 10px; color: #8b949e; font-size: 0.85rem; line-height: 1.6;">
           Audio recordings kindly provided by Yoav Oved and Julieta Kunik, <em>i migliori fabbri</em>.
         </p>
         <p style="margin-top: 10px; color: #8b949e; font-size: 0.85rem; line-height: 1.6;">
@@ -680,6 +695,7 @@
         <div id="sung-version-bar" class="hidden" style="text-align: center; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid #30363d; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
           <button id="sung-version-btn" style="padding: 8px 22px; border: 1px solid var(--gold-dim); background: transparent; color: var(--gold); font-family: 'Crimson Pro', serif; font-size: 0.95rem; border-radius: 6px; cursor: pointer; transition: all 0.2s;">🎵 Sung Version</button>
           <button id="full-text-btn" style="padding: 8px 22px; border: 1px solid var(--gold-dim); background: transparent; color: var(--gold); font-family: 'Crimson Pro', serif; font-size: 0.95rem; border-radius: 6px; cursor: pointer; transition: all 0.2s;">📖 Full Text</button>
+          <button id="vocab-btn" style="padding: 8px 22px; border: 1px solid var(--gold-dim); background: transparent; color: var(--gold); font-family: 'Crimson Pro', serif; font-size: 0.95rem; border-radius: 6px; cursor: pointer; transition: all 0.2s;">📚 Key Vocabulary</button>
         </div>
 
         <!-- Full text modal -->
@@ -697,6 +713,20 @@
             </div>
             <!-- Modal body -->
             <div id="full-text-body" style="overflow-y: auto; flex: 1; padding: 4px 0;"></div>
+          </div>
+        </div>
+
+        <!-- Vocab modal -->
+        <div id="vocab-modal" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; display: flex; align-items: flex-start; justify-content: center; padding-top: 40px; padding-bottom: 40px;">
+          <div style="background: #0f1f3d; border: 1px solid #2a3f5f; border-radius: 12px; width: 640px; max-width: 94vw; max-height: 80vh; display: flex; flex-direction: column; overflow: hidden;">
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid #1e3050; flex-shrink: 0;">
+              <span id="vocab-title" style="font-size: 1rem; font-weight: 600; color: var(--gold); letter-spacing: 0.03em;"></span>
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <button id="vocab-pronun-btn" class="ft-toggle-btn">Show Pronunciation</button>
+                <button id="vocab-close" style="font-size: 1.2rem; background: none; border: none; color: var(--silver-dim); cursor: pointer; padding: 0 4px; line-height: 1;">✕</button>
+              </div>
+            </div>
+            <div id="vocab-body" style="overflow-y: auto; flex: 1; padding: 8px 0;"></div>
           </div>
         </div>
 
@@ -799,6 +829,20 @@
           { hebrew: "וּקְשַׁרְתָּם לְאוֹת עַל יָדֶךָ", transliteration: "ukshartam leot al yadecha", stress: "uk-shar-TAM le-OT al ya-DE-cha", english: "And you shall bind them as a sign upon your hand" },
           { hebrew: "וְהָיוּ לְטֹטָפֹת בֵּין עֵינֶיךָ", transliteration: "vehayu letotafot bein einecha", stress: "ve-HA-yu le-to-ta-FOT bein ei-NE-cha", english: "and they shall be as frontlets between your eyes" },
           { hebrew: "וּכְתַבְתָּם עַל מְזֻזוֹת בֵּיתֶךָ וּבִשְׁעָרֶיךָ", transliteration: "uchtavtam al mezuzot beitecha uvisharecha", stress: "uch-tav-TAM al me-zu-ZOT bei-TE-cha u-vi-sha-RE-cha", english: "And you shall write them on the doorposts of your house and on your gates" }
+        ],
+        vocab: [
+          { hebrew: "שְׁמַע", english: "hear / listen", stress: "SHMA", note: "The opening word is also the prayer's name and a foundational statement; to truly hear is to internalise and obey" },
+          { hebrew: "אֶחָד", english: "one", stress: "e-CHAD", note: "The declaration of divine unity; the ד is lengthened in prayer to hold the thought of God's oneness throughout heaven and earth" },
+          { hebrew: "וְאָהַבְתָּ", english: "and you shall love", stress: "ve-a-HAV-ta", note: "Love here is a commanded act, not merely a feeling; the Rabbis understand it as choosing to orient one's whole life toward God" },
+          { hebrew: "לְבָבְךָ", english: "your heart", stress: "le-VAV-cha", note: "The doubled ב (levav rather than lev) hints at both inclinations — the good and the evil — both directed toward God" },
+          { hebrew: "נַפְשְׁךָ", english: "your soul", stress: "naf-SHE-cha", note: "Also in Birkat Shalom; Rashi: even if God takes your soul — be willing to give your life rather than deny God" },
+          { hebrew: "מְאֹדֶךָ", english: "your might / your resources", stress: "me-O-de-cha", note: "The Rabbis read this as 'with all your money' — whatever you value most; a demand for total, not just spiritual, commitment" },
+          { hebrew: "וְשִׁנַּנְתָּם", english: "and you shall teach them diligently", stress: "ve-shi-NAN-tam", note: "Root: שנן — to sharpen; teach Torah so thoroughly it becomes sharp, embedded in the child's mind through repetition" },
+          { hebrew: "וּבְשָׁכְבְּךָ", english: "when you lie down", stress: "uv-shoch-BE-cha", note: "The basis for reciting the Shema every night; the commandment becomes a daily rhythm of the body's rest and rising" },
+          { hebrew: "טֹטָפוֹת", english: "frontlets / tefillin", stress: "to-ta-FOT", note: "The origin of tefillin; the exact meaning is uncertain — possibly tied, bound, or a foreign loan word meaning bands" },
+          { hebrew: "מְזוּזוֹת", english: "doorposts", stress: "me-zu-ZOT", note: "The literal meaning is doorposts; the rabbinic extension means the mezuzah scroll placed on the doorpost — Torah made physical" },
+          { hebrew: "צִיצִת", english: "fringes / tzitzit", stress: "tzi-TZIT", note: "The fringes on a garment (Numbers 15); seeing them prompts remembrance of all commandments — vision as spiritual discipline" },
+          { hebrew: "תְּכֵלֶת", english: "blue / sky-blue thread", stress: "te-CHE-let", note: "The mysterious blue dye; its source (a sea creature) was lost for centuries; some communities have revived it; the colour of sky and sea" },
         ]
       },
 
@@ -876,6 +920,49 @@
           { hebrew: "זֶה אֵלִי עָנוּ וְאָמְרוּ", transliteration: "zeh eli anu veameru", stress: "ZEH E-li a-NU ve-a-me-RU", english: "This is my God, they cried and said" },
           { hebrew: "יְהוָה יִמְלֹךְ לְעֹלָם וָעֶד", transliteration: "adonai yimloch leolam vaed", stress: "a-do-NAI yim-LOCH le-o-LAM VA-ed", english: "The Lord shall reign forever and ever" },
           { hebrew: "בָּרוּךְ אַתָּה יְהוָה גָּאַל יִשְׂרָאֵל", transliteration: "baruch ata adonai gaal yisrael", stress: "ba-RUCH a-TA a-do-NAI ga-AL yis-ra-EL", english: "Blessed are You, Lord, who has redeemed Israel" }
+        ],
+        vocab: [
+          { hebrew: "שְׁמַע", english: "hear / listen", stress: "SHMA", note: "The opening word is also the prayer's name; to truly hear is to internalise and obey — the Shema is recited twice daily" },
+          { hebrew: "אֶחָד", english: "one", stress: "e-CHAD", note: "The declaration of divine unity; the ד is lengthened to hold the thought of God's oneness throughout heaven and earth" },
+          { hebrew: "לְבָבְךָ", english: "your heart", stress: "le-VAV-cha", note: "The doubled ב (levav rather than lev) hints at both inclinations being directed toward God" },
+          { hebrew: "נַפְשְׁךָ", english: "your soul", stress: "naf-SHE-cha", note: "Rashi: even if God takes your soul; be willing to give your life rather than deny God" },
+          { hebrew: "מְאֹדֶךָ", english: "your might / your resources", stress: "me-O-de-cha", note: "The Rabbis read this as 'with all your money' — whatever you value most; total, not just spiritual, commitment" },
+          { hebrew: "וְשִׁנַּנְתָּם", english: "teach them diligently", stress: "ve-shi-NAN-tam", note: "Root: שנן — to sharpen; teach Torah so it becomes sharp, embedded through constant repetition" },
+          { hebrew: "מְזוּזוֹת", english: "doorposts", stress: "me-zu-ZOT", note: "The literal meaning is doorposts; the rabbinic extension means the mezuzah scroll placed on the doorpost" },
+          { hebrew: "טֹטָפוֹת", english: "frontlets / tefillin", stress: "to-ta-FOT", note: "The origin of tefillin; the exact meaning is uncertain — possibly tied or bound; the physical sign of the commandment" },
+          { hebrew: "מִצְוֹתַי", english: "My commandments", stress: "mitz-vo-TAI", note: "God's first-person commandments in V'haya; commandments are life-giving — the rain imagery follows as a consequence of keeping them" },
+          { hebrew: "יוֹרֶה", english: "early rain", stress: "yo-REH", note: "The first autumn rain; also means 'teaching' (from the same root as Torah) — rain and teaching are linked in Hebrew thought" },
+          { hebrew: "מַלְקוֹשׁ", english: "latter rain", stress: "mal-KOSH", note: "The spring rains that ripen the grain; paired with יוֹרֶה, they represent completeness — beginning and ending of the agricultural year" },
+          { hebrew: "צִיצִת", english: "fringes / tzitzit", stress: "tzi-TZIT", note: "Fringes on a garment (Numbers 15); seeing them prompts remembrance of all commandments — vision as spiritual discipline" },
+          { hebrew: "תְּכֵלֶת", english: "blue / sky-blue thread", stress: "te-CHE-let", note: "A blue dye from a sea creature; its source was lost for centuries; some communities have revived it; the colour of sky and sea" },
+          { hebrew: "קְדוֹשִׁים", english: "holy", stress: "ke-do-SHIM", note: "Also in Amida Kedushah; the goal of the Shema's third paragraph: to remember and observe, and thereby become holy" },
+          { hebrew: "גָּאַל", english: "redeemed", stress: "ga-AL", note: "The root of גּוֹאֵל (redeemer); the closing blessing connects the Shema to the Exodus redemption, and to the Amida that follows" },
+          { hebrew: "מִצְרַיִם", english: "Egypt", stress: "mitz-ra-YIM", note: "Also in Kiddush; the defining event of Jewish identity — the Exodus from Egypt establishes God as the God who liberates" },
+          { hebrew: "הִשָּׁמְרוּ", english: "take heed / be careful", stress: "hi-sha-me-RU", note: "A warning within a covenant; the conditional structure of V'haya — reward for observance, consequence for straying — frames a covenantal relationship" },
+          { hebrew: "וּרְאִיתֶם", english: "and you shall see", stress: "u-ri-TEM", note: "The tzitzit are worn to be seen; sight triggers memory, memory triggers action — a physical object as spiritual technology" },
+          { hebrew: "וּזְכַרְתֶּם", english: "and you shall remember", stress: "uz-char-TEM", note: "Memory is central to the third paragraph; the fringe is specifically a memory aid — seeing it recalls all the commandments at once" },
+          { hebrew: "וְלֹא תָתוּרוּ", english: "and you shall not stray", stress: "ve-LO ta-tu-RU", note: "Root: תור — to explore or scout; the same word used for the spies who toured Canaan; the heart and eyes can lead us astray" },
+          { hebrew: "לֵאמֹר", english: "saying", stress: "le-MOR", note: "The typical formula for divine speech in Torah; 'God spoke to Moses saying' — what follows is a direct command, not a suggestion" },
+          { hebrew: "כַּנְפֵי", english: "corners of", stress: "kan-FEI", note: "Literally 'wings of' — a poetic image; the fringes hang from the 'wings' of the garment, suggesting divine protection" },
+          { hebrew: "אֲנִי יְהוָה", english: "I am the Lord", stress: "a-NI a-do-NAI", note: "The closing self-declaration appears twice in Vayomer; God's identity as liberator is the foundation of the commandment" },
+          { hebrew: "בְּשִׂמְחָה רַבָּה", english: "with great joy", stress: "be-sim-CHA ra-BA", note: "The liturgical insertion connecting the Shema to Mi Chamocha; the joy of liberation is inseparable from the acceptance of Torah's yoke" },
+          { hebrew: "מִי כָמֹכָה", english: "who is like You", stress: "MI cha-mo-CHA", note: "The climax of the Song of the Sea (Exodus 15); the rhetorical question is its own answer — nothing is comparable to God" },
+          { hebrew: "בָּאֵלִם", english: "among the mighty", stress: "ba-E-lim", note: "The Rabbis also read this as 'among the silent' — who is like You, so silent in the face of Israel's suffering in Egypt?" },
+          { hebrew: "נֶאְדָּר", english: "majestic / glorious", stress: "ne-DAR", note: "Root: אדר — to be great or awe-inspiring; a rare word found in the Song of the Sea and associated with divine glory" },
+          { hebrew: "נוֹרָא", english: "awesome / revered", stress: "no-RA", note: "Also in Adon Olam, Yigdal; from the root ירא (to fear or revere) — awesome in the original sense of inspiring awe" },
+          { hebrew: "פֶלֶא", english: "wonder / miracle", stress: "PE-leh", note: "Also in Yigdal; a wonder that transcends normal understanding; used of the sea-splitting and of ongoing divine acts" },
+          { hebrew: "בֹּקֵעַ יָם", english: "splitting the sea", stress: "bo-KEA yam", note: "The defining miracle of the Exodus; God splits the sea to allow Israel to pass, then closes it over the Egyptian army" },
+          { hebrew: "יִמְלֹךְ לְעֹלָם", english: "shall reign forever", stress: "yim-LOCH le-o-LAM", note: "Also in Adon Olam; the conclusion of the Song of the Sea — divine sovereignty declared as the outcome of redemption" },
+          { hebrew: "גָּאַל יִשְׂרָאֵל", english: "who redeemed Israel", stress: "ga-AL yis-ra-EL", note: "The closing blessing bridges the Shema to the Amida; the rabbis required this blessing to end without interruption before the Amida" },
+          { hebrew: "שְׁבִיעִי", english: "seventh", stress: "hash-vi-I", note: "The seventh day is identified three times in the Vayechulu passage; the triple repetition emphasizes its significance above all other days" },
+          { hebrew: "מְלַאכְתּוֹ", english: "His work", stress: "me-lach-TO", note: "'Work' or 'craft' — the same word used for the Tabernacle's construction; creation and the Tabernacle mirror each other in the Torah" },
+          { hebrew: "וַיְבָרֶךְ", english: "and He blessed", stress: "va-ye-va-RECH", note: "God blessed the seventh day — blessing precedes sanctification; the day is first filled with divine goodness, then set apart" },
+          { hebrew: "הִשָּׁמְרוּ לָכֶם", english: "take heed to yourselves", stress: "hi-sha-me-RU la-CHEM", note: "A reflexive warning — literally 'guard yourselves'; the danger is internal (your own heart) more than external" },
+          { hebrew: "לְמַעַן", english: "in order that / so that", stress: "le-MA-an", note: "The purposive conjunction; the commandments are not arbitrary — they exist so that your days may be multiplied in the land" },
+          { hebrew: "אֲשֶׁר נִשְׁבַּע", english: "which He swore", stress: "a-SHER nish-BA", note: "God's sworn covenant with the ancestors; the land is a promise, not a reward — the covenant binds God's actions to Israel's history" },
+          { hebrew: "כִּימֵי הַשָּׁמַיִם", english: "as the days of heaven", stress: "ki-MEI ha-sha-MA-yim", note: "A breathtaking simile for longevity — your days shall be like the days of heaven upon the earth: eternal and boundless" },
+          { hebrew: "וַיֹּאמֶר", english: "and He said / and He spoke", stress: "va-YO-mer", note: "The narrative introduction to the tzitzit commandment; the third paragraph begins as Torah narrative, then becomes direct address" },
+          { hebrew: "דֹּרֹתָם", english: "throughout their generations", stress: "le-do-ro-TAM", note: "The tzitzit commandment is explicitly for all generations; it is not limited to the wilderness period but binds every subsequent generation" },
         ]
       },
 
@@ -891,6 +978,16 @@
           { hebrew: "זֶה אֵלִי עָנוּ וְאָמְרוּ", transliteration: "zeh eli anu veameru", stress: "ZEH E-li a-NU ve-a-me-RU", english: "This is my God, they cried and said" },
           { hebrew: "יְהוָה יִמְלֹךְ לְעֹלָם וָעֶד", transliteration: "adonai yimloch leolam vaed", stress: "a-do-NAI yim-LOCH le-o-LAM VA-ed", english: "The Lord shall reign forever and ever" },
           { hebrew: "בָּרוּךְ אַתָּה יְהוָה גָּאַל יִשְׂרָאֵל", transliteration: "baruch ata adonai gaal yisrael", stress: "ba-RUCH a-TA a-do-NAI ga-AL yis-ra-EL", english: "Blessed are You, Lord, who has redeemed Israel" }
+        ],
+        vocab: [
+          { hebrew: "מִי כָמֹכָה", english: "who is like You", stress: "MI cha-mo-CHA", note: "The climax of the Song of the Sea (Exodus 15); the rhetorical question is its own answer — nothing is comparable to God" },
+          { hebrew: "בָּאֵלִם", english: "among the mighty", stress: "ba-E-lim", note: "The Rabbis also read this as 'among the silent' — who is like You, so silent in the face of Israel's suffering in Egypt?" },
+          { hebrew: "נֶאְדָּר", english: "majestic / glorious", stress: "ne-DAR", note: "Root: אדר — to be great or awe-inspiring; a rare word found in the Song of the Sea and associated with divine glory" },
+          { hebrew: "נוֹרָא", english: "awesome / awe-inspiring", stress: "no-RA", note: "Also in Adon Olam, Yigdal; from the root ירא (to fear or revere) — inspiring sacred awe, not terror" },
+          { hebrew: "פֶלֶא", english: "wonder / miracle", stress: "PE-leh", note: "Also in Yigdal; a wonder that transcends normal understanding; used of the sea-splitting and of ongoing divine acts" },
+          { hebrew: "מַלְכוּת", english: "kingdom / sovereignty", stress: "mal-CHUT", note: "Also in Kiddush, Adon Olam, Kaddish; God's sovereignty becomes visible when Israel witnesses the splitting of the sea" },
+          { hebrew: "בֹּקֵעַ יָם", english: "splitting the sea", stress: "bo-KEA yam", note: "The defining miracle of the Exodus; God splits the sea to allow Israel to pass — the ultimate demonstration of power over nature" },
+          { hebrew: "גָּאַל יִשְׂרָאֵל", english: "who redeemed Israel", stress: "ga-AL yis-ra-EL", note: "The closing blessing bridges the Shema to the Amida; the Rabbis required this blessing to end without interruption before the Amida" },
         ]
       },
 
@@ -913,6 +1010,20 @@
           { hebrew: "תּוֹךְ אֱמוּנֵי עַם סְגֻלָּה", transliteration: "toch emunei am segula", stress: "toch e-mu-NEI am se-gu-LA", english: "Among the faithful of the treasured people" },
           { hebrew: "בּוֹאִי כַלָּה בּוֹאִי כַלָּה", transliteration: "boi chala boi chala", stress: "bo-I cha-LA bo-I cha-LA", english: "Come, O bride! Come, O bride!",
             notes: ["<strong>כַלָּה</strong> — pronounce <em>cha-LA</em> with a guttural ח, not <em>ka-LA</em>. The quiz cannot distinguish the two, but use ח for correct pronunciation."] }
+        ],
+        vocab: [
+          { hebrew: "לְכָה דוֹדִי", english: "come, my beloved", stress: "LE-cha do-DI", note: "An echo of Song of Songs; the 'beloved' is both the worshipper and the poet — Israel inviting Shabbat as a divine lover" },
+          { hebrew: "כַּלָּה", english: "bride", stress: "cha-LA", note: "Shabbat is personified as a bride; the tradition of going out to greet her on Friday evening is embodied in this poem's ritual use" },
+          { hebrew: "שָׁמוֹר וְזָכוֹר", english: "keep and remember", stress: "sha-MOR ve-za-CHOR", note: "From Deuteronomy 5:12 (Shamor) and Exodus 20:8 (Zachor); Lecha Dodi opens by reconciling the two different versions of the Shabbat command" },
+          { hebrew: "בְּדִבּוּר אֶחָד", english: "in one utterance", stress: "be-di-BUR e-CHAD", note: "The Rabbis taught that God spoke both versions simultaneously — something human speech cannot replicate" },
+          { hebrew: "הַמְיֻחָד", english: "the unique One", stress: "ha-me-yu-CHAD", note: "Only God could utter two seemingly contradictory commandments in one breath — a kabbalistic vision of divine speech" },
+          { hebrew: "תִּפְאֶרֶת", english: "splendour / glory", stress: "tif-E-ret", note: "Also in Kaddish; in Kabbalah, Tiferet is the central divine attribute; here it names the spiritual beauty of Shabbat observance" },
+          { hebrew: "מְקוֹר הַבְּרָכָה", english: "source of blessing", stress: "me-KOR ha-bra-CHA", note: "Shabbat is not just a day of rest but the wellspring from which all blessing flows — connecting Kiddush and Candle Lighting" },
+          { hebrew: "סוֹף מַעֲשֶׂה", english: "last in deed", stress: "sof ma-a-SEH", note: "Shabbat was created last but was first in God's thought — the entire creation was made in order to reach the seventh day" },
+          { hebrew: "בְּמַחֲשָׁבָה תְּחִלָּה", english: "first in thought", stress: "be-mach-sha-VA tchi-LA", note: "A kabbalistic principle: the final purpose is the first intention; Shabbat gives creation its meaning retrospectively" },
+          { hebrew: "עֲטֶרֶת", english: "crown", stress: "a-TE-ret", note: "Also in Lecha Dodi's conclusion (עֲטֶרֶת בַּעְלָהּ); Shabbat as the crown of the week — the day that crowns all other days" },
+          { hebrew: "סְגֻלָּה", english: "treasured / chosen people", stress: "se-gu-LA", note: "Also in Yigdal; a term of intimate divine ownership — Israel as God's special treasure, set apart from all other nations" },
+          { hebrew: "אֱמוּנֵי", english: "faithful ones", stress: "e-mu-NEI", note: "From the same root as אֱמוּנָה (emunah, faith); the faithful people of Israel are described as those who welcome Shabbat" },
         ]
       },
       "kaddish": {
@@ -944,6 +1055,16 @@
           { hebrew: "הוּא יַעֲשֶׂה שָׁלוֹם עָלֵינוּ", transliteration: "hu yaase shalom aleinu", stress: "HU ya-a-SEH sha-LOM a-LEI-nu", english: "make peace for us" },
           { hebrew: "וְעַל כָּל יִשְׂרָאֵל", transliteration: "veal kol yisrael", stress: "ve-AL kol yis-ra-EL", english: "and for all Israel" },
           { hebrew: "וְאִמְרוּ אָמֵן", transliteration: "veimru amen", stress: "ve-im-RU a-MEN", english: "and say, Amen" }
+        ],
+        vocab: [
+          { hebrew: "יִתְגַּדַּל", english: "magnified / exalted", stress: "yit-ga-DAL", note: "In Aramaic; an echo of Ezekiel 38:23 — 'I will magnify myself and sanctify myself'; God's greatness is expressed through history" },
+          { hebrew: "יִתְקַדַּשׁ", english: "sanctified / made holy", stress: "yit-ka-DASH", note: "Aramaic; the same root as קָדוֹשׁ (holy) in Hebrew; magnifying and sanctifying God's name is the focus of the entire prayer" },
+          { hebrew: "שְׁמֵהּ רַבָּא", english: "His great name", stress: "shmei-H ra-BA", note: "Aramaic for the Hebrew שְׁמוֹ הַגָּדוֹל; the congregation's response 'May His great name be blessed' is considered the heart of the Kaddish" },
+          { hebrew: "כִרְעוּתֵהּ", english: "according to His will", stress: "chi-ru-TEI-h", note: "Aramaic; the world was created according to God's will — Kaddish affirms this even in the face of death and loss" },
+          { hebrew: "מַלְכוּתֵהּ", english: "His kingdom", stress: "mal-chu-TEI-h", note: "Aramaic for מַלְכוּת; God's kingdom is established not in the absence of suffering but through the ongoing community of prayer" },
+          { hebrew: "בְּרִיךְ הוּא", english: "blessed be He", stress: "b-RICH HU", note: "The congregational response to 'the Holy One'; an Aramaic parallel to Hebrew בָּרוּךְ — a declaration of blessing amid loss" },
+          { hebrew: "לְעֵלָּא", english: "beyond / above", stress: "le-EI-la", note: "Aramaic; God's name transcends all human praise — Kaddish acknowledges the gap between our words and the divine reality" },
+          { hebrew: "נֶחֱמָתָא", english: "consolations", stress: "ne-che-ma-TA", note: "From the same root as נֶחָמָה (comfort); Kaddish is a mourner's prayer that paradoxically praises God rather than mourning — comfort through affirmation" },
         ]
       },
 
@@ -972,6 +1093,18 @@
           { hebrew: "בְּעֵת אִישַׁן וְאָעִירָה", transliteration: "beet ishan veaira", stress: "be-ET i-SHAN ve-a-I-ra", english: "when I sleep and when I wake" },
           { hebrew: "וְעִם רוּחִי גְּוִיָּתִי", transliteration: "veim ruchi geviyati", stress: "ve-IM ru-CHI ge-vi-ya-TI", english: "And with my spirit, my body" },
           { hebrew: "יְהוָה לִי וְלֹא אִירָא", transliteration: "adonai li velo ira", stress: "a-do-NAI li ve-LO i-RA", english: "The Lord is with me, I shall not fear" }
+        ],
+        vocab: [
+          { hebrew: "אֲדוֹן עוֹלָם", english: "Lord of the universe", stress: "a-DON o-LAM", note: "The opening title and the prayer's name; אָדוֹן means master or lord; עוֹלָם means both universe and eternity — God is sovereign over all space and time" },
+          { hebrew: "מָלַךְ", english: "reigned", stress: "ma-LACH", note: "Past tense — God reigned before creation; the poem moves through past, present, and future tenses to describe timeless sovereignty" },
+          { hebrew: "בְּטֶרֶם", english: "before", stress: "be-TE-rem", note: "Before anything existed; Adon Olam opens by establishing God's pre-existence — prior even to the concept of 'before'" },
+          { hebrew: "נוֹרָא", english: "awesome / awe-inspiring", stress: "no-RA", note: "Also in Mi Chamocha; God alone reigns 'in awe' when all else ceases — sovereignty through overwhelming presence, not force" },
+          { hebrew: "תַכְלִית", english: "end / conclusion", stress: "tach-LIT", note: "Paired with רֵאשִׁית (beginning); God is both without beginning and without end — the poem's theological heart" },
+          { hebrew: "גּוֹאֲלִי", english: "my Redeemer", stress: "go-a-LI", note: "Also in Elohai Netzor; the cosmic Adon Olam becomes intimate — the Lord of the universe is also my personal redeemer" },
+          { hebrew: "חֶבְלִי", english: "my portion / my lot", stress: "chev-LI", note: "Root: חֶבֶל — rope, portion, territory; the same word used in Psalms for one's allotted portion of land; God is my inheritance" },
+          { hebrew: "מָנוֹס", english: "refuge / hiding place", stress: "ma-NOS", note: "From the root נוּס — to flee; God as the place we run to, not from; a haven in trouble" },
+          { hebrew: "אַפְקִיד", english: "I entrust / I deposit", stress: "af-KID", note: "A financial/legal term — depositing valuables for safekeeping; the soul is entrusted to God each night like an overnight deposit" },
+          { hebrew: "רוּחִי", english: "my spirit / my breath", stress: "ru-CHI", note: "The poem ends with this ultimate trust; the final lines echo the bedtime Shema — Adon Olam is the last prayer of the day for many" },
         ]
       },
 
@@ -1004,6 +1137,17 @@
           { hebrew: "לִפְדּוֹת מְחַכֵּי קֵץ יְשׁוּעָתוֹ", transliteration: "lifdot mechakei ketz yeshuato", stress: "lif-DOT me-cha-KEI KETZ ye-shu-a-TO", english: "to redeem those who await His final salvation" },
           { hebrew: "מֵתִים יְחַיֶּה אֵל בְּרֹב חַסְדּוֹ", transliteration: "meitim yechayeh el berov chasdo", stress: "mei-TIM ye-cha-YEH el be-ROV chas-DO", english: "God will revive the dead in His great kindness" },
           { hebrew: "בָּרוּךְ עֲדֵי עַד שֵׁם תְּהִלָּתוֹ", transliteration: "baruch adei ad shem tehilato", stress: "ba-RUCH a-dei AD shem te-hi-la-TO", english: "Blessed forever is His glorious name" }
+        ],
+        vocab: [
+          { hebrew: "יִגְדַּל", english: "exalted / magnified", stress: "yig-DAL", note: "The same root as Kaddish's יִתְגַּדַּל; Yigdal is a poetic summary of Maimonides's Thirteen Principles of Faith" },
+          { hebrew: "חַי", english: "living", stress: "CHAI", note: "God is described as חַי (living) — God's existence is not static but dynamic and alive; the source of all life" },
+          { hebrew: "נִמְצָא", english: "exists / is found", stress: "nim-TZA", note: "From מָצָא (to find); God's existence is described as 'found' — ever-present, discoverable in every moment" },
+          { hebrew: "יָחִיד", english: "unique / singular", stress: "ya-CHID", note: "Stronger than אֶחָד (one); יָחִיד means alone-in-its-kind, absolutely unique — there is no other divine being at all" },
+          { hebrew: "נֶעְלָם", english: "hidden / concealed", stress: "ne-LAM", note: "God's unity is 'hidden' — beyond human comprehension; divine oneness is not just a number but a quality that cannot be grasped" },
+          { hebrew: "דְּמוּת הַגּוּף", english: "bodily form", stress: "de-MUT ha-GUF", note: "One of Maimonides's key principles: God has no body or bodily image; anthropomorphic language in Torah is metaphorical" },
+          { hebrew: "קַדְמוֹן", english: "primordial / ancient", stress: "kad-MON", note: "God preceded everything; קַדְמוֹן is related to מִקֶּדֶם (from of old) — God's antiquity surpasses the universe itself" },
+          { hebrew: "שֶׁפַע נְבוּאָה", english: "gift of prophecy", stress: "SHE-fa ne-vu-A", note: "שֶׁפַע (shefa) means abundance or overflow; prophecy is God's overflow of divine knowledge into selected human vessels" },
+          { hebrew: "מְשִׁיחֵנוּ", english: "our Messiah", stress: "me-shi-CHE-nu", note: "Yigdal includes the messianic hope as a principle of faith; the Messiah will come at the appointed time — belief sustains the wait" },
         ]
       },
 
@@ -1013,6 +1157,13 @@
           { hebrew: "בָּרוּךְ אַתָּה יְהוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם", transliteration: "baruch ata adonai eloheinu melech haolam", stress: "ba-RUCH a-TA a-do-NAI e-lo-HEI-nu ME-lech ha-o-LAM", english: "Blessed are You, Lord our God, King of the universe" },
           { hebrew: "אֲשֶׁר קִדְּשָׁנוּ בְּמִצְוֹתָיו וְצִוָּנוּ", transliteration: "asher kidshanu bemitzvotav vetzivanu", stress: "A-sher kid-SHA-nu be-mitz-vo-TAV ve-tzi-VA-nu", english: "who has sanctified us with His commandments and commanded us" },
           { hebrew: "לְהַדְלִיק נֵר שֶׁל חֲנֻכָּה", transliteration: "lehadlik ner shel chanukah", stress: "le-had-LIK NER shel cha-nu-KA", english: "to kindle the Chanukah light" }
+        ],
+        vocab: [
+          { hebrew: "קִדְּשָׁנוּ", english: "sanctified us", stress: "kid-SHA-nu", note: "Also in Hadlakat Nerot, Kiddush; through commandments, we participate in God's holiness — the act of kindling is itself a holy act" },
+          { hebrew: "בְּמִצְוֹתָיו", english: "with His commandments", stress: "be-mitz-vo-TAV", note: "Also in Hadlakat Nerot, Kiddush; commandments are described as instruments of sanctification — they make ordinary actions holy" },
+          { hebrew: "לְהַדְלִיק", english: "to kindle / to light", stress: "le-had-LIK", note: "Also in Hadlakat Nerot; the root דלק means to burn or ignite; lighting is a visible act of public witness to the miracle" },
+          { hebrew: "נֵר", english: "candle / light", stress: "NER", note: "Also in Hadlakat Nerot; a single light in darkness; the Chanukah candles are placed at doorways or windows to publicise the miracle" },
+          { hebrew: "חֲנֻכָּה", english: "Chanukah", stress: "cha-nu-KA", note: "Means 'dedication' (from חנך — to dedicate); refers to the rededication of the Temple in Jerusalem by the Maccabees in 165 BCE" },
         ]
       },
 
@@ -1022,6 +1173,13 @@
           { hebrew: "בָּרוּךְ אַתָּה יְהוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם", transliteration: "baruch ata adonai eloheinu melech haolam", stress: "ba-RUCH a-TA a-do-NAI e-lo-HEI-nu ME-lech ha-o-LAM", english: "Blessed are You, Lord our God, King of the universe" },
           { hebrew: "שֶׁעָשָׂה נִסִּים לַאֲבוֹתֵינוּ", transliteration: "sheasah nisim laavoteinu", stress: "she-a-SA ni-SIM la-a-vo-TEI-nu", english: "who performed miracles for our ancestors" },
           { hebrew: "בַּיָּמִים הָהֵם בַּזְּמַן הַזֶּה", transliteration: "bayamim hahem bazman hazeh", stress: "ba-ya-MIM ha-HEM baz-MAN ha-ZEH", english: "in those days at this season" }
+        ],
+        vocab: [
+          { hebrew: "שֶׁעָשָׂה", english: "who performed / who did", stress: "she-a-SA", note: "The blessing formula for miracles that happened to our ancestors; God's past acts are remembered as present realities" },
+          { hebrew: "נִסִּים", english: "miracles", stress: "ni-SIM", note: "Plural of נֵס; the Chanukah miracle refers both to the military victory and the miraculous oil lasting eight days" },
+          { hebrew: "לַאֲבוֹתֵינוּ", english: "for our ancestors", stress: "la-a-vo-TEI-nu", note: "The miracles happened to our ancestors — but we say this blessing as their inheritors; past miracles create present obligation" },
+          { hebrew: "בַּיָּמִים הָהֵם", english: "in those days", stress: "ba-ya-MIM ha-HEM", note: "The temporal frame distances the events in time" },
+          { hebrew: "בַּזְּמַן הַזֶּה", english: "at this season / at this time", stress: "baz-MAN ha-ZEH", note: "Immediately collapses the distance — 'in those days' but also 'at this time'; past miracles are eternally present in the season of their celebration" },
         ]
       },
 
@@ -1032,6 +1190,12 @@
           { hebrew: "בָּרוּךְ אַתָּה יְהוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם", transliteration: "baruch ata adonai eloheinu melech haolam", stress: "ba-RUCH a-TA a-do-NAI e-lo-HEI-nu ME-lech ha-o-LAM", english: "Blessed are You, Lord our God, King of the universe" },
           { hebrew: "שֶׁהֶחֱיָנוּ וְקִיְּמָנוּ וְהִגִּיעָנוּ", transliteration: "shehecheyanu vekiyemanu vehigianu", stress: "she-he-che-YA-nu ve-ki-ye-MA-nu ve-hi-gi-A-nu", english: "who has kept us alive, sustained us" },
           { hebrew: "לַזְּמַן הַזֶּה", transliteration: "lazman hazeh", stress: "laz-MAN ha-ZEH", english: "and brought us to this season" }
+        ],
+        vocab: [
+          { hebrew: "שֶׁהֶחֱיָנוּ", english: "who has kept us alive", stress: "she-he-che-YA-nu", note: "The first of three verbs; God sustains our life — recited at first occurrence of each festival, first new fruit, new clothing, and special occasions" },
+          { hebrew: "וְקִיְּמָנוּ", english: "and sustained us", stress: "ve-ki-ye-MA-nu", note: "Root: קוּם — to stand, to exist; God has upheld us, kept us standing through time to reach this moment" },
+          { hebrew: "וְהִגִּיעָנוּ", english: "and brought us", stress: "ve-hi-gi-A-nu", note: "Root: נָגַע — to reach; God has brought us to arrive at this special time — each festival is a destination reached together" },
+          { hebrew: "לַזְּמַן הַזֶּה", english: "to this season", stress: "laz-MAN ha-ZEH", note: "The destination of the blessing; the very fact that we have arrived at this moment — alive, together, celebrating — is itself the miracle" },
         ]
       },
 
@@ -1046,6 +1210,15 @@
           { hebrew: "הַתִּקְוָה בַּת שְׁנוֹת אַלְפַּיִם", transliteration: "hatikva bat shnot alpayim", stress: "ha-tik-VA bat shnot al-PA-yim", english: "the hope of two thousand years" },
           { hebrew: "לִהְיוֹת עַם חָפְשִׁי בְּאַרְצֵנוּ", transliteration: "lihyot am chofshi beartzenu", stress: "lih-YOT am CHOF-shi be-ar-TZE-nu", english: "to be a free people in our land" },
           { hebrew: "אֶרֶץ צִיּוֹן וִירוּשָׁלַיִם", transliteration: "eretz tziyon virushalayim", stress: "E-retz tzi-YON vi-ru-sha-LA-yim", english: "the land of Zion and Jerusalem" }
+        ],
+        vocab: [
+          { hebrew: "תִּקְוָה", english: "hope", stress: "tik-VA", note: "The word that names the anthem and the central Jewish aspiration; from the root קָוָה — to wait, to hope; also means a cord or thread that ties us to a future" },
+          { hebrew: "נֶפֶשׁ", english: "soul / inner self", stress: "NE-fesh", note: "Also in the Amida; the poem uses נֶפֶשׁ יְהוּדִי — a Jewish soul; the deep inner self that carries the longing for Zion across millennia" },
+          { hebrew: "הוֹמִיָּה", english: "yearning / stirring", stress: "ho-mi-YA", note: "From הָמָה — to murmur, to stir, to roar; the soul doesn't simply desire — it throbs and pulses with longing" },
+          { hebrew: "מִזְרָח", english: "east", stress: "miz-RACH", note: "Also in Mizmor Shir; Jews traditionally pray facing east toward Jerusalem — the East as orientation is both physical and spiritual" },
+          { hebrew: "עַיִן", english: "eye", stress: "A-yin", note: "Also a letter name; the eye gazing toward Zion — a physical image of the spiritual orientation that sustained Jews across 2,000 years of exile" },
+          { hebrew: "צוֹפִיָּה", english: "gazes / watches", stress: "tzo-fi-YA", note: "From the root צָפָה — to look, to watch, to hope; the watchman awaiting dawn is a classic image of Jewish hope" },
+          { hebrew: "חָפְשִׁי", english: "free", stress: "CHOF-shi", note: "Freedom — the goal of the return; not just political independence but the freedom of a people to live fully as themselves in their own land" },
         ]
       },
             "mizmor-shir": {
@@ -1063,6 +1236,16 @@
           { hebrew: "בְּמַעֲשֵׂי יָדֶיךָ אֲרַנֵּן", transliteration: "bemasei yadecha aranen", stress: "be-ma-a-SEI ya-DE-cha a-ra-NEN", english: "I will sing for joy at the works of Your hands" },
           { hebrew: "מַה גָּדְלוּ מַעֲשֶׂיךָ יְהוָה", transliteration: "ma gadlu maasecha adonai", stress: "ma GAD-lu ma-a-SE-cha a-do-NAI", english: "How great are Your works, O Lord" },
           { hebrew: "מְאֹד עָמְקוּ מַחְשְׁבֹתֶיךָ", transliteration: "meod amku machshevotecha", stress: "me-OD am-KU mach-she-vo-TE-cha", english: "Your thoughts are very deep" }
+        ],
+        vocab: [
+          { hebrew: "מִזְמוֹר", english: "psalm / melody", stress: "miz-MOR", note: "A musical term for a psalm; from the root זָמַר — to sing, to make music; the same root as זִמְרָה (song) and מְזַמֵּר (musician)" },
+          { hebrew: "שַׁבָּת", english: "Sabbath", stress: "sha-BAT", note: "The day of rest; from שָׁבַת — to cease, to rest; the Sabbath is woven through the entire Friday evening service, and this psalm celebrates it directly" },
+          { hebrew: "לְהֹדוֹת", english: "to give thanks", stress: "le-ho-DOT", note: "Also in Amida Hoda'ah; from the root יָדָה — to acknowledge, to give thanks; the same root as תּוֹדָה (gratitude) and יְהוּדָה (Judah)" },
+          { hebrew: "לְזַמֵּר", english: "to sing praises", stress: "le-za-MER", note: "From the root זָמַר — to make music, to praise in song; the root of מִזְמוֹר above; the whole psalm models what it calls for" },
+          { hebrew: "חַסְדֶּךָ", english: "Your lovingkindness", stress: "chas-DE-cha", note: "Also in Amida Avot; חֶסֶד is one of the most theologically rich words in Hebrew — loyal love, covenant faithfulness, steadfast kindness" },
+          { hebrew: "אֱמוּנָתְךָ", english: "Your faithfulness", stress: "e-mu-nat-CHA", note: "From אָמַן — to be firm, faithful, trustworthy; the root of אָמֵן (Amen); God's faithfulness declared by night mirrors His lovingkindness declared in the morning" },
+          { hebrew: "שִׂמַּחְתַּנִי", english: "You have made me glad", stress: "si-mach-TA-ni", note: "Also in Tzadik Katamar; joy (שִׂמְחָה) as a response to God's work — not commanded emotion but the natural overflow of perceiving what God has done" },
+          { hebrew: "מַחְשְׁבֹתֶיךָ", english: "Your thoughts", stress: "mach-she-vo-TE-cha", note: "God's thoughts are very deep — beyond human comprehension; the word for thought (מַחֲשָׁבָה) comes from חָשַׁב — to think, to plan, to weave" },
         ]
       },
 
@@ -1076,6 +1259,15 @@
           { hebrew: "דְּשֵׁנִים וְרַעֲנַנִּים יִהְיוּ", transliteration: "desheinim veraananim yiheyu", stress: "de-shei-NIM ve-ra-a-na-NIM yih-YU", english: "full of sap and green" },
           { hebrew: "לְהַגִּיד כִּי יָשָׁר יְהוָה", transliteration: "lehagid ki yashar adonai", stress: "le-ha-GID ki ya-SHAR a-do-NAI", english: "declaring that the Lord is upright" },
           { hebrew: "צוּרִי וְלֹא עַוְלָתָה בּוֹ", transliteration: "tzuri velo avlata bo", stress: "tzu-RI ve-LO av-la-TA BO", english: "my Rock, in whom there is no unrighteousness" }
+        ],
+        vocab: [
+          { hebrew: "צַדִּיק", english: "the righteous one", stress: "tza-DIK", note: "Also in Aleinu; a central moral concept — one who acts with justice and integrity; not just morally correct but aligned with God's covenant purposes" },
+          { hebrew: "תָּמָר", english: "palm tree", stress: "ta-MAR", note: "The date palm — tall, straight, fruitful even in the desert; also a personal name in the Torah; the image pairs with the cedar as twin models of righteous flourishing" },
+          { hebrew: "אֶרֶז", english: "cedar", stress: "E-rez", note: "The great cedar of Lebanon — ancient, fragrant, enduring, used to build the Temple; together with the palm, they describe breadth (height) and faithfulness (rootedness)" },
+          { hebrew: "שְׁתוּלִים", english: "planted", stress: "she-tu-LIM", note: "From שָׁתַל — to plant; being planted in God's house is not passive — it is purposeful, nurtured growth rooted in a particular soil and community" },
+          { hebrew: "יַפְרִיחוּ", english: "they shall flourish", stress: "yaf-RI-chu", note: "From פָּרַח — to blossom, to bloom; the same root as פֶּרַח (flower); flourishing in God's courts is the natural outcome of being rooted there" },
+          { hebrew: "דְּשֵׁנִים", english: "full of sap / vigorous", stress: "de-shei-NIM", note: "Literally fat, well-nourished — a word for vitality; the righteous are not just alive but abundantly, generously alive even in old age" },
+          { hebrew: "צוּרִי", english: "my Rock", stress: "tzu-RI", note: "Also in Amida Gevurot; a name for God as immovable foundation and refuge; the psalm closes by grounding all its imagery of flourishing in the character of God himself" },
         ]
       },
 
@@ -1089,6 +1281,18 @@
           { hebrew: "אֲשֶׁר קִדְּשָׁנוּ בְּמִצְוֹתָיו", transliteration: "asher kidshanu bemitzvotav", stress: "A-sher kid-SHA-nu be-mitz-vo-TAV", english: "who has sanctified us with His commandments" },
           { hebrew: "וְצִוָּנוּ לְהַדְלִיק נֵר שֶׁל שַׁבָּת", transliteration: "vetzivanu lehadlik ner shel shabat", stress: "ve-tzi-VA-nu le-had-LIK ner shel sha-BAT", english: "and commanded us to kindle the Sabbath light",
             notes: ["<strong>לְהַדְלִיק</strong> — le-had-<em>lik</em>, don't drop the ה (le-ad-lik is incorrect)"] }
+        ],
+        vocab: [
+          { hebrew: "בָּרוּךְ", english: "blessed", stress: "ba-RUCH", note: "Opens almost every blessing; the root ברך means to bless or to kneel" },
+          { hebrew: "אַתָּה", english: "You", stress: "a-TA", note: "Direct second-person address to the divine — intimate and immediate" },
+          { hebrew: "מֶלֶךְ", english: "King / Sovereign", stress: "ME-lech", note: "Also in Kiddush, Amida" },
+          { hebrew: "עוֹלָם", english: "universe / eternity", stress: "o-LAM", note: "Also in Kiddush, Amida, Adon Olam; the phrase מֶלֶךְ הָעוֹלָם means King of the universe" },
+          { hebrew: "קִדְּשָׁנוּ", english: "sanctified us", stress: "kid-SHA-nu", note: "Also in Kiddush; from the root קדש — holy, set apart" },
+          { hebrew: "מִצְוֹתָיו", english: "His commandments", stress: "mitz-vo-TAV", note: "Also in Kiddush; the singular מִצְוָה means a commandment or good deed" },
+          { hebrew: "וְצִוָּנוּ", english: "and commanded us", stress: "ve-tzi-VA-nu", note: "Also in Kiddush; the וְ prefix means 'and'" },
+          { hebrew: "לְהַדְלִיק", english: "to kindle / to light", stress: "le-had-LIK", note: "Distinctive to this blessing; the root דלק means to burn or ignite" },
+          { hebrew: "נֵר", english: "candle / light", stress: "NER", note: "Also in Chanukah blessings; נֵר שֶׁל שַׁבָּת means the Sabbath light" },
+          { hebrew: "שַׁבָּת", english: "Sabbath", stress: "sha-BAT", note: "Also in Kiddush, V'shamru; from the root שבת — to rest" },
         ]
       },
       "kiddush": {
@@ -1126,6 +1330,23 @@
           { hebrew: "בָּרוּךְ אַתָּה יְהוָה", transliteration: "baruch ata adonai", stress: "ba-RUCH a-TA a-do-NAI", english: "Blessed are You, Lord" },
           { hebrew: "אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם", transliteration: "eloheinu melech haolam", stress: "e-lo-HEI-nu ME-lech ha-o-LAM", english: "our God, King of the universe" },
           { hebrew: "הַמּוֹצִיא לֶחֶם מִן הָאָרֶץ", transliteration: "hamotzi lechem min haaretz", stress: "ha-MO-tzi LE-chem min ha-A-retz", english: "who brings forth bread from the earth" }
+        ],
+        vocab: [
+          { hebrew: "וַיְכֻלּוּ", english: "and were completed", stress: "va-ye-chu-LU", note: "Opens the Vayechulu passage (Genesis 2); signals the completion of creation" },
+          { hebrew: "שָׁמַיִם", english: "heavens", stress: "sha-MA-yim", note: "Paired with אָרֶץ throughout; also in Shema (V'haya), Barchu" },
+          { hebrew: "אָרֶץ", english: "earth / land", stress: "A-retz", note: "Also in Shema (V'haya im shamoa); the land is central to Kiddush's themes" },
+          { hebrew: "שָׁבַת", english: "rested", stress: "sha-VAT", note: "The verbal root of שַׁבָּת (Sabbath); God's rest on the seventh day sanctifies ours" },
+          { hebrew: "בּוֹרֵא", english: "who creates", stress: "bo-REI", note: "Also in Amida; the present-tense form — God continuously creates" },
+          { hebrew: "גָּפֶן", english: "vine", stress: "GA-fen", note: "פְּרִי הַגָּפֶן means 'the fruit of the vine' — the Borei pri hagafen blessing" },
+          { hebrew: "קִדְּשָׁנוּ", english: "sanctified us", stress: "kid-SHA-nu", note: "Also in Candles blessing; shares the root קדש with קָדוֹשׁ (holy)" },
+          { hebrew: "זִכָּרוֹן", english: "remembrance", stress: "zi-ka-RON", note: "Also in Kedushat HaYom; memory is central to Jewish practice" },
+          { hebrew: "בְּרֵאשִׁית", english: "in the beginning", stress: "be-re-SHIT", note: "The first word of the Torah; Kiddush links Shabbat directly to creation" },
+          { hebrew: "יְצִיאַת מִצְרַיִם", english: "exodus from Egypt", stress: "ye-tzi-AT mitz-ra-YIM", note: "The foundational act of liberation; Kiddush links both creation and redemption to Shabbat" },
+          { hebrew: "לֶחֶם", english: "bread", stress: "LE-chem", note: "הַמּוֹצִיא — who brings forth bread from the earth — the blessing over challah" },
+          { hebrew: "הַמּוֹצִיא", english: "who brings forth", stress: "ha-MO-tzi", note: "From the root יצא (to go out); the Hamotzi blessing that opens the meal" },
+          { hebrew: "מְקַדֵּשׁ", english: "who sanctifies", stress: "me-ka-DESH", note: "The closing word of the main Kiddush blessing; also closes Kedushat HaYom" },
+          { hebrew: "אַהֲבָה", english: "love", stress: "a-ha-VA", note: "Also in Ahavat Olam; God gives Shabbat בְּאַהֲבָה — with love" },
+          { hebrew: "רָצוֹן", english: "favour / will", stress: "ra-TZON", note: "Also in Kedushat HaYom (Avodah); God's willing, gracious gift of Shabbat" },
         ]
       },
 
@@ -1148,6 +1369,17 @@
           { hebrew: "מַלְאֲכֵי עֶלְיוֹן", transliteration: "malachei elyon", stress: "mal-a-CHEI el-YON", english: "messengers of the Most High" },
           { hebrew: "מִמֶּלֶךְ מַלְכֵי הַמְּלָכִים", transliteration: "mimelech malachei hamelachim", stress: "mi-ME-lech mal-CHEI ha-me-la-CHIM", english: "messengers of the Ruler of Rulers" },
           { hebrew: "הַקָּדוֹשׁ בָּרוּךְ הוּא", transliteration: "hakadosh baruch hu", stress: "ha-ka-DOSH ba-RUCH HU", english: "the blessed, the Holy One" }
+        ],
+        vocab: [
+          { hebrew: "שָׁלוֹם", english: "peace", stress: "sha-LOM", note: "Also in Birkat Shalom, Kaddish; the central word of the poem — spoken three times in different registers" },
+          { hebrew: "עֲלֵיכֶם", english: "upon you (plural)", stress: "a-lei-CHEM", note: "The response עֲלֵיכֶם שָׁלוֹם mirrors the greeting — a traditional Jewish greeting structure" },
+          { hebrew: "מַלְאָךְ", english: "angel / messenger", stress: "ma-LACH", note: "Plural מַלְאָכִים; the word literally means messenger — angels are divine messengers" },
+          { hebrew: "הַשָּׁרֵת", english: "of service / ministering", stress: "ha-sha-RET", note: "מַלְאֲכֵי הַשָּׁרֵת — angels of service; distinct from the angels of peace (הַשָּׁלוֹם)" },
+          { hebrew: "עֶלְיוֹן", english: "Most High", stress: "el-YON", note: "A divine epithet; also in Amida (Avot: גָּדוֹל גִּבּוֹר וְנוֹרָא אֵל עֶלְיוֹן)" },
+          { hebrew: "הַקָּדוֹשׁ בָּרוּךְ הוּא", english: "the Holy One, blessed be He", stress: "ha-ka-DOSH ba-RUCH HU", note: "Standard rabbinic name for God; הַקָּדוֹשׁ — the Holy One — recurs in Kedushah" },
+          { hebrew: "בּוֹאֲכֶם", english: "your coming / come in", stress: "bo-a-CHEM", note: "Welcoming the Shabbat angels as honoured guests; the poem mirrors ancient hospitality customs" },
+          { hebrew: "בָּרְכוּנִי", english: "bless me", stress: "bar-CHU-ni", note: "A direct personal request for blessing — unusually intimate in liturgical poetry" },
+          { hebrew: "צֵאתְכֶם", english: "your going forth / farewell", stress: "tzei-te-CHEM", note: "The poem's structure: welcome (בּוֹאֲכֶם) → bless (בָּרְכוּנִי) → farewell (צֵאתְכֶם)" },
         ]
       },
 
@@ -1172,6 +1404,19 @@
           { hebrew: "וּמַבְדִּיל בֵּין יוֹם וּבֵין לָיְלָה", transliteration: "umavdil bein yom uvein layla", stress: "u-mav-DIL bein yom u-VEIN LAY-la", english: "and separates between day and night" },
           { hebrew: "יְהוָה צְבָאוֹת שְׁמוֹ", transliteration: "adonai tzvaot shmo", stress: "a-do-NAI tzva-OT shMO", english: "Lord of Hosts is His name" },
           { hebrew: "בָּרוּךְ אַתָּה יְהוָה הַמַּעֲרִיב עֲרָבִים", transliteration: "baruch ata adonai hamaariv aravim", stress: "ba-RUCH a-TA a-do-NAI ha-ma-a-RIV a-ra-VIM", english: "Blessed are You, Lord, who brings on the evening twilight" }
+        ],
+        vocab: [
+          { hebrew: "בָּרְכוּ", english: "bless! (imperative)", stress: "bar-CHU", note: "A summons to communal worship; the prayer leader calls, the congregation responds" },
+          { hebrew: "הַמְּבֹרָךְ", english: "the blessed One", stress: "ha-me-vo-RACH", note: "The divine receives the same blessing it bestows — a profound reciprocity" },
+          { hebrew: "מַעֲרִיב", english: "who brings on evening", stress: "ma-a-RIV", note: "From עֶרֶב (evening); the prayer is named Ma'ariv after this word" },
+          { hebrew: "עֲרָבִים", english: "evenings", stress: "a-ra-VIM", note: "The plural of עֶרֶב; God brings on each successive evening" },
+          { hebrew: "חָכְמָה", english: "wisdom", stress: "CHOCH-ma", note: "The first of God's three instruments in ordering creation: wisdom, understanding (בִּינָה), and will (רָצוֹן)" },
+          { hebrew: "שְׁעָרִים", english: "gates", stress: "she-a-RIM", note: "The 'gates' of day and night — a poetic image of the transitions between light and darkness" },
+          { hebrew: "אוֹר", english: "light", stress: "OR", note: "Also in Birkat Shalom; the contrast between אוֹר and חֹשֶׁךְ echoes the first day of creation" },
+          { hebrew: "חֹשֶׁךְ", english: "darkness", stress: "CHO-shech", note: "Paired with אוֹר throughout; God 'rolls' light and darkness in alternation" },
+          { hebrew: "כּוֹכָבִים", english: "stars", stress: "ko-cha-VIM", note: "The stars are set in their watches — creation as divine order" },
+          { hebrew: "צְבָאוֹת", english: "of hosts / multitudes", stress: "tzva-OT", note: "Also in Kedushah (Sat); יְהוָה צְבָאוֹת — Lord of Hosts — a military-cosmic epithet for God" },
+          { hebrew: "לָיְלָה", english: "night", stress: "LAY-la", note: "Barchu is an evening prayer; night and day are both God's creation" },
         ]
       },
 
@@ -1191,6 +1436,18 @@
           { hebrew: "וּבָהֶם נֶהְגֶּה יוֹמָם וָלָיְלָה", transliteration: "uvahem nehge yomam valayla", stress: "u-va-HEM neh-GEH yo-MAM va-LAY-la", english: "and we will think of them day and night" },
           { hebrew: "וְאַהֲבָתְךָ אַל תָּסִיר מִמֶּנּוּ לְעוֹלָמִים", transliteration: "veahavatcha al tasir mimenu leolamin", stress: "ve-a-ha-vat-CHA al ta-SIR mi-ME-nu le-o-la-MIM", english: "May You never withdraw Your love from us" },
           { hebrew: "בָּרוּךְ אַתָּה יְהוָה אוֹהֵב עַמּוֹ יִשְׂרָאֵל", transliteration: "baruch ata adonai ohev amo yisrael", stress: "ba-RUCH a-TA a-do-NAI o-HEV a-MO yis-ra-EL", english: "Blessed are You, Lord, who loves Your people Israel" }
+        ],
+        vocab: [
+          { hebrew: "אַהֲבָה", english: "love", stress: "a-ha-VA", note: "Also in Kiddush, Kedushat HaYom; the prayer's name means 'eternal love'" },
+          { hebrew: "עוֹלָם", english: "eternity / universe", stress: "o-LAM", note: "אַהֲבַת עוֹלָם — endless/eternal love; also throughout the liturgy" },
+          { hebrew: "תּוֹרָה", english: "Torah", stress: "to-RA", note: "Also in Shema, Kedushat HaYom, Elohai Netzor; the Torah is the object of God's loving gift" },
+          { hebrew: "מִצְווֹת", english: "commandments", stress: "mitz-VOT", note: "Also in Shema; the plural of מִצְוָה — the obligations given through love" },
+          { hebrew: "חֻקִּים", english: "statutes", stress: "chu-KIM", note: "Laws for which no explicit reason is given; paired with מִשְׁפָּטִים throughout the liturgy" },
+          { hebrew: "מִשְׁפָּטִים", english: "laws / judgements", stress: "mish-pa-TIM", note: "Rational ethical laws; together with חֻקִּים they form the full body of Jewish law" },
+          { hebrew: "בְּשָׁכְבֵנוּ", english: "when we lie down", stress: "be-shoch-BEI-nu", note: "Echoes the Shema: 'when you lie down and when you rise up' — this prayer comes just before the Shema" },
+          { hebrew: "וּבְקוּמֵנוּ", english: "when we rise up", stress: "uv-ku-MEI-nu", note: "The second half of the Shema's daily time-markers; also in Shema (V'ahavta)" },
+          { hebrew: "חַיֵּינוּ", english: "our life", stress: "cha-YEI-nu", note: "Also in Hoda'ah; the Torah and commandments are described as 'our life and the length of our days'" },
+          { hebrew: "אוֹהֵב", english: "who loves", stress: "o-HEV", note: "The closing blessing names God as the one who loves Israel; love is the relationship, not merely duty" },
         ]
       },
 
@@ -1205,6 +1462,15 @@
           { hebrew: "כִּי שֵׁשֶׁת יָמִים עָשָׂה יְהוָה", transliteration: "ki sheishet yamim asa adonai", stress: "ki SHEI-shet ya-MIM a-SA a-do-NAI", english: "for in six days God made" },
           { hebrew: "אֶת הַשָּׁמַיִם וְאֶת הָאָרֶץ", transliteration: "et hashamayim veet haaretz", stress: "et ha-sha-MA-yim ve-ET ha-A-retz", english: "the heavens and the earth" },
           { hebrew: "וּבַיּוֹם הַשְּׁבִיעִי שָׁבַת וַיִּנָּפַשׁ", transliteration: "uvayom hashvii shavat vayinafash", stress: "u-va-YOM hash-vi-I sha-VAT va-yi-NA-fash", english: "and on the seventh day God rested and was refreshed" }
+        ],
+        vocab: [
+          { hebrew: "וְשָׁמְרוּ", english: "and they shall keep / observe", stress: "ve-sha-me-RU", note: "The root שמר means to guard, watch, observe; to 'keep' Shabbat is to protect it" },
+          { hebrew: "בְּרִית", english: "covenant", stress: "be-RIT", note: "Also in Kiddush; Shabbat observance is described as a sign of the covenant between God and Israel" },
+          { hebrew: "עוֹלָם", english: "eternity / forever", stress: "o-LAM", note: "בְּרִית עוֹלָם — an everlasting covenant; also throughout the liturgy" },
+          { hebrew: "אוֹת", english: "sign", stress: "OT", note: "Shabbat is a sign (אוֹת) of the covenant; also in Shema (the mezuzah and tefillin as physical signs)" },
+          { hebrew: "שֵׁשֶׁת יָמִים", english: "six days", stress: "SHEI-shet ya-MIM", note: "The creation period; the verse echoes the fourth commandment from Exodus 20" },
+          { hebrew: "שָׁבַת", english: "rested", stress: "sha-VAT", note: "The verbal root of שַׁבָּת; also in Kiddush (Vayechulu)" },
+          { hebrew: "וַיִּנָּפַשׁ", english: "was refreshed / took breath", stress: "va-yi-NA-fash", note: "From נֶפֶשׁ (soul/breath); God 'took breath' — a profound anthropomorphism suggesting rest as renewal" },
         ]
       },
 
@@ -1212,6 +1478,12 @@
         name: "Amida — Petichah",
         lines: [
           { hebrew: "יְהוָה שְׂפָתַי תִּפְתָּח וּפִי יַגִּיד תְּהִלָּתֶךָ", transliteration: "adonai sefatai tiftach ufi yagid tehilatecha", stress: "a-do-NAI se-fa-TAI tif-TACH u-FI ya-GID te-hi-la-TE-cha", english: "Lord, open my lips, and my mouth shall declare Your praise" }
+        ],
+        vocab: [
+          { hebrew: "שְׂפָתַי", english: "my lips", stress: "se-fa-TAI", note: "The instrument of prayer; this verse (Psalm 51:17) bookends the entire Amida — it also closes Elohai Netzor" },
+          { hebrew: "תִּפְתָּח", english: "open (imperative)", stress: "tif-TACH", note: "Asking the divine to enable speech itself — the worshipper cannot even begin without God's help" },
+          { hebrew: "פִי", english: "my mouth", stress: "PI", note: "Paired with שְׂפָתַי (lips); the two organs of speech together" },
+          { hebrew: "תְּהִלָּתֶךָ", english: "Your praise", stress: "te-hi-la-TE-cha", note: "Also in Mizmor Shir; תְּהִלִּים (Psalms) comes from the same root" },
         ]
       },
 
@@ -1230,6 +1502,22 @@
           { hebrew: "לְמַעַן שְׁמוֹ בְּאַהֲבָה", transliteration: "lemaan shmo beahava", stress: "le-MA-an shmo be-a-ha-VA", english: "for the sake of His name, with love" },
           { hebrew: "מֶלֶךְ עוֹזֵר וּמוֹשִׁיעַ וּמָגֵן", transliteration: "melech ozer umoshia umagen", stress: "ME-lech o-ZER u-mo-SHI-a u-ma-GEN", english: "Sovereign, Helper, Saviour and Shield" },
           { hebrew: "בָּרוּךְ אַתָּה יְהוָה מָגֵן אַבְרָהָם וּפוֹקֵד שָׂרָה", transliteration: "baruch ata adonai magen avraham ufoked sara", stress: "ba-RUCH a-TA a-do-NAI ma-GEN av-ra-HAM u-fo-KED sa-RA", english: "Blessed are You, Lord, Shield of Abraham and Guardian of Sarah" }
+        ],
+        vocab: [
+          { hebrew: "אֲבוֹתֵינוּ", english: "our ancestors", stress: "a-vo-TEI-nu", note: "The chain of tradition; the Amida deliberately names both patriarchs and matriarchs" },
+          { hebrew: "אַבְרָהָם", english: "Abraham", stress: "av-ra-HAM", note: "First patriarch; his defining quality is חֶסֶד (loving kindness)" },
+          { hebrew: "יִצְחָק", english: "Isaac", stress: "yitz-CHAK", note: "Second patriarch; his defining quality is גְּבוּרָה (strength/restraint)" },
+          { hebrew: "יַעֲקֹב", english: "Jacob", stress: "ya-a-KOV", note: "Third patriarch; his defining quality is תִּפְאֶרֶת (beauty/harmony)" },
+          { hebrew: "שָׂרָה", english: "Sarah", stress: "sa-RA", note: "First matriarch; the closing blessing uniquely names her — פּוֹקֵד שָׂרָה (Guardian of Sarah)" },
+          { hebrew: "גָּדוֹל", english: "great", stress: "ga-DOL", note: "One of three divine epithets: great (גָּדוֹל), mighty (גִּבּוֹר), awesome (נוֹרָא)" },
+          { hebrew: "גִּבּוֹר", english: "mighty", stress: "gi-BOR", note: "Also in Gevurot; the root גבר means strength" },
+          { hebrew: "נוֹרָא", english: "awesome / awe-inspiring", stress: "no-RA", note: "Also in Kedushah, Mi chamocha; the root ירא means to fear/revere" },
+          { hebrew: "עֶלְיוֹן", english: "Most High", stress: "el-YON", note: "Also in Shalom Aleichem; אֵל עֶלְיוֹן — God Most High — a name found in Genesis" },
+          { hebrew: "חֲסָדִים", english: "acts of loving kindness", stress: "cha-sa-DIM", note: "Also in Hoda'ah; the plural of חֶסֶד — the defining quality of Abraham and of God" },
+          { hebrew: "גּוֹמֵל", english: "who bestows", stress: "go-MEL", note: "God bestows unearned חֲסָדִים — grace freely given, not merited" },
+          { hebrew: "זוֹכֵר", english: "who remembers", stress: "zo-CHER", note: "Divine memory is active and consequential — to remember is to act on the memory" },
+          { hebrew: "גּוֹאֵל", english: "redeemer", stress: "go-EL", note: "Also in Mi chamocha, Adon Olam, Elohai Netzor; the go'el redeems the family member in need" },
+          { hebrew: "מָגֵן", english: "shield", stress: "ma-GEN", note: "The closing word and blessing name; God as protective shield of Abraham — and of us" },
         ]
       },
 
@@ -1247,6 +1535,22 @@
           { hebrew: "וְנֶאֱמָן אַתָּה לְהַחֲיוֹת מֵתִים", transliteration: "veneeman ata lehachayot meitim", stress: "ve-ne-e-MAN a-TA le-ha-cha-YOT mei-TIM", english: "You are faithful to bring life to the dead",
             notes: ["<strong>מֵתִים</strong> — SR struggles with this word in this position. Say it slowly and clearly: <em>mei-TIM</em>"] },
           { hebrew: "בָּרוּךְ אַתָּה יְהוָה מְחַיֵּה הַמֵּתִים", transliteration: "baruch ata adonai mechaye hameitim", stress: "ba-RUCH a-TA a-do-NAI me-cha-YEH ha-mei-TIM", english: "Blessed are You, Lord, who brings life to the dead" }
+        ],
+        vocab: [
+          { hebrew: "גִּבּוֹר", english: "mighty", stress: "gi-BOR", note: "Also in Avot; opens this section — God's might is defined here as life-giving power, not force" },
+          { hebrew: "מְחַיֵּה", english: "who revives / gives life", stress: "me-cha-YEH", note: "The central verb of this section; מְחַיֵּה מֵתִים — the one who revives the dead — appears three times" },
+          { hebrew: "מֵתִים", english: "the dead", stress: "mei-TIM", note: "Resurrection (תְּחִיַּת הַמֵּתִים) is the 13th of Maimonides' principles; this blessing asserts it directly" },
+          { hebrew: "לְהוֹשִׁיעַ", english: "to save", stress: "le-ho-SHI-a", note: "From the root ישע; also in יְשׁוּעָה (salvation); the same root as the name יֵשׁוּעַ (Joshua/Jesus)" },
+          { hebrew: "מְכַלְכֵּל", english: "who sustains", stress: "me-chal-KEL", note: "God sustains the living; the same root (כלכל) is used for feeding and providing for dependants" },
+          { hebrew: "חַיִּים", english: "life / the living", stress: "cha-YIM", note: "Also in Birkat Shalom; the plural form — life is always multidimensional in Hebrew thought" },
+          { hebrew: "רַחֲמִים", english: "mercy / compassion", stress: "ra-cha-MIM", note: "Also in Avodah, Hoda'ah, Birkat Shalom; from רֶחֶם (womb) — the compassion a mother has for her child" },
+          { hebrew: "סוֹמֵךְ", english: "who supports", stress: "so-MECH", note: "God supports the falling; the same root used for laying hands on a sacrifice — support with purpose" },
+          { hebrew: "נוֹפְלִים", english: "the fallen", stress: "nof-LIM", note: "A concrete social category — those who have stumbled or been brought low, not just metaphorically" },
+          { hebrew: "רוֹפֵא", english: "who heals", stress: "ro-FEH", note: "Also in Hoda'ah; רוֹפֵא חוֹלִים — healer of the sick — God as physician" },
+          { hebrew: "מַתִּיר", english: "who frees", stress: "ma-TIR", note: "מַתִּיר אֲסוּרִים — who frees the captive; the root אסר means to bind or prohibit" },
+          { hebrew: "אֱמוּנָה", english: "faithfulness", stress: "e-mu-NA", note: "Also in Mizmor Shir; God is described as keeping faith (אֱמוּנָה) even with those who sleep in the dust" },
+          { hebrew: "יְשׁוּעָה", english: "salvation", stress: "ye-shu-A", note: "Also in Kedushat HaYom; God causes salvation (יְשׁוּעָה) to flourish — a messianic image" },
+          { hebrew: "עָפָר", english: "dust", stress: "a-FAR", note: "The 'sleepers in the dust' — those who have died; also in Elohai Netzor (humility before all)" },
         ]
       },
 
@@ -1256,6 +1560,13 @@
           { hebrew: "אַתָּה קָדוֹשׁ וְשִׁמְךָ קָדוֹשׁ", transliteration: "ata kadosh veshimcha kadosh", stress: "a-TA ka-DOSH ve-shim-CHA ka-DOSH", english: "You are holy and Your name is holy" },
           { hebrew: "וּקְדוֹשִׁים בְּכָל יוֹם יְהַלְלוּךָ סֶּלָה", transliteration: "ukdoshim bechol yom yehaleluchah selah", stress: "uk-do-SHIM be-CHOL yom ye-ha-le-LU-cha SE-la", english: "and holy beings praise You every day, forever" },
           { hebrew: "בָּרוּךְ אַתָּה יְהוָה הָאֵל הַקָּדוֹשׁ", transliteration: "baruch ata adonai hael hakadosh", stress: "ba-RUCH a-TA a-do-NAI ha-EL ha-ka-DOSH", english: "Blessed are You, Lord, the Almighty, the Holy One" }
+        ],
+        vocab: [
+          { hebrew: "קָדוֹשׁ", english: "holy", stress: "ka-DOSH", note: "The central word of this section; set apart, other, transcendent — the defining attribute of God" },
+          { hebrew: "שִׁמְךָ", english: "Your name", stress: "shim-CHA", note: "Also in Hoda'ah, Kaddish; God's name shares in God's holiness" },
+          { hebrew: "קְדוֹשִׁים", english: "holy beings", stress: "ke-do-SHIM", note: "Also in Vayomer (Shema); all holy beings praise God daily — the worship of heaven echoes in ours" },
+          { hebrew: "יְהַלְלוּךָ", english: "shall praise You", stress: "ye-ha-le-LU-cha", note: "From הָלַל — to praise; the root of הַלְלוּיָהּ (Hallelujah)" },
+          { hebrew: "סֶלָה", english: "forever / selah", stress: "SE-la", note: "Also in Mizmor Shir, Kaddish; a musical term in Psalms, used to mean 'forever' or 'pause and reflect'" },
         ]
       },
 
@@ -1269,6 +1580,15 @@
           { hebrew: "יִמְלֹךְ יְהוָה לְעוֹלָם אֱלֹהַיִךְ צִיּוֹן", transliteration: "yimloch adonai leolam elohayich tziyon", stress: "yim-LOCH a-do-NAI le-o-LAM e-lo-ha-YICH tzi-YON", english: "The Lord shall reign forever, your God, O Zion" },
           { hebrew: "לְדֹר וָדֹר הַלְלוּיָהּ", transliteration: "ledor vador halleluyah", stress: "le-DOR va-DOR ha-le-lu-YAH", english: "throughout all generations, Halleluyah" },
           { hebrew: "בָּרוּךְ אַתָּה יְהוָה הָאֵל הַקָּדוֹשׁ", transliteration: "baruch ata adonai hael hakadosh", stress: "ba-RUCH a-TA a-do-NAI ha-EL ha-ka-DOSH", english: "Blessed are You, Lord, the holy God" }
+        ],
+        vocab: [
+          { hebrew: "קָדוֹשׁ", english: "holy", stress: "ka-DOSH", note: "Triple repetition — the only biblical word repeated three times; the Kedushah is the pinnacle of the prayer service" },
+          { hebrew: "יוֹשֵׁב תְּהִלּוֹת", english: "enthroned on praises", stress: "yo-SHEV te-hi-LOT", note: "God's throne is constructed from, or seated amid, the praises of Israel — a profound image of prayer as God's dwelling" },
+          { hebrew: "צְבָאוֹת", english: "of hosts / of armies", stress: "tzva-OT", note: "Divine title meaning God of all heavenly and earthly forces; also in Vshamru, Mi Chamocha" },
+          { hebrew: "מְלֹא כָל הָאָרֶץ", english: "the whole earth is full", stress: "me-LO chol ha-A-retz", note: "From Isaiah 6:3 — the seraphim call to one another in the Isaiah vision; this verse is sung responsively" },
+          { hebrew: "כְּבוֹד", english: "glory", stress: "ke-VOD", note: "Also in Lecha Dodi, Kiddush; the divine radiance or weighty presence of God" },
+          { hebrew: "מִמְּקוֹמוֹ", english: "from His place", stress: "mim-ko-MO", note: "From Ezekiel 3:12; implies God's glory transcends any fixed location yet fills all places" },
+          { hebrew: "יִמְלֹךְ", english: "shall reign", stress: "yim-LOCH", note: "Also in Adon Olam; the reign of God is a key theme of Shabbat morning — sovereignty without end" },
         ]
       },
 
@@ -1299,6 +1619,20 @@
           { hebrew: "וְיָנוּחוּ בָהּ כָּל יִשְׂרָאֵל", transliteration: "veyanuchu vah kol yisrael", stress: "ve-ya-NU-chu VAH kol yis-ra-EL", english: "and may all Israel who sanctify Your name rest thereon" },
           { hebrew: "מְקַדְּשֵׁי שְׁמֶךָ", transliteration: "mekadshei shemecha", stress: "me-kad-SHEI she-ME-cha", english: "those who sanctify Your name" },
           { hebrew: "בָּרוּךְ אַתָּה יְהוָה מְקַדֵּשׁ הַשַּׁבָּת", transliteration: "baruch ata adonai mekadesh hashabat", stress: "ba-RUCH a-TA a-do-NAI me-ka-DESH ha-sha-BAT", english: "Blessed are You, Lord, who sanctifies the Sabbath" }
+        ],
+        vocab: [
+          { hebrew: "וַיְכֻלּוּ", english: "were completed", stress: "va-ye-chu-LU", note: "Genesis 2:1 — the verb means both 'were completed' and 'yearned/longed'; the Rabbis read a double meaning: the world was completed and it longed for Shabbat" },
+          { hebrew: "צְבָאָם", english: "their hosts / armies", stress: "tze-va-AM", note: "All the heavenly bodies, plants, animals — the totality of creation listed before Shabbat rest" },
+          { hebrew: "וַיִּשְׁבֹּת", english: "He rested", stress: "va-yish-BOT", note: "The root of שַׁבָּת (Shabbat); God's own rest on the seventh day is the foundation of our rest" },
+          { hebrew: "וַיְקַדֵּשׁ", english: "and sanctified it", stress: "va-ye-ka-DESH", note: "Root: קדש (holiness); the first use of the word 'holy' in the Torah applies to time, not to a place or person" },
+          { hebrew: "רְצֵה", english: "accept / take pleasure in", stress: "re-TZEH", note: "Also in Avodah; a plea for divine acceptance of our worship — the same root as רָצוֹן (ratzon, will/favour)" },
+          { hebrew: "מְנוּחָה", english: "rest", stress: "me-nu-CHA", note: "Shabbat rest; carries connotations of peace, completion, and spiritual stillness — more than mere physical stopping" },
+          { hebrew: "קַדְּשֵׁנוּ", english: "sanctify us", stress: "kad-SHEI-nu", note: "We ask God to extend the holiness of Shabbat to us — through the commandments, we participate in divine holiness" },
+          { hebrew: "חֶלְקֵנוּ", english: "our portion", stress: "chel-KEI-nu", note: "Also in Aleinu; seeking not just Torah access but a personal share in it — an intimate, relational image" },
+          { hebrew: "בְּרָצוֹן", english: "in favour / willingly", stress: "be-ra-TZON", note: "Divine willingness or goodwill; this Shabbat should be experienced as a gift freely given, not a burden" },
+          { hebrew: "מְקַדֵּשׁ הַשַּׁבָּת", english: "who sanctifies the Sabbath", stress: "me-ka-DESH ha-sha-BAT", note: "The closing blessing formula; God is the one who makes Shabbat holy — we observe what God has already consecrated" },
+          { hebrew: "וַיְבָרֶךְ", english: "and blessed", stress: "va-ye-va-RECH", note: "God blessed the seventh day before anyone existed to observe it — blessing and sanctification are built into creation itself" },
+          { hebrew: "לַעֲשׂוֹת", english: "to do / to make", stress: "la-a-SOT", note: "A mysterious phrase — 'which God created to do'; the Rabbis read this as 'for humans to continue making/completing'" },
         ]
       },
 
@@ -1310,6 +1644,15 @@
           { hebrew: "וּבְרַחֲמֶיךָ הָרַבִּים תַּחְפֹּץ בָּנוּ", transliteration: "uvrachamecha harabim tachpotz banu", stress: "uv-ra-cha-ME-cha ha-ra-BIM tach-POTZ BA-nu", english: "and in Your great mercy look upon us graciously" },
           { hebrew: "וְתַשְׁרֶה שְׁכִינָתְךָ עַל צִיּוֹן", transliteration: "vetashre shchinatcha al tziyon", stress: "ve-tash-REH shchi-nat-CHA al tzi-YON", english: "and may Your divine presence rest upon Zion" },
           { hebrew: "בָּרוּךְ אַתָּה יְהוָה הַמַּשְׁרֶה שְׁכִינָתוֹ עַל צִיּוֹן", transliteration: "baruch ata adonai hamashre shchinato al tziyon", stress: "ba-RUCH a-TA a-do-NAI ha-mash-REH shchi-na-TO al tzi-YON", english: "Blessed are You, Lord, who spreads the divine Presence on Zion" }
+        ],
+        vocab: [
+          { hebrew: "רְצֵה", english: "accept / take pleasure in", stress: "re-TZEH", note: "A plea for divine acceptance of our worship; the same root as רָצוֹן (ratzon, will/favour) — also in Kedushat HaYom" },
+          { hebrew: "תְפִלָּה", english: "prayer", stress: "te-fi-LA", note: "Also in the Amida heading; the root פָּלַל means to judge or intercede — prayer as self-examination before God" },
+          { hebrew: "רַחֲמִים", english: "mercy / compassion", stress: "ra-cha-MIM", note: "Also in Birkat Shalom; from the root רֶחֶם (womb) — divine mercy as deep maternal tenderness" },
+          { hebrew: "שְׁכִינָה", english: "divine Presence", stress: "she-chi-NA", note: "The indwelling presence of God; used in Aleinu too; associated with Zion and the Temple, and with the Jewish people in exile" },
+          { hebrew: "צִיּוֹן", english: "Zion", stress: "tzi-YON", note: "Jerusalem / the Temple Mount; symbol of redemption and return; appears in Lecha Dodi, Aleinu, Kaddish" },
+          { hebrew: "עַמְּךָ יִשְׂרָאֵל", english: "Your people Israel", stress: "am-CHA yis-ra-EL", note: "Avodah focuses the prayer on collective rather than individual worship — the whole people standing before God" },
+          { hebrew: "הַמַּשְׁרֶה", english: "who spreads / who causes to dwell", stress: "ha-mash-REH", note: "God actively lowers the divine Presence to dwell among us — not passive presence but active divine movement toward us" },
         ]
       },
 
@@ -1338,6 +1681,21 @@
           { hebrew: "בֶּאֱמֶת הָאֵל יְשׁוּעָתֵנוּ וְעֶזְרָתֵנוּ סֶלָה", transliteration: "beemet hael yeshuatenu veezratenu selah", stress: "be-e-MET ha-EL ye-shu-a-TEI-nu ve-ez-ra-TEI-nu SE-la", english: "in truth, O God our salvation and our help, Selah" },
           { hebrew: "בָּרוּךְ אַתָּה יְהוָה הַטּוֹב שִׁמְךָ", transliteration: "baruch ata adonai hatov shimcha", stress: "ba-RUCH a-TA a-do-NAI ha-TOV shim-CHA", english: "Blessed are You, Lord, Your name is goodness" },
           { hebrew: "וּלְךָ נָאֶה לְהוֹדוֹת", transliteration: "ulecha naeh lehodot", stress: "u-le-CHA NA-eh le-ho-DOT", english: "and unto You all thanks are due" }
+        ],
+        vocab: [
+          { hebrew: "מוֹדִים", english: "we give thanks / we acknowledge", stress: "mo-DIM", note: "Root: ידה; means both to thank and to acknowledge/confess — gratitude as recognition of truth. Also the blessing's name" },
+          { hebrew: "אֲנַחְנוּ", english: "we", stress: "a-NACH-nu", note: "Notably plural — this blessing is the only one in the Amida spoken in the first person plural throughout; communal gratitude" },
+          { hebrew: "צוּר", english: "Rock", stress: "TZUR", note: "Also in Elohai Netzor; God as immovable foundation and source of strength — a key divine metaphor in Psalms and liturgy" },
+          { hebrew: "נִשְׁמוֹת", english: "souls", stress: "nish-MOT", note: "Plural of נְשָׁמָה (neshamah); the highest level of soul in kabbalistic thought, associated with divine breath" },
+          { hebrew: "נִסִּים", english: "miracles", stress: "ni-SIM", note: "Also the name of the Chanukah blessing; refers to both the great biblical miracles and the daily 'hidden' miracles we often overlook" },
+          { hebrew: "נִפְלְאוֹת", english: "wonders", stress: "nif-le-OT", note: "Also in Mi Chamocha; from the root פֶּלֶא — wonders that transcend normal understanding; used of the Exodus and ongoing redemption" },
+          { hebrew: "רַחֲמִים", english: "compassion / mercy", stress: "ra-cha-MIM", note: "Also in Avodah, Birkat Shalom; from the root רֶחֶם (womb) — divine compassion as deep, innate tenderness" },
+          { hebrew: "חֲסָדִים", english: "acts of lovingkindness", stress: "cha-sa-DIM", note: "Also in Ahavat Olam, Birkat Shalom; חֶסֶד is loyal love beyond obligation — God's faithfulness that never runs out" },
+          { hebrew: "הַטּוֹב", english: "the Good One", stress: "ha-TOV", note: "Divine title here — not merely 'good' as adjective but God's essential nature as the source of all goodness" },
+          { hebrew: "יִתְבָּרַךְ", english: "shall be blessed", stress: "yit-ba-RACH", note: "We bless God in response to God's blessing us — the liturgy creates a reciprocal flow of blessing" },
+          { hebrew: "יִתְרוֹמֵם", english: "shall be exalted", stress: "yit-ro-MEM", note: "Also in Kaddish; God's exaltation is raised through our praise — a profound theology of human participation in divine glory" },
+          { hebrew: "וִיבָרְכוּ", english: "and shall bless", stress: "vi-var-CHU", note: "The whole of living creation joins in blessing — an all-encompassing vision of universal gratitude" },
+          { hebrew: "יְשׁוּעָה", english: "salvation", stress: "ye-shu-A", note: "Also in Birkat Shalom; from the same root as יֵשׁוּעַ; divine rescue that restores wholeness and right relationship" },
         ]
       },
 
@@ -1355,6 +1713,19 @@
           { hebrew: "וְטוֹב בְּעֵינֶיךָ לְבָרֵךְ", transliteration: "vetov beeinecha levarech", stress: "ve-TOV be-ei-NE-cha le-va-RECH", english: "May Your eyes find favour to bless" },
           { hebrew: "אֶת עַמְּךָ יִשְׂרָאֵל בְּרָב עוֹז וּבְשָׁלוֹם", transliteration: "et amcha yisrael berav oz uveshalom", stress: "et am-CHA yis-ra-EL be-RAV oz u-ve-sha-LOM", english: "Your people Israel with great strength and peace" },
           { hebrew: "בָּרוּךְ אַתָּה יְהוָה הַמְבָרֵךְ אֶת עַמּוֹ יִשְׂרָאֵל בַּשָּׁלוֹם", transliteration: "baruch ata adonai hamvarech et amo yisrael bashalom", stress: "ba-RUCH a-TA a-do-NAI ha-mva-RECH et a-MO yis-ra-EL ba-sha-LOM", english: "Blessed are You, Lord, who blesses Your people Israel with peace" }
+        ],
+        vocab: [
+          { hebrew: "שָׁלוֹם", english: "peace", stress: "sha-LOM", note: "More than absence of conflict; שָׁלוֹם means wholeness, completion, and right relationship — the Amida ends and begins with this theme" },
+          { hebrew: "חֵן", english: "grace / favour", stress: "CHEN", note: "Unearned favour freely given; the quality that makes something or someone pleasing — often paired with חֶסֶד" },
+          { hebrew: "חֶסֶד", english: "lovingkindness / loyalty", stress: "CHE-sed", note: "Also in Hoda'ah, Ahavat Olam; loyal love that goes beyond obligation — one of the defining qualities of God and of the ideal human" },
+          { hebrew: "צְדָקָה", english: "justice / righteousness", stress: "tze-da-KA", note: "Also means 'charity'; rooted in the idea that giving to the poor is not generosity but justice — restoring what is right" },
+          { hebrew: "אוֹר פָּנֶיךָ", english: "the light of Your face", stress: "or pa-NE-cha", note: "An echo of the Priestly Blessing (Numbers 6:25); God's face turned toward us as the source of blessing and wellbeing" },
+          { hebrew: "בְּרָכָה", english: "blessing", stress: "bra-CHA", note: "From the same root as בָּרוּךְ; a blessing is a channel of divine abundance flowing into the world through words and deeds" },
+          { hebrew: "כֻּלָּנוּ יַחַד", english: "all of us together", stress: "ku-LA-nu ya-CHAD", note: "The blessing is communal — not just for individuals but for all Israel as one; unity is itself part of the blessing" },
+          { hebrew: "תּוֹרָה", english: "Torah / teaching", stress: "to-RA", note: "The Torah is explicitly listed as one of God's gifts of light; learning Torah is here framed as a blessing, not merely a duty" },
+          { hebrew: "עֹז", english: "strength", stress: "OZ", note: "Also in Lecha Dodi; God's gift of strength enables peace — real שָׁלוֹם is not weakness but strength rightly used" },
+          { hebrew: "הַמְבָרֵךְ", english: "who blesses", stress: "ha-mva-RECH", note: "The active participle — God is the ongoing, present-tense blesser; this is not a past act but God's continuous nature" },
+          { hebrew: "רַחֲמִים", english: "compassion", stress: "ra-cha-MIM", note: "Also in Hoda'ah, Avodah; the blessing of peace flows from divine compassion, not merely divine power" },
         ]
       },
 
@@ -1376,6 +1747,21 @@
           { hebrew: "הוּא יַעֲשֶׂה שָׁלוֹם עָלֵינוּ", transliteration: "hu yaase shalom aleinu", stress: "HU ya-a-SEH sha-LOM a-LEI-nu", english: "make peace for us" },
           { hebrew: "וְעַל כָּל יִשְׂרָאֵל", transliteration: "veal kol yisrael", stress: "ve-AL kol yis-ra-EL", english: "and for all Israel" },
           { hebrew: "וְאִמְרוּ אָמֵן", transliteration: "veimru amen", stress: "ve-im-RU a-MEN", english: "and let us say, Amen" }
+        ],
+        vocab: [
+          { hebrew: "נְצוֹר", english: "guard / protect", stress: "ne-TZOR", note: "The root נצר also means 'to keep' or 'to watch over'; asking God to be guardian of the worshipper's own speech — a remarkable act of self-awareness" },
+          { hebrew: "לָשׁוֹן", english: "tongue", stress: "la-SHON", note: "The organ of speech; the Rabbis consider the tongue capable of both tremendous good and tremendous harm — hence this private petition" },
+          { hebrew: "מִרְמָה", english: "deceit / cunning", stress: "mir-MA", note: "Deceptive speech; asking not just for silence but for inner integrity that matches outer words" },
+          { hebrew: "נַפְשִׁי", english: "my soul", stress: "naf-SHI", note: "Also in Birkat Shalom; the innermost self; the worshipper's soul is offered as dust — radical humility at the close of standing prayer" },
+          { hebrew: "כֶּעָפָר", english: "like dust", stress: "ke-a-FAR", note: "A powerful image of humility; עָפָר (dust) echoes Genesis 2:7 — we return to our origin, making space for others to walk over us in peace" },
+          { hebrew: "הֶגְיוֹן לִבִּי", english: "meditation of my heart", stress: "heg-YON li-BI", note: "From Psalm 19:15; הֶגְיוֹן means inner murmuring or meditation — the prayer concerns not just spoken words but unspoken thoughts" },
+          { hebrew: "צוּרִי", english: "my Rock", stress: "tzu-RI", note: "Also in Hoda'ah; God as personal rock — the possessive suffix makes this an intimate declaration, not just a theological statement" },
+          { hebrew: "גּוֹאֲלִי", english: "my Redeemer", stress: "go-a-LI", note: "Also in Mi Chamocha; the גּוֹאֵל is a family redeemer who rescues a kinsperson from slavery — God as intimate rescuer" },
+          { hebrew: "עֹשֶׂה שָׁלוֹם", english: "who makes peace", stress: "o-SEH sha-LOM", note: "Also in Kaddish; the phrase closes both the Amida and the Kaddish — peace in the highest realms as the model for peace below" },
+          { hebrew: "מִצְוֹתֶיךָ", english: "Your commandments", stress: "mitz-vo-TE-cha", note: "The soul is asked to pursue commandments — framing mitzvot not as burden but as something worth chasing" },
+          { hebrew: "עֲצָתָם", english: "their counsel", stress: "a-tza-TAM", note: "The plans of those who act against us; the prayer asks God to nullify harmful intentions — not vengeance but protection" },
+          { hebrew: "לְרָצוֹן", english: "for acceptance / pleasing", stress: "le-ra-TZON", note: "From Psalm 19:15; the same root as the רְצֵה petition in Avodah — the whole Amida ends with a request that all of it was acceptable" },
+          { hebrew: "בִּמְרוֹמָיו", english: "in His heights", stress: "bim-ro-MAV", note: "God's peace-making in the celestial realms — the Amida ends by grounding our individual prayers in the cosmic order" },
         ]
       },
 
@@ -1398,6 +1784,19 @@
           { hebrew: "כִּי יְהוָה הוּא הָאֱלֹהִים", transliteration: "ki adonai hu haelohim", stress: "ki a-do-NAI hu ha-e-lo-HIM", english: "that the Lord, He is God" },
           { hebrew: "בַּשָּׁמַיִם מִמַּעַל", transliteration: "bashamayim mimaal", stress: "ba-sha-MA-yim mi-ma-AL", english: "in the heavens above" },
           { hebrew: "וְעַל הָאָרֶץ מִתָּחַת אֵין עוֹד", transliteration: "veal haaretz mitachat ein od", stress: "ve-AL ha-A-retz mi-TA-chat ein OD", english: "and upon the earth below, there is none else" }
+        ],
+        vocab: [
+          { hebrew: "עָלֵינוּ", english: "it is upon us / our duty", stress: "a-LEI-nu", note: "The prayer's name and opening word; not 'it is permitted' but 'it is incumbent upon us' — a sense of responsibility and calling, not mere permission" },
+          { hebrew: "לְשַׁבֵּחַ", english: "to praise", stress: "le-sha-BEI-ach", note: "From the root שָׁבַח — to praise, to laud; deeper than to thank — to declare the greatness of someone who deserves it; the whole first paragraph fulfils this word" },
+          { hebrew: "אֲדוֹן הַכֹּל", english: "Lord of all", stress: "a-DON ha-KOL", note: "God as sovereign over everything without exception; אֲדוֹן (master, lord) applies to God as ultimate authority — not just our God but Lord of the whole" },
+          { hebrew: "יוֹצֵר", english: "the One who formed / Creator", stress: "yo-TZER", note: "From יָצַר — to form, to shape, to fashion (as a potter); also used in Amida Gevurot; God as active shaper of creation, not just a distant first cause" },
+          { hebrew: "בְּרֵאשִׁית", english: "in the beginning", stress: "be-re-SHIT", note: "The opening word of the Torah; citing it here anchors the praise in creation itself — God who formed the world in the beginning is still Lord of all now" },
+          { hebrew: "שְׁכִינַת", english: "the presence / indwelling of", stress: "she-chi-NAT", note: "From שָׁכַן — to dwell; the Shechinah is God's immanent, indwelling presence; God is both transcendent (heavens above) and present (dwelling in power)" },
+          { hebrew: "אֱמֶת", english: "truth / true", stress: "E-met", note: "A foundational divine attribute; also in Amida; אֱמֶת means not just 'true' but reliable, faithful, real — God's kingship is grounded in reality" },
+          { hebrew: "מַלְכֵּנוּ", english: "our King", stress: "mal-KEI-nu", note: "Also in Amida Petichah; the shift from Lord of all (line 1) to our King is the movement of Aleinu — universal sovereignty claimed personally and covenantally" },
+          { hebrew: "כַּכָּתוּב", english: "as it is written", stress: "ka-ka-TUV", note: "A formula introducing a Torah proof-text; it signals that what follows is not simply assertion but grounded in Scripture — here Deuteronomy 4:39" },
+          { hebrew: "וַהֲשֵׁבֹתָ", english: "and you shall return / take to heart", stress: "va-ha-she-VO-ta", note: "From שׁוּב — to return, to turn; but here in a reflective sense — to bring back to one's heart; knowing God must become internalized, not merely intellectual" },
+          { hebrew: "אֵין עוֹד", english: "there is none else", stress: "ein OD", note: "The core monotheistic declaration; not just 'no other God is greater' but 'there is absolutely nothing beside Him' — total, unqualified divine unity" },
         ]
       }
     };
@@ -2464,6 +2863,96 @@
     }
 
     document.getElementById('full-text-btn').addEventListener('click', openFullText);
+
+    // ── Vocab modal ──────────────────────────────────────────────────────────
+    const vocabModal = document.getElementById('vocab-modal');
+    const vocabBody  = document.getElementById('vocab-body');
+    const vocabTitle = document.getElementById('vocab-title');
+    let vocabPronunVisible = false;
+
+    function buildVocabModal(prayer) {
+      const vocab = prayer.vocab || [];
+      vocabTitle.textContent = prayer.name + ' — Key Vocabulary';
+      vocabBody.innerHTML = '';
+      vocabPronunVisible = false;
+      const pronunBtn = document.getElementById('vocab-pronun-btn');
+      pronunBtn.textContent = 'Show Pronunciation';
+
+      vocab.forEach((word, i) => {
+        // Main row: Hebrew | divider | English + optional ⓘ
+        const row = document.createElement('div');
+        row.className = 'vocab-row';
+
+        const hebrewCell = document.createElement('div');
+        hebrewCell.className = 'vocab-hebrew';
+        hebrewCell.innerHTML = `<div>${word.hebrew}</div>` +
+          (word.stress ? `<div class="vocab-pronun">${word.stress}</div>` : '');
+
+        const divider = document.createElement('div');
+        divider.className = 'vocab-divider';
+
+        const englishCell = document.createElement('div');
+        englishCell.className = 'vocab-english';
+        const noteId = `vocab-note-${i}`;
+        englishCell.innerHTML = word.english +
+          (word.note ? `<button class="vocab-note-btn" data-target="${noteId}" title="More info">ⓘ</button>` : '');
+
+        row.appendChild(hebrewCell);
+        row.appendChild(divider);
+        row.appendChild(englishCell);
+        vocabBody.appendChild(row);
+
+        // Note row (hidden until ⓘ clicked)
+        if (word.note) {
+          const noteRow = document.createElement('div');
+          noteRow.className = 'vocab-note-row';
+          noteRow.id = noteId;
+          noteRow.innerHTML = `<div class="vocab-note-text">${word.note}</div>`;
+          vocabBody.appendChild(noteRow);
+        }
+      });
+
+      if (vocab.length === 0) {
+        vocabBody.innerHTML = '<div style="padding: 20px; color: var(--silver-dim); text-align: center; font-style: italic;">No vocabulary available for this prayer.</div>';
+      }
+    }
+
+    // ⓘ note button delegation — set up once, works across all rebuilds
+    vocabBody.addEventListener('click', (e) => {
+      const btn = e.target.closest('.vocab-note-btn');
+      if (!btn) return;
+      const target = document.getElementById(btn.dataset.target);
+      if (!target) return;
+      const open = target.style.display === 'block';
+      target.style.display = open ? 'none' : 'block';
+      btn.style.color = open ? '' : 'var(--gold)';
+    });
+
+    function closeVocabModal() {
+      vocabModal.classList.add('hidden');
+    }
+
+    document.getElementById('vocab-btn').addEventListener('click', () => {
+      const prayer = prayers[currentPrayer];
+      if (!prayer) return;
+      buildVocabModal(prayer);
+      vocabModal.classList.remove('hidden');
+    });
+
+    document.getElementById('vocab-close').addEventListener('click', closeVocabModal);
+
+    vocabModal.addEventListener('click', (e) => {
+      if (e.target === vocabModal) closeVocabModal();
+    });
+
+    document.getElementById('vocab-pronun-btn').addEventListener('click', function() {
+      vocabPronunVisible = !vocabPronunVisible;
+      this.textContent = vocabPronunVisible ? 'Hide Pronunciation' : 'Show Pronunciation';
+      vocabBody.querySelectorAll('.vocab-pronun').forEach(el => {
+        el.style.display = vocabPronunVisible ? 'block' : 'none';
+      });
+    });
+    // ── End vocab modal ───────────────────────────────────────────────────────
 
     document.getElementById('full-text-close').addEventListener('click', () => {
       ftStop();
