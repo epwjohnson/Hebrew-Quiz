@@ -155,11 +155,15 @@
     .ft-toggle-btn.active { background: rgba(184,134,11,0.15); color: var(--gold); border-color: var(--gold); }
     .ft-line { padding: 10px 20px; border-bottom: 1px solid #131f33; }
     .ft-line:last-child { border-bottom: none; }
-    .ft-hebrew { text-align: right; direction: rtl; font-size: 1.3rem; color: #e8e8e8; line-height: 1.5; font-family: 'David Libre', serif; }
+    .ft-hebrew { text-align: right; direction: rtl; font-size: 1.56rem; color: #e8e8e8; line-height: 1.5; font-family: 'David Libre', serif; }
     /* Vocab modal */
     .vocab-row { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; padding: 10px 20px; border-bottom: 1px solid #131f33; }
     .vocab-row:last-child { border-bottom: none; }
-    .vocab-hebrew { text-align: right; direction: rtl; font-size: 1.4rem; color: #e8e8e8; font-family: 'David Libre', serif; line-height: 1.4; }
+    .vocab-hebrew { text-align: right; direction: rtl; font-size: 1.68rem; color: #e8e8e8; font-family: 'David Libre', serif; line-height: 1.4; }
+    /* Phones: Full Text Hebrew +10% only (long lines would wrap at +20%); vocab stays +20% */
+    @media (max-width: 600px) {
+      .ft-hebrew { font-size: 1.43rem; }
+    }
     .vocab-pronun { font-size: 0.78rem; color: var(--gold); font-style: italic; text-align: right; display: none; margin-top: 2px; }
     .vocab-divider { width: 1px; background: #2a3f5f; align-self: stretch; min-height: 28px; }
     .vocab-english { font-size: 0.95rem; color: var(--silver); font-family: 'Crimson Pro', serif; line-height: 1.4; }
