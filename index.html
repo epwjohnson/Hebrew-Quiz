@@ -152,18 +152,21 @@
       font-family: inherit;
       transition: all 0.2s;
     }
+    /* Modal header: centred title on its own line, buttons centred beneath, ✕ pinned top-right */
+    .modal-head { position: relative; padding: 14px 44px 12px; border-bottom: 1px solid #1e3050; flex-shrink: 0; text-align: center; }
+    .modal-head-title { display: block; font-size: 1.1rem; font-weight: 600; color: var(--gold); letter-spacing: 0.03em; line-height: 1.3; }
+    .modal-head-close { position: absolute; top: 10px; right: 12px; font-size: 1.2rem; background: none; border: none; color: var(--silver-dim); cursor: pointer; padding: 4px; line-height: 1; }
+    .modal-head-close:hover { color: var(--gold); }
+    .modal-head-btns { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 10px; }
+    .lbl-short { display: none; }
     .ft-toggle-btn.active { background: rgba(184,134,11,0.15); color: var(--gold); border-color: var(--gold); }
-    .ft-line { padding: 10px 20px; border-bottom: 1px solid #131f33; }
+    .ft-line { padding: 4px 20px; border-bottom: 1px solid #131f33; }
     .ft-line:last-child { border-bottom: none; }
-    .ft-hebrew { text-align: right; direction: rtl; font-size: 1.56rem; color: #e8e8e8; line-height: 1.5; font-family: 'David Libre', serif; }
+    .ft-hebrew { text-align: right; direction: rtl; font-size: 1.87rem; color: #e8e8e8; line-height: 1.35; font-family: 'David Libre', serif; }
     /* Vocab modal */
     .vocab-row { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; padding: 10px 20px; border-bottom: 1px solid #131f33; }
     .vocab-row:last-child { border-bottom: none; }
     .vocab-hebrew { text-align: right; direction: rtl; font-size: 1.68rem; color: #e8e8e8; font-family: 'David Libre', serif; line-height: 1.4; }
-    /* Phones: Full Text Hebrew +10% only (long lines would wrap at +20%); vocab stays +20% */
-    @media (max-width: 600px) {
-      .ft-hebrew { font-size: 1.43rem; }
-    }
     .vocab-pronun { font-size: 0.78rem; color: var(--gold); font-style: italic; text-align: right; display: none; margin-top: 2px; }
     .vocab-divider { width: 1px; background: #2a3f5f; align-self: stretch; min-height: 28px; }
     .vocab-english { font-size: 0.95rem; color: var(--silver); font-family: 'Crimson Pro', serif; line-height: 1.4; }
@@ -172,10 +175,25 @@
     .vocab-note-btn { background: none; border: none; color: var(--silver-dim); cursor: pointer; font-size: 0.8rem; padding: 0 0 0 6px; vertical-align: middle; }
     .vocab-note-btn:hover { color: var(--gold); }
     .vocab-also { font-size: 0.8rem; color: var(--silver-dim); margin-top: 2px; }
-    .ft-translit { font-size: 0.85rem; color: var(--gold); font-style: italic; margin-top: 3px; display: none; }
-    .ft-meaning { font-size: 0.82rem; color: #6a7a8a; margin-top: 2px; display: none; }
+    .ft-translit { font-size: 1.02rem; color: var(--gold); font-style: italic; margin-top: 3px; display: none; }
+    .ft-meaning { font-size: 0.98rem; color: #6a7a8a; margin-top: 2px; display: none; }
     .ft-show-translit .ft-translit { display: block; }
     .ft-show-meaning .ft-meaning { display: block; }
+    /* Full Text vocab highlighting (only while the vocab panel is open) */
+    .ft-vw { transition: color 0.2s; }
+    .ft-show-vocab .ft-vw { color: var(--gold); cursor: pointer; }
+    .vocab-row { transition: background 0.4s; }
+    .vocab-row.vocab-flash { background: rgba(184,134,11,0.18); }
+    /* Phones: Full Text keeps its earlier sizes (long lines would wrap); vocab Hebrew stays at 1.68rem */
+    @media (max-width: 600px) {
+      .lbl-full { display: none; }
+      .lbl-short { display: inline; }
+      .modal-head-btns { gap: 6px; }
+      .modal-head-btns .ft-toggle-btn { padding: 4px 9px; }
+      .ft-hebrew { font-size: 1.43rem; }
+      .ft-translit { font-size: 0.85rem; }
+      .ft-meaning { font-size: 0.82rem; }
+    }
     .peek-content {
       text-align: center;
       font-size: 0.88rem;
@@ -704,30 +722,42 @@
 
         <!-- Full text modal -->
         <div id="full-text-modal" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; display: flex; align-items: flex-start; justify-content: center; padding-top: 40px; padding-bottom: 40px;">
-          <div style="background: #0f1f3d; border: 1px solid #2a3f5f; border-radius: 12px; width: 600px; max-width: 94vw; max-height: 80vh; display: flex; flex-direction: column; overflow: hidden;">
+          <div id="full-text-box" style="background: #0f1f3d; border: 1px solid #2a3f5f; border-radius: 12px; width: 600px; max-width: 94vw; max-height: 80vh; display: flex; flex-direction: column; overflow: hidden;">
             <!-- Modal header -->
-            <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid #1e3050; flex-shrink: 0;">
-              <span id="full-text-title" style="font-size: 1rem; font-weight: 600; color: var(--gold); letter-spacing: 0.03em;"></span>
-              <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-                <button id="ft-translit-btn" class="ft-toggle-btn">Show Transliteration</button>
-                <button id="ft-meaning-btn" class="ft-toggle-btn">Show Meaning</button>
+            <div class="modal-head">
+              <span id="full-text-title" class="modal-head-title"></span>
+              <button id="full-text-close" class="modal-head-close" title="Close">✕</button>
+              <div class="modal-head-btns">
+                <button id="ft-translit-btn" class="ft-toggle-btn"><span class="lbl-full">Show Transliteration</span><span class="lbl-short">Translit.</span></button>
+                <button id="ft-meaning-btn" class="ft-toggle-btn"><span class="lbl-full">Show Meaning</span><span class="lbl-short">Meaning</span></button>
+                <button id="ft-vocab-btn" class="ft-toggle-btn">📚 Vocab</button>
                 <button id="ft-listen-btn" class="ft-toggle-btn" style="color: var(--gold); border-color: var(--gold);">▶ Listen</button>
-                <button id="full-text-close" style="font-size: 1.2rem; background: none; border: none; color: var(--silver-dim); cursor: pointer; padding: 0 4px; line-height: 1;">✕</button>
               </div>
             </div>
             <!-- Modal body -->
-            <div id="full-text-body" style="overflow-y: auto; flex: 1; padding: 4px 0;"></div>
+            <div id="full-text-body" style="overflow-y: auto; flex: 1; min-height: 0; padding: 4px 0;"></div>
+            <!-- Vocab panel (opens inside the Full Text pane) -->
+            <div id="ft-vocab-panel" class="hidden" style="flex: 0 0 50%; display: flex; flex-direction: column; min-height: 0; border-top: 1px solid #2a3f5f; background: #0b1a33;">
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 20px; border-bottom: 1px solid #1e3050; flex-shrink: 0;">
+                <span style="font-size: 0.9rem; font-weight: 600; color: var(--gold); letter-spacing: 0.03em;">Key Vocabulary</span>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                  <button id="ft-vocab-pronun-btn" class="ft-toggle-btn">Show Pronunciation</button>
+                  <button id="ft-vocab-close" style="font-size: 1.1rem; background: none; border: none; color: var(--silver-dim); cursor: pointer; padding: 0 4px; line-height: 1;">✕</button>
+                </div>
+              </div>
+              <div id="ft-vocab-body" style="overflow-y: auto; flex: 1; min-height: 0; padding: 4px 0;"></div>
+            </div>
           </div>
         </div>
 
         <!-- Vocab modal -->
         <div id="vocab-modal" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; display: flex; align-items: flex-start; justify-content: center; padding-top: 40px; padding-bottom: 40px;">
           <div style="background: #0f1f3d; border: 1px solid #2a3f5f; border-radius: 12px; width: 640px; max-width: 94vw; max-height: 80vh; display: flex; flex-direction: column; overflow: hidden;">
-            <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid #1e3050; flex-shrink: 0;">
-              <span id="vocab-title" style="font-size: 1rem; font-weight: 600; color: var(--gold); letter-spacing: 0.03em;"></span>
-              <div style="display: flex; gap: 8px; align-items: center;">
+            <div class="modal-head">
+              <span id="vocab-title" class="modal-head-title"></span>
+              <button id="vocab-close" class="modal-head-close" title="Close">✕</button>
+              <div class="modal-head-btns">
                 <button id="vocab-pronun-btn" class="ft-toggle-btn">Show Pronunciation</button>
-                <button id="vocab-close" style="font-size: 1.2rem; background: none; border: none; color: var(--silver-dim); cursor: pointer; padding: 0 4px; line-height: 1;">✕</button>
               </div>
             </div>
             <div id="vocab-body" style="overflow-y: auto; flex: 1; padding: 8px 0;"></div>
@@ -845,8 +875,6 @@
           { hebrew: "וּבְשָׁכְבְּךָ", english: "when you lie down", stress: "uv-shoch-BE-cha", note: "The basis for reciting the Shema every night; the commandment becomes a daily rhythm of the body's rest and rising" },
           { hebrew: "טֹטָפוֹת", english: "frontlets / tefillin", stress: "to-ta-FOT", note: "The origin of tefillin; the exact meaning is uncertain — possibly tied, bound, or a foreign loan word meaning bands" },
           { hebrew: "מְזוּזוֹת", english: "doorposts", stress: "me-zu-ZOT", note: "The literal meaning is doorposts; the rabbinic extension means the mezuzah scroll placed on the doorpost — Torah made physical" },
-          { hebrew: "צִיצִת", english: "fringes / tzitzit", stress: "tzi-TZIT", note: "The fringes on a garment (Numbers 15); seeing them prompts remembrance of all commandments — vision as spiritual discipline" },
-          { hebrew: "תְּכֵלֶת", english: "blue / sky-blue thread", stress: "te-CHE-let", note: "The mysterious blue dye; its source (a sea creature) was lost for centuries; some communities have revived it; the colour of sky and sea" },
         ]
       },
 
@@ -958,9 +986,6 @@
           { hebrew: "בֹּקֵעַ יָם", english: "splitting the sea", stress: "bo-KEA yam", note: "The defining miracle of the Exodus; God splits the sea to allow Israel to pass, then closes it over the Egyptian army" },
           { hebrew: "יִמְלֹךְ לְעֹלָם", english: "shall reign forever", stress: "yim-LOCH le-o-LAM", note: "Also in Adon Olam; the conclusion of the Song of the Sea — divine sovereignty declared as the outcome of redemption" },
           { hebrew: "גָּאַל יִשְׂרָאֵל", english: "who redeemed Israel", stress: "ga-AL yis-ra-EL", note: "The closing blessing bridges the Shema to the Amida; the rabbis required this blessing to end without interruption before the Amida" },
-          { hebrew: "שְׁבִיעִי", english: "seventh", stress: "hash-vi-I", note: "The seventh day is identified three times in the Vayechulu passage; the triple repetition emphasizes its significance above all other days" },
-          { hebrew: "מְלַאכְתּוֹ", english: "His work", stress: "me-lach-TO", note: "'Work' or 'craft' — the same word used for the Tabernacle's construction; creation and the Tabernacle mirror each other in the Torah" },
-          { hebrew: "וַיְבָרֶךְ", english: "and He blessed", stress: "va-ye-va-RECH", note: "God blessed the seventh day — blessing precedes sanctification; the day is first filled with divine goodness, then set apart" },
           { hebrew: "הִשָּׁמְרוּ לָכֶם", english: "take heed to yourselves", stress: "hi-sha-me-RU la-CHEM", note: "A reflexive warning — literally 'guard yourselves'; the danger is internal (your own heart) more than external" },
           { hebrew: "לְמַעַן", english: "in order that / so that", stress: "le-MA-an", note: "The purposive conjunction; the commandments are not arbitrary — they exist so that your days may be multiplied in the land" },
           { hebrew: "אֲשֶׁר נִשְׁבַּע", english: "which He swore", stress: "a-SHER nish-BA", note: "God's sworn covenant with the ancestors; the land is a promise, not a reward — the covenant binds God's actions to Israel's history" },
@@ -989,7 +1014,7 @@
           { hebrew: "נֶאְדָּר", english: "majestic / glorious", stress: "ne-DAR", note: "Root: אדר — to be great or awe-inspiring; a rare word found in the Song of the Sea and associated with divine glory" },
           { hebrew: "נוֹרָא", english: "awesome / awe-inspiring", stress: "no-RA", note: "Also in Adon Olam, Yigdal; from the root ירא (to fear or revere) — inspiring sacred awe, not terror" },
           { hebrew: "פֶלֶא", english: "wonder / miracle", stress: "PE-leh", note: "Also in Yigdal; a wonder that transcends normal understanding; used of the sea-splitting and of ongoing divine acts" },
-          { hebrew: "מַלְכוּת", english: "kingdom / sovereignty", stress: "mal-CHUT", note: "Also in Kiddush, Adon Olam, Kaddish; God's sovereignty becomes visible when Israel witnesses the splitting of the sea" },
+          { hebrew: "מַלְכוּת", match: ["מַלְכוּתְךָ"], english: "kingdom / sovereignty", stress: "mal-CHUT", note: "Also in Kiddush, Adon Olam, Kaddish; God's sovereignty becomes visible when Israel witnesses the splitting of the sea" },
           { hebrew: "בֹּקֵעַ יָם", english: "splitting the sea", stress: "bo-KEA yam", note: "The defining miracle of the Exodus; God splits the sea to allow Israel to pass — the ultimate demonstration of power over nature" },
           { hebrew: "גָּאַל יִשְׂרָאֵל", english: "who redeemed Israel", stress: "ga-AL yis-ra-EL", note: "The closing blessing bridges the Shema to the Amida; the Rabbis required this blessing to end without interruption before the Amida" },
         ]
@@ -1150,7 +1175,7 @@
           { hebrew: "נֶעְלָם", english: "hidden / concealed", stress: "ne-LAM", note: "God's unity is 'hidden' — beyond human comprehension; divine oneness is not just a number but a quality that cannot be grasped" },
           { hebrew: "דְּמוּת הַגּוּף", english: "bodily form", stress: "de-MUT ha-GUF", note: "One of Maimonides's key principles: God has no body or bodily image; anthropomorphic language in Torah is metaphorical" },
           { hebrew: "קַדְמוֹן", english: "primordial / ancient", stress: "kad-MON", note: "God preceded everything; קַדְמוֹן is related to מִקֶּדֶם (from of old) — God's antiquity surpasses the universe itself" },
-          { hebrew: "שֶׁפַע נְבוּאָה", english: "gift of prophecy", stress: "SHE-fa ne-vu-A", note: "שֶׁפַע (shefa) means abundance or overflow; prophecy is God's overflow of divine knowledge into selected human vessels" },
+          { hebrew: "שֶׁפַע נְבוּאָה", match: ["שֶׁפַע נְבוּאָתוֹ"], english: "gift of prophecy", stress: "SHE-fa ne-vu-A", note: "שֶׁפַע (shefa) means abundance or overflow; prophecy is God's overflow of divine knowledge into selected human vessels" },
           { hebrew: "מְשִׁיחֵנוּ", english: "our Messiah", stress: "me-shi-CHE-nu", note: "Yigdal includes the messianic hope as a principle of faith; the Messiah will come at the appointed time — belief sustains the wait" },
         ]
       },
@@ -1339,7 +1364,7 @@
           { hebrew: "וַיְכֻלּוּ", english: "and were completed", stress: "va-ye-chu-LU", note: "Opens the Vayechulu passage (Genesis 2); signals the completion of creation" },
           { hebrew: "שָׁמַיִם", english: "heavens", stress: "sha-MA-yim", note: "Paired with אָרֶץ throughout; also in Shema (V'haya), Barchu" },
           { hebrew: "אָרֶץ", english: "earth / land", stress: "A-retz", note: "Also in Shema (V'haya im shamoa); the land is central to Kiddush's themes" },
-          { hebrew: "שָׁבַת", english: "rested", stress: "sha-VAT", note: "The verbal root of שַׁבָּת (Sabbath); God's rest on the seventh day sanctifies ours" },
+          { hebrew: "שָׁבַת", match: ["שָׁבַת"], english: "rested", stress: "sha-VAT", note: "The verbal root of שַׁבָּת (Sabbath); God's rest on the seventh day sanctifies ours" },
           { hebrew: "בּוֹרֵא", english: "who creates", stress: "bo-REI", note: "Also in Amida; the present-tense form — God continuously creates" },
           { hebrew: "גָּפֶן", english: "vine", stress: "GA-fen", note: "פְּרִי הַגָּפֶן means 'the fruit of the vine' — the Borei pri hagafen blessing" },
           { hebrew: "קִדְּשָׁנוּ", english: "sanctified us", stress: "kid-SHA-nu", note: "Also in Candles blessing; shares the root קדש with קָדוֹשׁ (holy)" },
@@ -1442,7 +1467,7 @@
           { hebrew: "בָּרוּךְ אַתָּה יְהוָה אוֹהֵב עַמּוֹ יִשְׂרָאֵל", transliteration: "baruch ata adonai ohev amo yisrael", stress: "ba-RUCH a-TA a-do-NAI o-HEV a-MO yis-ra-EL", english: "Blessed are You, Lord, who loves Your people Israel" }
         ],
         vocab: [
-          { hebrew: "אַהֲבָה", english: "love", stress: "a-ha-VA", note: "Also in Kiddush, Kedushat HaYom; the prayer's name means 'eternal love'" },
+          { hebrew: "אַהֲבָה", match: ["אַהֲבַת", "וְאַהֲבָתְךָ"], english: "love", stress: "a-ha-VA", note: "Also in Kiddush, Kedushat HaYom; the prayer's name means 'eternal love'" },
           { hebrew: "עוֹלָם", english: "eternity / universe", stress: "o-LAM", note: "אַהֲבַת עוֹלָם — endless/eternal love; also throughout the liturgy" },
           { hebrew: "תּוֹרָה", english: "Torah", stress: "to-RA", note: "Also in Shema, Kedushat HaYom, Elohai Netzor; the Torah is the object of God's loving gift" },
           { hebrew: "מִצְווֹת", english: "commandments", stress: "mitz-VOT", note: "Also in Shema; the plural of מִצְוָה — the obligations given through love" },
@@ -1473,7 +1498,7 @@
           { hebrew: "עוֹלָם", english: "eternity / forever", stress: "o-LAM", note: "בְּרִית עוֹלָם — an everlasting covenant; also throughout the liturgy" },
           { hebrew: "אוֹת", english: "sign", stress: "OT", note: "Shabbat is a sign (אוֹת) of the covenant; also in Shema (the mezuzah and tefillin as physical signs)" },
           { hebrew: "שֵׁשֶׁת יָמִים", english: "six days", stress: "SHEI-shet ya-MIM", note: "The creation period; the verse echoes the fourth commandment from Exodus 20" },
-          { hebrew: "שָׁבַת", english: "rested", stress: "sha-VAT", note: "The verbal root of שַׁבָּת; also in Kiddush (Vayechulu)" },
+          { hebrew: "שָׁבַת", match: ["שָׁבַת"], english: "rested", stress: "sha-VAT", note: "The verbal root of שַׁבָּת; also in Kiddush (Vayechulu)" },
           { hebrew: "וַיִּנָּפַשׁ", english: "was refreshed / took breath", stress: "va-yi-NA-fash", note: "From נֶפֶשׁ (soul/breath); God 'took breath' — a profound anthropomorphism suggesting rest as renewal" },
         ]
       },
@@ -1552,7 +1577,7 @@
           { hebrew: "נוֹפְלִים", english: "the fallen", stress: "nof-LIM", note: "A concrete social category — those who have stumbled or been brought low, not just metaphorically" },
           { hebrew: "רוֹפֵא", english: "who heals", stress: "ro-FEH", note: "Also in Hoda'ah; רוֹפֵא חוֹלִים — healer of the sick — God as physician" },
           { hebrew: "מַתִּיר", english: "who frees", stress: "ma-TIR", note: "מַתִּיר אֲסוּרִים — who frees the captive; the root אסר means to bind or prohibit" },
-          { hebrew: "אֱמוּנָה", english: "faithfulness", stress: "e-mu-NA", note: "Also in Mizmor Shir; God is described as keeping faith (אֱמוּנָה) even with those who sleep in the dust" },
+          { hebrew: "אֱמוּנָה", match: ["אֱמוּנָתוֹ"], english: "faithfulness", stress: "e-mu-NA", note: "Also in Mizmor Shir; God is described as keeping faith (אֱמוּנָה) even with those who sleep in the dust" },
           { hebrew: "יְשׁוּעָה", english: "salvation", stress: "ye-shu-A", note: "Also in Kedushat HaYom; God causes salvation (יְשׁוּעָה) to flourish — a messianic image" },
           { hebrew: "עָפָר", english: "dust", stress: "a-FAR", note: "The 'sleepers in the dust' — those who have died; also in Elohai Netzor (humility before all)" },
         ]
@@ -1630,7 +1655,7 @@
           { hebrew: "וַיִּשְׁבֹּת", english: "He rested", stress: "va-yish-BOT", note: "The root of שַׁבָּת (Shabbat); God's own rest on the seventh day is the foundation of our rest" },
           { hebrew: "וַיְקַדֵּשׁ", english: "and sanctified it", stress: "va-ye-ka-DESH", note: "Root: קדש (holiness); the first use of the word 'holy' in the Torah applies to time, not to a place or person" },
           { hebrew: "רְצֵה", english: "accept / take pleasure in", stress: "re-TZEH", note: "Also in Avodah; a plea for divine acceptance of our worship — the same root as רָצוֹן (ratzon, will/favour)" },
-          { hebrew: "מְנוּחָה", english: "rest", stress: "me-nu-CHA", note: "Shabbat rest; carries connotations of peace, completion, and spiritual stillness — more than mere physical stopping" },
+          { hebrew: "מְנוּחָה", match: ["בִמְנוּחָתֵנוּ"], english: "rest", stress: "me-nu-CHA", note: "Shabbat rest; carries connotations of peace, completion, and spiritual stillness — more than mere physical stopping" },
           { hebrew: "קַדְּשֵׁנוּ", english: "sanctify us", stress: "kad-SHEI-nu", note: "We ask God to extend the holiness of Shabbat to us — through the commandments, we participate in divine holiness" },
           { hebrew: "חֶלְקֵנוּ", english: "our portion", stress: "chel-KEI-nu", note: "Also in Aleinu; seeking not just Torah access but a personal share in it — an intimate, relational image" },
           { hebrew: "בְּרָצוֹן", english: "in favour / willingly", stress: "be-ra-TZON", note: "Divine willingness or goodwill; this Shabbat should be experienced as a gift freely given, not a burden" },
@@ -1651,9 +1676,9 @@
         ],
         vocab: [
           { hebrew: "רְצֵה", english: "accept / take pleasure in", stress: "re-TZEH", note: "A plea for divine acceptance of our worship; the same root as רָצוֹן (ratzon, will/favour) — also in Kedushat HaYom" },
-          { hebrew: "תְפִלָּה", english: "prayer", stress: "te-fi-LA", note: "Also in the Amida heading; the root פָּלַל means to judge or intercede — prayer as self-examination before God" },
-          { hebrew: "רַחֲמִים", english: "mercy / compassion", stress: "ra-cha-MIM", note: "Also in Birkat Shalom; from the root רֶחֶם (womb) — divine mercy as deep maternal tenderness" },
-          { hebrew: "שְׁכִינָה", english: "divine Presence", stress: "she-chi-NA", note: "The indwelling presence of God; used in Aleinu too; associated with Zion and the Temple, and with the Jewish people in exile" },
+          { hebrew: "תְפִלָּה", match: ["וְלִתְפִלָּתָם"], english: "prayer", stress: "te-fi-LA", note: "Also in the Amida heading; the root פָּלַל means to judge or intercede — prayer as self-examination before God" },
+          { hebrew: "רַחֲמִים", match: ["וּבְרַחֲמֶיךָ"], english: "mercy / compassion", stress: "ra-cha-MIM", note: "Also in Birkat Shalom; from the root רֶחֶם (womb) — divine mercy as deep maternal tenderness" },
+          { hebrew: "שְׁכִינָה", match: ["שְׁכִינָתְךָ", "שְׁכִינָתוֹ"], english: "divine Presence", stress: "she-chi-NA", note: "The indwelling presence of God; used in Aleinu too; associated with Zion and the Temple, and with the Jewish people in exile" },
           { hebrew: "צִיּוֹן", english: "Zion", stress: "tzi-YON", note: "Jerusalem / the Temple Mount; symbol of redemption and return; appears in Lecha Dodi, Aleinu, Kaddish" },
           { hebrew: "עַמְּךָ יִשְׂרָאֵל", english: "Your people Israel", stress: "am-CHA yis-ra-EL", note: "Avodah focuses the prayer on collective rather than individual worship — the whole people standing before God" },
           { hebrew: "הַמַּשְׁרֶה", english: "who spreads / who causes to dwell", stress: "ha-mash-REH", note: "God actively lowers the divine Presence to dwell among us — not passive presence but active divine movement toward us" },
@@ -1690,16 +1715,16 @@
           { hebrew: "מוֹדִים", english: "we give thanks / we acknowledge", stress: "mo-DIM", note: "Root: ידה; means both to thank and to acknowledge/confess — gratitude as recognition of truth. Also the blessing's name" },
           { hebrew: "אֲנַחְנוּ", english: "we", stress: "a-NACH-nu", note: "Notably plural — this blessing is the only one in the Amida spoken in the first person plural throughout; communal gratitude" },
           { hebrew: "צוּר", english: "Rock", stress: "TZUR", note: "Also in Elohai Netzor; God as immovable foundation and source of strength — a key divine metaphor in Psalms and liturgy" },
-          { hebrew: "נִשְׁמוֹת", english: "souls", stress: "nish-MOT", note: "Plural of נְשָׁמָה (neshamah); the highest level of soul in kabbalistic thought, associated with divine breath" },
-          { hebrew: "נִסִּים", english: "miracles", stress: "ni-SIM", note: "Also the name of the Chanukah blessing; refers to both the great biblical miracles and the daily 'hidden' miracles we often overlook" },
-          { hebrew: "נִפְלְאוֹת", english: "wonders", stress: "nif-le-OT", note: "Also in Mi Chamocha; from the root פֶּלֶא — wonders that transcend normal understanding; used of the Exodus and ongoing redemption" },
-          { hebrew: "רַחֲמִים", english: "compassion / mercy", stress: "ra-cha-MIM", note: "Also in Avodah, Birkat Shalom; from the root רֶחֶם (womb) — divine compassion as deep, innate tenderness" },
-          { hebrew: "חֲסָדִים", english: "acts of lovingkindness", stress: "cha-sa-DIM", note: "Also in Ahavat Olam, Birkat Shalom; חֶסֶד is loyal love beyond obligation — God's faithfulness that never runs out" },
+          { hebrew: "נִשְׁמוֹת", match: ["נִשְׁמוֹתֵינוּ"], english: "souls", stress: "nish-MOT", note: "Plural of נְשָׁמָה (neshamah); the highest level of soul in kabbalistic thought, associated with divine breath" },
+          { hebrew: "נִסִּים", match: ["נִסֶּיךָ"], english: "miracles", stress: "ni-SIM", note: "Also the name of the Chanukah blessing; refers to both the great biblical miracles and the daily 'hidden' miracles we often overlook" },
+          { hebrew: "נִפְלְאוֹת", match: ["נִפְלְאוֹתֶיךָ"], english: "wonders", stress: "nif-le-OT", note: "Also in Mi Chamocha; from the root פֶּלֶא — wonders that transcend normal understanding; used of the Exodus and ongoing redemption" },
+          { hebrew: "רַחֲמִים", match: ["רַחֲמֶיךָ"], english: "compassion / mercy", stress: "ra-cha-MIM", note: "Also in Avodah, Birkat Shalom; from the root רֶחֶם (womb) — divine compassion as deep, innate tenderness" },
+          { hebrew: "חֲסָדִים", match: ["חֲסָדֶיךָ"], english: "acts of lovingkindness", stress: "cha-sa-DIM", note: "Also in Ahavat Olam, Birkat Shalom; חֶסֶד is loyal love beyond obligation — God's faithfulness that never runs out" },
           { hebrew: "הַטּוֹב", english: "the Good One", stress: "ha-TOV", note: "Divine title here — not merely 'good' as adjective but God's essential nature as the source of all goodness" },
           { hebrew: "יִתְבָּרַךְ", english: "shall be blessed", stress: "yit-ba-RACH", note: "We bless God in response to God's blessing us — the liturgy creates a reciprocal flow of blessing" },
           { hebrew: "יִתְרוֹמֵם", english: "shall be exalted", stress: "yit-ro-MEM", note: "Also in Kaddish; God's exaltation is raised through our praise — a profound theology of human participation in divine glory" },
           { hebrew: "וִיבָרְכוּ", english: "and shall bless", stress: "vi-var-CHU", note: "The whole of living creation joins in blessing — an all-encompassing vision of universal gratitude" },
-          { hebrew: "יְשׁוּעָה", english: "salvation", stress: "ye-shu-A", note: "Also in Birkat Shalom; from the same root as יֵשׁוּעַ; divine rescue that restores wholeness and right relationship" },
+          { hebrew: "יְשׁוּעָה", match: ["יְשׁוּעָתֵנוּ", "יִשְׁעֵנוּ"], english: "salvation", stress: "ye-shu-A", note: "Also in Birkat Shalom; from the same root as יֵשׁוּעַ; divine rescue that restores wholeness and right relationship" },
         ]
       },
 
@@ -1727,7 +1752,7 @@
           { hebrew: "בְּרָכָה", english: "blessing", stress: "bra-CHA", note: "From the same root as בָּרוּךְ; a blessing is a channel of divine abundance flowing into the world through words and deeds" },
           { hebrew: "כֻּלָּנוּ יַחַד", english: "all of us together", stress: "ku-LA-nu ya-CHAD", note: "The blessing is communal — not just for individuals but for all Israel as one; unity is itself part of the blessing" },
           { hebrew: "תּוֹרָה", english: "Torah / teaching", stress: "to-RA", note: "The Torah is explicitly listed as one of God's gifts of light; learning Torah is here framed as a blessing, not merely a duty" },
-          { hebrew: "עֹז", english: "strength", stress: "OZ", note: "Also in Lecha Dodi; God's gift of strength enables peace — real שָׁלוֹם is not weakness but strength rightly used" },
+          { hebrew: "עֹז", match: ["עוֹז"], english: "strength", stress: "OZ", note: "Also in Lecha Dodi; God's gift of strength enables peace — real שָׁלוֹם is not weakness but strength rightly used" },
           { hebrew: "הַמְבָרֵךְ", english: "who blesses", stress: "ha-mva-RECH", note: "The active participle — God is the ongoing, present-tense blesser; this is not a past act but God's continuous nature" },
           { hebrew: "רַחֲמִים", english: "compassion", stress: "ra-cha-MIM", note: "Also in Hoda'ah, Avodah; the blessing of peace flows from divine compassion, not merely divine power" },
         ]
@@ -2839,12 +2864,80 @@
     let ftShowTranslit = false;
     let ftShowMeaning = false;
 
+    // ── Vocab-in-text matching ──────────────────────────────────────────────
+    // Finds each vocab entry's words in a prayer's lines so Full Text can highlight them.
+    // Token-based (split on spaces / maqaf) — never \b, which doesn't work for Hebrew.
+    // Compares consonants only, allowing a prefix (ו ה ב ל כ מ ש). A vocab entry can instead list the
+    // exact pointed forms to find in `match` — used for inflected forms, and where consonants alone
+    // would be ambiguous (e.g. שָׁבַת "rested" vs שַׁבָּת "Sabbath").
+    const VOCAB_FINALS = { 'ך': 'כ', 'ם': 'מ', 'ן': 'נ', 'ף': 'פ', 'ץ': 'צ' };
+    function vocabSkel(w, loose) {
+      let s = w.replace(/[֑-ׇ]/g, '').replace(/[^א-ת]/g, '')
+               .replace(/[ךםןףץ]/g, c => VOCAB_FINALS[c]);
+      if (loose) s = s.charAt(0) + s.slice(1).replace(/[וי]/g, ''); // spelling variants (מְזוּזוֹת/מְזֻזוֹת); keep a leading ו/י, which may be a prefix
+      return s;
+    }
+    function vocabPointed(w) {
+      return w.replace(/[\u0591-\u05AF\u05BD]/g, '').replace(/[^\u05B0-\u05C7\u05D0-\u05EA]/g, '');
+    }
+    function vocabTokMatch(tok, form, allowPrefix) {
+      if (!form) return false;
+      if (tok === form) return true;
+      if (!allowPrefix || tok.length <= form.length || !tok.endsWith(form)) return false;
+      return /^[והבלכמש]{1,3}$/.test(tok.slice(0, tok.length - form.length));
+    }
+    function splitHebrewLine(hebrew) {
+      return hebrew.split(/(\s+|־)/); // even indices = words, odd = separators
+    }
+    function findVocabMatches(prayer) {
+      const tokens = []; // { line, part, skel, loose }
+      prayer.lines.forEach((line, li) => {
+        splitHebrewLine(line.hebrew).forEach((p, pi) => {
+          if (pi % 2 === 0 && vocabSkel(p)) tokens.push({ line: li, part: pi, skel: vocabSkel(p), loose: vocabSkel(p, true), pt: vocabPointed(p) });
+        });
+      });
+      const marks = new Map(); // "line:part" -> vocab index
+      const found = new Set();
+      const entries = (prayer.vocab || []).map((v, vi) => ({ vi, exact: !!v.match, forms: [].concat(v.match || v.hebrew) }))
+        .sort((a, b) => Math.max(...b.forms.map(f => f.split(/[\s־]+/).length)) - Math.max(...a.forms.map(f => f.split(/[\s־]+/).length)));
+      for (const loose of [false, true]) {
+        for (const { vi, exact, forms } of entries) {
+          if (found.has(vi) || (exact && loose)) continue;
+          for (const form of forms) {
+            const fw = form.split(/[\s־]+/).map(w => exact ? vocabPointed(w) : vocabSkel(w, loose)).filter(Boolean);
+            if (!fw.length || (loose && fw.join('').length < 3)) continue;
+            for (let t = 0; t + fw.length <= tokens.length; t++) {
+              let ok = true;
+              for (let j = 0; j < fw.length && ok; j++) {
+                const tk = tokens[t + j];
+                ok = exact ? tk.pt === fw[j] : vocabTokMatch(loose ? tk.loose : tk.skel, fw[j], j === 0);
+              }
+              if (ok) {
+                // A word inside a longer phrase keeps the phrase's entry (phrases are processed first)
+                for (let j = 0; j < fw.length; j++) {
+                  const key = tokens[t + j].line + ':' + tokens[t + j].part;
+                  if (!marks.has(key)) marks.set(key, vi);
+                }
+                found.add(vi);
+              }
+            }
+          }
+        }
+      }
+      return { marks, found };
+    }
+
     function openFullText() {
       const prayer = prayers[currentPrayer];
       fullTextTitle.textContent = prayer.name;
-      fullTextBody.innerHTML = prayer.lines.map(line => `
+      const { marks } = findVocabMatches(prayer);
+      const markLine = (hebrew, li) => splitHebrewLine(hebrew).map((part, pi) => {
+        const vi = marks.get(li + ':' + pi);
+        return vi === undefined ? part : `<span class="ft-vw" data-vi="${vi}">${part}</span>`;
+      }).join('');
+      fullTextBody.innerHTML = prayer.lines.map((line, li) => `
         <div class="ft-line">
-          <div class="ft-hebrew">${line.hebrew}</div>
+          <div class="ft-hebrew">${markLine(line.hebrew, li)}</div>
           <div class="ft-translit">${line.stress || line.transliteration}</div>
           <div class="ft-meaning">${line.english}</div>
         </div>
@@ -2854,11 +2947,14 @@
       ftShowMeaning = false;
       ftTranslitBtn.classList.remove('active');
       ftMeaningBtn.classList.remove('active');
-      ftTranslitBtn.textContent = 'Show Transliteration';
-      ftMeaningBtn.textContent = 'Show Meaning';
+      ftTranslitBtn.querySelector('.lbl-full').textContent = 'Show Transliteration';
+      ftMeaningBtn.querySelector('.lbl-full').textContent = 'Show Meaning';
       applyFtClasses();
+      setFtVocab(false);
+      ftVocabBtn.style.display = (prayer.vocab && prayer.vocab.length) ? '' : 'none';
       fullTextModal.classList.remove('hidden');
       fullTextModal.style.display = 'flex';
+      fullTextBody.scrollTop = 0; // always open at line 1 — the body keeps its scroll position between openings
     }
 
     function applyFtClasses() {
@@ -2875,17 +2971,22 @@
     let vocabPronunVisible = false;
 
     function buildVocabModal(prayer) {
-      const vocab = prayer.vocab || [];
       vocabTitle.textContent = prayer.name + ' — Key Vocabulary';
-      vocabBody.innerHTML = '';
       vocabPronunVisible = false;
       const pronunBtn = document.getElementById('vocab-pronun-btn');
       pronunBtn.textContent = 'Show Pronunciation';
+      renderVocabRows(prayer, vocabBody, 'vocab-note');
+    }
 
+    // Renders a prayer's vocab rows into a container — used by the vocab modal and the Full Text vocab panel
+    function renderVocabRows(prayer, container, notePrefix) {
+      const vocab = prayer.vocab || [];
+      container.innerHTML = '';
       vocab.forEach((word, i) => {
         // Main row: Hebrew | divider | English + optional ⓘ
         const row = document.createElement('div');
         row.className = 'vocab-row';
+        row.dataset.vi = i;
 
         const hebrewCell = document.createElement('div');
         hebrewCell.className = 'vocab-hebrew';
@@ -2897,14 +2998,14 @@
 
         const englishCell = document.createElement('div');
         englishCell.className = 'vocab-english';
-        const noteId = `vocab-note-${i}`;
+        const noteId = `${notePrefix}-${i}`;
         englishCell.innerHTML = word.english +
           (word.note ? `<button class="vocab-note-btn" data-target="${noteId}" title="More info">ⓘ</button>` : '');
 
         row.appendChild(hebrewCell);
         row.appendChild(divider);
         row.appendChild(englishCell);
-        vocabBody.appendChild(row);
+        container.appendChild(row);
 
         // Note row (hidden until ⓘ clicked)
         if (word.note) {
@@ -2912,17 +3013,17 @@
           noteRow.className = 'vocab-note-row';
           noteRow.id = noteId;
           noteRow.innerHTML = `<div class="vocab-note-text">${word.note}</div>`;
-          vocabBody.appendChild(noteRow);
+          container.appendChild(noteRow);
         }
       });
 
       if (vocab.length === 0) {
-        vocabBody.innerHTML = '<div style="padding: 20px; color: var(--silver-dim); text-align: center; font-style: italic;">No vocabulary available for this prayer.</div>';
+        container.innerHTML = '<div style="padding: 20px; color: var(--silver-dim); text-align: center; font-style: italic;">No vocabulary available for this prayer.</div>';
       }
     }
 
-    // ⓘ note button delegation — set up once, works across all rebuilds
-    vocabBody.addEventListener('click', (e) => {
+    // ⓘ note button delegation — set up ONCE per container (here, outside any build function), works across all rebuilds
+    function handleVocabNoteClick(e) {
       const btn = e.target.closest('.vocab-note-btn');
       if (!btn) return;
       const target = document.getElementById(btn.dataset.target);
@@ -2930,7 +3031,8 @@
       const open = target.style.display === 'block';
       target.style.display = open ? 'none' : 'block';
       btn.style.color = open ? '' : 'var(--gold)';
-    });
+    }
+    vocabBody.addEventListener('click', handleVocabNoteClick);
 
     function closeVocabModal() {
       vocabModal.classList.add('hidden');
@@ -2941,6 +3043,7 @@
       if (!prayer) return;
       buildVocabModal(prayer);
       vocabModal.classList.remove('hidden');
+      vocabBody.scrollTop = 0; // always open at the first word
     });
 
     document.getElementById('vocab-close').addEventListener('click', closeVocabModal);
@@ -2955,6 +3058,55 @@
       vocabBody.querySelectorAll('.vocab-pronun').forEach(el => {
         el.style.display = vocabPronunVisible ? 'block' : 'none';
       });
+    });
+    // ── Full Text vocab panel ─────────────────────────────────────────────────
+    const ftVocabBtn    = document.getElementById('ft-vocab-btn');
+    const ftVocabPanel  = document.getElementById('ft-vocab-panel');
+    const ftVocabBody   = document.getElementById('ft-vocab-body');
+    const ftVocabPronunBtn = document.getElementById('ft-vocab-pronun-btn');
+    const fullTextBox   = document.getElementById('full-text-box');
+    let ftVocabOpen = false;
+    let ftVocabPronunVisible = false;
+
+    function setFtVocab(open) {
+      ftVocabOpen = open;
+      ftVocabPanel.classList.toggle('hidden', !open);
+      ftVocabBtn.classList.toggle('active', open);
+      fullTextBody.classList.toggle('ft-show-vocab', open); // gold highlighting only while the panel is open
+      fullTextBox.style.height = open ? '80vh' : '';         // give the panel room even for short prayers
+    }
+
+    ftVocabBtn.addEventListener('click', () => {
+      if (!ftVocabOpen) {
+        renderVocabRows(prayers[currentPrayer], ftVocabBody, 'ft-vocab-note');
+        ftVocabPronunVisible = false;
+        ftVocabPronunBtn.textContent = 'Show Pronunciation';
+        ftVocabBody.scrollTop = 0;
+      }
+      setFtVocab(!ftVocabOpen);
+    });
+    document.getElementById('ft-vocab-close').addEventListener('click', () => setFtVocab(false));
+    ftVocabBody.addEventListener('click', handleVocabNoteClick);
+
+    ftVocabPronunBtn.addEventListener('click', function() {
+      ftVocabPronunVisible = !ftVocabPronunVisible;
+      this.textContent = ftVocabPronunVisible ? 'Hide Pronunciation' : 'Show Pronunciation';
+      ftVocabBody.querySelectorAll('.vocab-pronun').forEach(el => {
+        el.style.display = ftVocabPronunVisible ? 'block' : 'none';
+      });
+    });
+
+    // Tap a gold word → scroll the panel to its entry and flash it
+    fullTextBody.addEventListener('click', (e) => {
+      const w = e.target.closest('.ft-vw');
+      if (!w || !ftVocabOpen) return;
+      const row = ftVocabBody.querySelector(`.vocab-row[data-vi="${w.dataset.vi}"]`);
+      if (!row) return;
+      // Scroll only the panel (scrollIntoView would also move the page on phones)
+      const delta = row.getBoundingClientRect().top - ftVocabBody.getBoundingClientRect().top - 8;
+      ftVocabBody.scrollBy({ top: delta, behavior: 'smooth' });
+      row.classList.add('vocab-flash');
+      setTimeout(() => row.classList.remove('vocab-flash'), 1200);
     });
     // ── End vocab modal ───────────────────────────────────────────────────────
 
@@ -3058,14 +3210,14 @@
     ftTranslitBtn.addEventListener('click', () => {
       ftShowTranslit = !ftShowTranslit;
       ftTranslitBtn.classList.toggle('active', ftShowTranslit);
-      ftTranslitBtn.textContent = ftShowTranslit ? 'Hide Transliteration' : 'Show Transliteration';
+      ftTranslitBtn.querySelector('.lbl-full').textContent = ftShowTranslit ? 'Hide Transliteration' : 'Show Transliteration';
       applyFtClasses();
     });
 
     ftMeaningBtn.addEventListener('click', () => {
       ftShowMeaning = !ftShowMeaning;
       ftMeaningBtn.classList.toggle('active', ftShowMeaning);
-      ftMeaningBtn.textContent = ftShowMeaning ? 'Hide Meaning' : 'Show Meaning';
+      ftMeaningBtn.querySelector('.lbl-full').textContent = ftShowMeaning ? 'Hide Meaning' : 'Show Meaning';
       applyFtClasses();
     });
 
