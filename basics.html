@@ -341,7 +341,7 @@
 
     <h3>Endings that catch people out</h3>
     <div class="rule"><span class="num">◆</span><span><strong><span class="he" lang="he">ָיו</span> is said <span class="tr">av</span></strong>, not <span class="tr">a-yo</span>: <span class="he" lang="he">מִצְוֹתָיו</span> <span class="tr">mitz-vo-TAV</span>. The <span class="he" lang="he">י</span> is silent.</span></div>
-    <div class="rule"><span class="num">◆</span><span><strong>A patach under a final <span class="he" lang="he">ח</span>, <span class="he" lang="he">ע</span> or <span class="he" lang="he">ה</span> is said <em>before</em> the letter</strong> (<em>"furtive patach"</em>): <span class="he" lang="he">לְהוֹשִׁיעַ</span> <span class="tr">le-ho-SHI-a</span>, not <span class="tr">le-ho-shi-ya</span>.</span></div>
+    <div class="rule"><span class="num">◆</span><span><strong>A patach under a final <span class="he" lang="he">ח</span> or <span class="he" lang="he">ע</span> is said <em>before</em> the letter</strong> (<em>"furtive patach"</em>): <span class="he" lang="he">לְשַׁבֵּחַ</span> <span class="tr">le-sha-BE-ach</span> (Aleinu), not <span class="tr">le-sha-be-cha</span>. With <span class="he" lang="he">ע</span>, which is silent, you just hear an extra <span class="tr">a</span>: <span class="he" lang="he">לְהוֹשִׁיעַ</span> <span class="tr">le-ho-SHI-a</span>.</span></div>
     <div class="rule"><span class="num">◆</span><span><strong>A final <span class="he" lang="he">ה</span> or <span class="he" lang="he">א</span> is usually silent</strong>: <span class="he" lang="he">תּוֹרָה</span> <span class="tr">to-RA</span>, <span class="he" lang="he">בָּרָא</span> <span class="tr">ba-RA</span>. But a <strong>dot in a final <span class="he" lang="he">ה</span></strong> (<span class="he" lang="he">הּ</span>, <em>mappik</em>) means you sound the <span class="tr">h</span>: <span class="he" lang="he">שְׁמֵהּ</span> <span class="tr">she-MEH</span> in the Kaddish.</span></div>
     <div class="rule"><span class="num">◆</span><span><strong>A small dash between words</strong> (<span class="he" lang="he">־</span>, <em>maqaf</em>) joins them so they're read as one unit, with only the second one stressed.</span></div>
 
@@ -408,7 +408,7 @@
     d2: [['שָׁלוֹם','sha-LOM'],['בָּרוּךְ','ba-RUCH'],['אַתָּה','a-TA'],['אָמֵן','a-MEN'],['מֶלֶךְ','ME-lech'],['תּוֹרָה','to-RA'],['לֶחֶם','LE-chem'],['חַיִּים','cha-YIM'],['קָדוֹשׁ','ka-DOSH'],['יִשְׂרָאֵל','yis-ra-EL']],
     d3: [['בָּרוּךְ אַתָּה יְהוָה','ba-RUCH a-TA a-do-NAI — "Blessed are You, Lord"'],['אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם','e-lo-HEI-nu ME-lech ha-o-LAM — "our God, King of the universe"']],
     d4: [['שְׁמַע יִשְׂרָאֵל','SHMA yis-ra-EL'],['בּוֹרֵא פְּרִי הַגָּפֶן','bo-REI pri ha-GA-fen'],['מִי כָמֹכָה','mi cha-MO-cha'],['כִּי בוֹ שָׁבַת','ki vo sha-VAT'],['זִכָּרוֹן לְמַעֲשֵׂה בְרֵאשִׁית','zi-ka-RON le-ma-a-SEH ve-re-SHIT'],['שָׁלוֹם עֲלֵיכֶם','sha-LOM a-lei-CHEM']],
-    d5: [['כָּל','kol'],['חָכְמָה','choch-MA'],['מִצְוֹתָיו','mitz-vo-TAV'],['לְהוֹשִׁיעַ','le-ho-SHI-a'],['שְׁמֵהּ','she-MEH'],['וּבְכָל','uv-CHOL'],['יְהוָה','a-do-NAI'],['מִצְווֹת','mitz-VOT']],
+    d5: [['כָּל','kol'],['חָכְמָה','choch-MA'],['מִצְוֹתָיו','mitz-vo-TAV'],['לְשַׁבֵּחַ','le-sha-BE-ach'],['שְׁמֵהּ','she-MEH'],['וּבְכָל','uv-CHOL'],['יְהוָה','a-do-NAI'],['מִצְווֹת','mitz-VOT']],
   };
   for (const [id, items] of Object.entries(DRILLS)) {
     document.getElementById(id).innerHTML = items.map(([h, a]) =>
@@ -435,7 +435,7 @@
       { p: 'How is <span class="he" lang="he">כָּל</span> read?', o: ['kal', 'kol'], a: 1, w: 'This kamatz is a short <span class="tr">o</span> (kamatz katan): <span class="tr">kol</span>.' },
       { p: 'How do you say the ending of <span class="he" lang="he">מִצְוֹתָיו</span>?', o: ['-ta-yo', '-tav', '-ta-yiv'], a: 1, w: '<span class="he" lang="he">ָיו</span> is always <span class="tr">av</span>: <span class="tr">mitz-vo-TAV</span>.' },
       { p: 'In <span class="he" lang="he">הָעוֹלָם</span>, what does the <span class="he" lang="he">הָ</span> at the front mean?', o: ['and', 'the', 'in'], a: 1, w: '<span class="he" lang="he">הַ</span>/<span class="he" lang="he">הָ</span> = "the": <span class="tr">ha-o-LAM</span>, "the world".' },
-      { p: 'In <span class="he" lang="he">לְהוֹשִׁיעַ</span>, where is the final "a" sound said?', o: ['Before the ע', 'After the ע'], a: 0, w: 'A furtive patach is said before its letter: <span class="tr">le-ho-SHI-a</span>.' },
+      { p: 'How is <span class="he" lang="he">לְשַׁבֵּחַ</span> read?', o: ['le-sha-BE-ach', 'le-sha-be-CHA'], a: 0, w: 'A patach under a final <span class="he" lang="he">ח</span> is said before it: <span class="tr">ach</span>, not <span class="tr">cha</span>.' },
     ],
   };
   document.querySelectorAll('[data-quiz]').forEach(box => {
