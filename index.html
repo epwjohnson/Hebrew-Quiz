@@ -159,6 +159,19 @@
     .modal-head-close:hover { color: var(--gold); }
     .modal-head-btns { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 10px; }
     .lbl-short { display: none; }
+    /* Tap a word for its pronunciation */
+    .tap-word { cursor: pointer; }
+    @media (hover: hover) { .tap-word:hover { text-decoration: underline dotted; text-decoration-color: var(--gold-dim); text-underline-offset: 6px; } }
+    .tap-word.tap-word-on { text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 6px; }
+    #word-bubble { position: fixed; z-index: 1200; background: #1e3050; border: 1px solid var(--gold); color: var(--gold); font-style: italic; font-family: 'Crimson Pro', serif; font-size: 1.05rem; padding: 4px 12px; border-radius: 8px; pointer-events: none; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.45); }
+    /* Keyboard shortcuts (desktop only) */
+    .kbd-hint { display: none; color: var(--silver-dim); font-size: 0.8rem; margin-top: 4px; }
+    @media (hover: hover) and (pointer: fine) { .kbd-hint { display: block; } }
+    kbd { font-family: inherit; font-size: 0.85em; border: 1px solid var(--gold-dim); border-radius: 4px; padding: 0 5px; color: var(--gold); background: rgba(184,134,11,0.08); }
+    .kbd-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+    .kbd-table td { padding: 6px 4px; border-bottom: 1px solid #131f33; color: var(--silver); vertical-align: top; }
+    .kbd-table td:first-child { white-space: nowrap; width: 1%; padding-right: 16px; }
+    .kbd-table .kbd-sec td { color: var(--gold); font-weight: 600; padding-top: 14px; border-bottom: 1px solid #2a3f5f; }
     .ft-toggle-btn.active { background: rgba(184,134,11,0.15); color: var(--gold); border-color: var(--gold); }
     .ft-line { padding: 4px 20px; border-bottom: 1px solid #131f33; }
     .ft-line:last-child { border-bottom: none; }
@@ -532,6 +545,10 @@
         <p style="margin-top: 10px; color: #8b949e; font-size: 0.85rem; line-height: 1.6;">
           <strong style="color: var(--silver);">Please note:</strong> this checks words, not pronunciation details. Differences like ח vs ה cannot be detected — use the Listen button to compare your pronunciation.
         </p>
+        <div style="text-align: center; margin-top: 22px; padding: 12px 16px; border: 1px dashed var(--gold-dim); border-radius: 8px;">
+          <span style="color: var(--silver); font-size: 0.95rem;">New to reading Hebrew, or want to brush up?</span>
+          <a href="basics.html" style="color: var(--gold); font-size: 0.95rem; white-space: nowrap; margin-left: 6px;">📘 Reading Hebrew — the basics →</a>
+        </div>
         <div style="text-align: center; margin-top: 24px;">
           <button id="begin-btn" style="background: var(--gold); color: #000; border: none; border-radius: 8px; padding: 14px 40px; font-size: 1.1rem; font-family: inherit; cursor: pointer;">Begin →</button>
         </div>
@@ -543,6 +560,7 @@
       <header style="text-align: center;">
         <h1>קריאה בעברית</h1>
         <p class="subtitle">Hebrew Reading Practice with Speech Recognition</p>
+        <p class="kbd-hint">Press <kbd>?</kbd> for keyboard shortcuts</p>
       </header>
     <div id="quiz-controls">
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
@@ -718,6 +736,7 @@
           <button id="sung-version-btn" style="padding: 8px 22px; border: 1px solid var(--gold-dim); background: transparent; color: var(--gold); font-family: 'Crimson Pro', serif; font-size: 0.95rem; border-radius: 6px; cursor: pointer; transition: all 0.2s;">🎵 Sung Version</button>
           <button id="full-text-btn" style="padding: 8px 22px; border: 1px solid var(--gold-dim); background: transparent; color: var(--gold); font-family: 'Crimson Pro', serif; font-size: 0.95rem; border-radius: 6px; cursor: pointer; transition: all 0.2s;">📖 Full Text</button>
           <button id="vocab-btn" style="padding: 8px 22px; border: 1px solid var(--gold-dim); background: transparent; color: var(--gold); font-family: 'Crimson Pro', serif; font-size: 0.95rem; border-radius: 6px; cursor: pointer; transition: all 0.2s;">📚 Key Vocabulary</button>
+          <button id="share-btn" style="padding: 8px 22px; border: 1px solid var(--gold-dim); background: transparent; color: var(--gold); font-family: 'Crimson Pro', serif; font-size: 0.95rem; border-radius: 6px; cursor: pointer; transition: all 0.2s;" title="Share a link to this prayer">🔗 Share</button>
         </div>
 
         <!-- Full text modal -->
@@ -838,6 +857,34 @@
     </div><!-- end layout -->
     </div><!-- end main-layout -->
   </div><!-- end container -->
+
+        <!-- Keyboard shortcuts help -->
+        <div id="kbd-modal" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1100; display: flex; align-items: flex-start; justify-content: center; padding-top: 40px;">
+          <div style="background: #0f1f3d; border: 1px solid #2a3f5f; border-radius: 12px; width: 460px; max-width: 94vw; max-height: 85vh; display: flex; flex-direction: column; overflow: hidden;">
+            <div class="modal-head">
+              <span class="modal-head-title">Keyboard shortcuts</span>
+              <button id="kbd-close" class="modal-head-close" title="Close">✕</button>
+            </div>
+            <div style="overflow-y: auto; padding: 4px 20px 16px;">
+              <table class="kbd-table">
+                <tr class="kbd-sec"><td colspan="2">Practising a line</td></tr>
+                <tr><td><kbd>Space</kbd></td><td>Listen to the line</td></tr>
+                <tr><td><kbd>M</kbd></td><td>Microphone on / off</td></tr>
+                <tr><td><kbd>→</kbd> <kbd>←</kbd></td><td>Skip / Back</td></tr>
+                <tr><td><kbd>T</kbd> <kbd>E</kbd></td><td>Show transliteration / English meaning</td></tr>
+                <tr><td><kbd>F</kbd> <kbd>V</kbd></td><td>Open Full Text / Key Vocabulary</td></tr>
+                <tr class="kbd-sec"><td colspan="2">In Full Text</td></tr>
+                <tr><td><kbd>Space</kbd></td><td>Listen / Stop</td></tr>
+                <tr><td><kbd>T</kbd> <kbd>E</kbd></td><td>Transliteration / English meaning</td></tr>
+                <tr><td><kbd>V</kbd></td><td>Vocab panel</td></tr>
+                <tr><td><kbd>P</kbd></td><td>Pronunciation (when vocab is open)</td></tr>
+                <tr class="kbd-sec"><td colspan="2">Anywhere</td></tr>
+                <tr><td><kbd>Esc</kbd></td><td>Close the panel or window</td></tr>
+                <tr><td><kbd>?</kbd></td><td>Show this list</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
 
   <script>
     // Prayer data
@@ -2548,7 +2595,11 @@
       const prayer = prayers[currentPrayer];
       const line = prayer.lines[currentLineIndex];
       
-      hebrewLine.textContent = line.hebrew;
+      hideWordBubble();
+      let qwi = 0;
+      hebrewLine.innerHTML = splitHebrewLine(line.hebrew).map((part, pi) =>
+        (pi % 2 === 1 || !/[\u05D0-\u05EA]/.test(part)) ? part : `<span class="tap-word" data-wi="${qwi++}">${part}</span>`
+      ).join('');
       resultsArea.classList.add('hidden');
       feedbackMessage.classList.add('hidden');
       document.getElementById('action-buttons').classList.add('hidden');
@@ -2654,6 +2705,8 @@
       showLine();
       updateListenButton();
       updateSungVersionBar();
+      // Keep the address in step with the prayer on screen (replaceState: no Back-button clutter)
+      if (location.hash !== '#' + prayerId) history.replaceState(null, '', '#' + prayerId);
     }
 
     // Event listeners
@@ -2931,10 +2984,16 @@
       const prayer = prayers[currentPrayer];
       fullTextTitle.textContent = prayer.name;
       const { marks } = findVocabMatches(prayer);
-      const markLine = (hebrew, li) => splitHebrewLine(hebrew).map((part, pi) => {
-        const vi = marks.get(li + ':' + pi);
-        return vi === undefined ? part : `<span class="ft-vw" data-vi="${vi}">${part}</span>`;
-      }).join('');
+      // Every word becomes tappable (pronunciation bubble); vocab words also carry their vocab index
+      const markLine = (hebrew, li) => {
+        let wi = 0;
+        return splitHebrewLine(hebrew).map((part, pi) => {
+          if (pi % 2 === 1 || !/[\u05D0-\u05EA]/.test(part)) return part;
+          const vi = marks.get(li + ':' + pi);
+          const vocabAttr = vi === undefined ? '' : ` data-vi="${vi}"`;
+          return `<span class="tap-word${vi === undefined ? '' : ' ft-vw'}" data-li="${li}" data-wi="${wi++}"${vocabAttr}>${part}</span>`;
+        }).join('');
+      };
       fullTextBody.innerHTML = prayer.lines.map((line, li) => `
         <div class="ft-line">
           <div class="ft-hebrew">${markLine(line.hebrew, li)}</div>
@@ -2954,6 +3013,7 @@
       ftVocabBtn.style.display = (prayer.vocab && prayer.vocab.length) ? '' : 'none';
       fullTextModal.classList.remove('hidden');
       fullTextModal.style.display = 'flex';
+      hideWordBubble();
       fullTextBody.scrollTop = 0; // always open at line 1 — the body keeps its scroll position between openings
     }
 
@@ -3096,10 +3156,13 @@
       });
     });
 
-    // Tap a gold word → scroll the panel to its entry and flash it
+    // Tap any word → pronunciation bubble; a gold word (vocab panel open) also scrolls the panel to its entry
     fullTextBody.addEventListener('click', (e) => {
-      const w = e.target.closest('.ft-vw');
-      if (!w || !ftVocabOpen) return;
+      const w = e.target.closest('.tap-word');
+      if (!w) return;
+      const line = prayers[currentPrayer].lines[+w.dataset.li];
+      showWordBubble(w, wordPronunciation(line, +w.dataset.wi));
+      if (!ftVocabOpen || w.dataset.vi === undefined) return;
       const row = ftVocabBody.querySelector(`.vocab-row[data-vi="${w.dataset.vi}"]`);
       if (!row) return;
       // Scroll only the panel (scrollIntoView would also move the page on phones)
@@ -3221,12 +3284,145 @@
       applyFtClasses();
     });
 
+    // ── Tap a word for its pronunciation ───────────────────────────────────
+    // The stress guide has exactly one entry per Hebrew word, in order, so word n ↔ stress word n.
+    function wordPronunciation(line, wi) {
+      return ((line.stress || line.transliteration || '').trim().split(/\s+/)[wi]) || '';
+    }
+    // var (not const): showLine() may call hideWordBubble() before this point in the script runs
+    var wordBubble = document.createElement('div');
+    wordBubble.id = 'word-bubble';
+    wordBubble.className = 'hidden';
+    document.body.appendChild(wordBubble);
+    var wordBubbleFor = null;
+    function hideWordBubble() {
+      if (!wordBubble) return;
+      wordBubble.classList.add('hidden');
+      if (wordBubbleFor) wordBubbleFor.classList.remove('tap-word-on');
+      wordBubbleFor = null;
+    }
+    function showWordBubble(el, text) {
+      if (wordBubbleFor === el) { hideWordBubble(); return; } // second tap on the same word closes it
+      hideWordBubble();
+      if (!text) return;
+      wordBubble.textContent = text;
+      wordBubble.classList.remove('hidden');
+      wordBubbleFor = el;
+      el.classList.add('tap-word-on');
+      const r = el.getBoundingClientRect(), b = wordBubble.getBoundingClientRect();
+      let top = r.top - b.height - 8;
+      if (top < 8) top = r.bottom + 8;                 // no room above → show below
+      const left = Math.max(8, Math.min(r.left + r.width / 2 - b.width / 2, window.innerWidth - b.width - 8));
+      wordBubble.style.top = top + 'px';
+      wordBubble.style.left = left + 'px';
+    }
+    hebrewLine.addEventListener('click', (e) => {
+      const w = e.target.closest('.tap-word');
+      if (!w) return;
+      showWordBubble(w, wordPronunciation(prayers[currentPrayer].lines[currentLineIndex], +w.dataset.wi));
+    });
+    // Any tap elsewhere, scrolling or resizing closes the bubble
+    document.addEventListener('click', (e) => { if (!e.target.closest('.tap-word')) hideWordBubble(); }, true);
+    fullTextBody.addEventListener('scroll', hideWordBubble);
+    window.addEventListener('scroll', hideWordBubble);
+    window.addEventListener('resize', hideWordBubble);
+
+    // ── Keyboard shortcuts (desktop) ───────────────────────────────────────
+    // Each key simply clicks the matching on-screen button, so behaviour is identical to clicking.
+    const kbdModal = document.getElementById('kbd-modal');
+    function setKbdHelp(open) { kbdModal.classList.toggle('hidden', !open); }
+    document.getElementById('kbd-close').addEventListener('click', () => setKbdHelp(false));
+    kbdModal.addEventListener('click', (e) => { if (e.target === kbdModal) setKbdHelp(false); });
+
+    function kbdShown(el) { return !!el && el.getClientRects().length > 0 && getComputedStyle(el).visibility !== 'hidden'; }
+    function kbdPress(id) {
+      const el = document.getElementById(id);
+      if (!kbdShown(el)) return false;
+      el.click();
+      return true;
+    }
+    let kbdSwallowSpaceUp = false;
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey || e.metaKey || e.altKey) return;           // leave browser shortcuts alone
+      const t = e.target;
+      if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+      const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+      const isOpen = (m) => !m.classList.contains('hidden');
+      let done = false;
+
+      if (k === '?') { setKbdHelp(!isOpen(kbdModal)); done = true; }
+      else if (k === 'Escape') {
+        if (wordBubbleFor) { hideWordBubble(); done = true; }
+        else if (isOpen(kbdModal)) { setKbdHelp(false); done = true; }
+        else if (isOpen(fullTextModal) && ftVocabOpen) { setFtVocab(false); done = true; }
+        else if (isOpen(fullTextModal)) done = kbdPress('full-text-close');
+        else if (isOpen(vocabModal)) done = kbdPress('vocab-close');
+      }
+      else if (isOpen(kbdModal)) { /* help is showing: ignore other keys */ }
+      else if (isOpen(vocabModal)) {
+        if (k === 'p') done = kbdPress('vocab-pronun-btn');
+      }
+      else if (isOpen(fullTextModal)) {
+        const map = { ' ': 'ft-listen-btn', 't': 'ft-translit-btn', 'e': 'ft-meaning-btn', 'v': 'ft-vocab-btn', 'p': 'ft-vocab-pronun-btn' };
+        if (map[k]) done = kbdPress(map[k]);
+      }
+      else {
+        const map = { ' ': 'listen-btn-pre', 'm': 'mic-btn', 'ArrowRight': 'skip-btn', 'ArrowLeft': 'back-btn',
+                      't': 'peek-translit-btn', 'e': 'peek-meaning-btn', 'f': 'full-text-btn', 'v': 'vocab-btn' };
+        if (map[k]) done = kbdPress(map[k]);
+      }
+      if (done) {
+        e.preventDefault();
+        if (k !== 'Escape') hideWordBubble();
+        // Space would otherwise also "press" whichever button was last clicked
+        if (k === ' ') kbdSwallowSpaceUp = true;
+        if (document.activeElement && document.activeElement.tagName === 'BUTTON') document.activeElement.blur();
+      }
+    });
+    document.addEventListener('keyup', (e) => {
+      if (e.key === ' ' && kbdSwallowSpaceUp) { e.preventDefault(); kbdSwallowSpaceUp = false; }
+    });
+
+    // ── Links to a single prayer (#kiddush etc.) ───────────────────────────
+    function prayerFromHash() {
+      const id = decodeURIComponent(location.hash.slice(1));
+      return (id && prayers[id] && prayers[id].lines) ? id : null;
+    }
+    function openPrayerFromLink(id) {
+      document.getElementById('welcome-screen').classList.add('hidden');
+      document.getElementById('main-layout').classList.remove('hidden');
+      switchPrayer(id);
+    }
+    window.addEventListener('hashchange', () => {
+      const id = prayerFromHash();
+      if (id && id !== currentPrayer) openPrayerFromLink(id);
+    });
+
+    const shareBtn = document.getElementById('share-btn');
+    shareBtn.addEventListener('click', async () => {
+      const url = location.origin + location.pathname + '#' + currentPrayer;
+      const title = prayers[currentPrayer].name + ' — Hebrew reading practice';
+      const isPhone = window.matchMedia('(pointer: coarse)').matches;
+      if (isPhone && navigator.share) {
+        try { await navigator.share({ title, url }); } catch (e) { /* cancelled */ }
+        return;
+      }
+      let copied = false;
+      try { await navigator.clipboard.writeText(url); copied = true; } catch (e) {}
+      if (!copied) { window.prompt('Copy this link:', url); return; }
+      shareBtn.textContent = '✓ Link copied';
+      setTimeout(() => { shareBtn.textContent = '🔗 Share'; }, 2000);
+    });
+
     // Welcome screen
     document.getElementById('begin-btn').addEventListener('click', () => {
       document.getElementById('welcome-screen').classList.add('hidden');
       document.getElementById('main-layout').classList.remove('hidden');
       switchPrayer(currentPrayer);
     });
+
+    // Opened from a prayer link? Go straight to it.
+    { const id = prayerFromHash(); if (id) openPrayerFromLink(id); }
   </script>
 </body>
 </html>

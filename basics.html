@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reading Hebrew — The Basics</title>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=David+Libre:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep: #0a1628;
+      --bg-card: #112240;
+      --bg-inner: #0f1f3d;
+      --line: #1e3050;
+      --line-strong: #2a3f5f;
+      --gold: #d4a853;
+      --gold-dim: #a67c2e;
+      --silver: #c9d1d9;
+      --silver-dim: #8b949e;
+      --correct: #3fb950;
+      --error: #f85149;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 70px; }
+    body { font-family: 'Crimson Pro', Georgia, serif; background: var(--bg-deep); color: var(--silver); font-size: 1.12rem; line-height: 1.65; }
+    a { color: var(--gold); }
+    .he { font-family: 'David Libre', serif; direction: rtl; unicode-bidi: isolate; color: #e8e8e8; font-size: 1.35em; line-height: 1.3; }
+    .tr { color: var(--gold); font-style: italic; }
+    .muted { color: var(--silver-dim); }
+
+    /* Top bar */
+    .topbar { position: sticky; top: 0; z-index: 50; background: rgba(10,22,40,0.96); border-bottom: 1px solid var(--line); }
+    .topbar-inner { max-width: 820px; margin: 0 auto; padding: 10px 16px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .topbar a { text-decoration: none; font-size: 0.95rem; }
+    .back { color: var(--silver-dim) !important; }
+    .back:hover { color: var(--gold) !important; }
+    .toc { display: flex; gap: 6px; flex-wrap: wrap; margin-left: auto; }
+    .toc a { border: 1px solid var(--gold-dim); border-radius: 12px; padding: 1px 12px; font-size: 0.88rem; }
+    .toc a:hover { background: rgba(212,168,83,0.12); }
+
+    main { max-width: 820px; margin: 0 auto; padding: 24px 16px 60px; }
+    header.hero { text-align: center; padding: 18px 0 8px; }
+    header.hero h1 { font-family: 'David Libre', serif; color: var(--gold); font-size: 2.1rem; line-height: 1.2; }
+    header.hero .sub { color: var(--silver-dim); margin-top: 4px; }
+    .intro { background: var(--bg-card); border: 1px solid var(--line-strong); border-radius: 12px; padding: 18px 22px; margin: 20px 0 8px; }
+    .intro ul { margin: 8px 0 0 20px; }
+
+    .part { margin-top: 44px; }
+    .part-label { color: var(--gold-dim); text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.8rem; }
+    h2 { color: var(--gold); font-family: 'Crimson Pro', serif; font-size: 1.7rem; font-weight: 600; line-height: 1.25; border-bottom: 1px solid var(--line-strong); padding-bottom: 6px; margin-bottom: 14px; }
+    h3 { color: var(--gold); font-size: 1.25rem; font-weight: 600; margin: 28px 0 8px; }
+    p { margin: 10px 0; }
+    ul.plain { margin: 8px 0 8px 22px; }
+    ul.plain li { margin: 4px 0; }
+
+    .card { background: var(--bg-card); border: 1px solid var(--line-strong); border-radius: 12px; padding: 16px 20px; margin: 14px 0; }
+    .tip { border-left: 3px solid var(--gold-dim); background: rgba(212,168,83,0.06); padding: 10px 16px; margin: 14px 0; border-radius: 0 8px 8px 0; }
+
+    /* Letter grid */
+    .letters { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin: 14px 0; }
+    .lt { background: var(--bg-inner); border: 1px solid var(--line-strong); border-radius: 10px; padding: 10px 12px 12px; text-align: center; }
+    .lt .g { font-family: 'David Libre', serif; font-size: 2.6rem; line-height: 1.1; color: #fff; }
+    .lt .g small { font-size: 0.55em; color: var(--silver-dim); margin-right: 6px; }
+    .lt .n { color: var(--gold); font-weight: 600; margin-top: 2px; }
+    .lt .s { font-size: 0.95rem; }
+    .lt .ex { margin-top: 6px; font-size: 0.92rem; color: var(--silver-dim); }
+    .lt .ex .he { font-size: 1.35rem; }
+
+    /* Tables */
+    table.t { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    table.t th { text-align: left; color: var(--gold); font-weight: 600; font-size: 0.95rem; border-bottom: 1px solid var(--line-strong); padding: 6px 8px; }
+    table.t td { border-bottom: 1px solid var(--line); padding: 8px; vertical-align: middle; }
+    table.t td.big { font-family: 'David Libre', serif; font-size: 2rem; color: #fff; text-align: center; width: 70px; line-height: 1.2; }
+    .scroll-x { overflow-x: auto; }
+    table.t .tr, .lt .tr { white-space: nowrap; }
+
+    /* Look-alikes */
+    .pairs { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; margin: 12px 0; }
+    .pair { background: var(--bg-inner); border: 1px solid var(--line-strong); border-radius: 10px; padding: 10px 14px; }
+    .pair .gl { font-family: 'David Libre', serif; font-size: 2.2rem; color: #fff; letter-spacing: 0.3em; direction: rtl; text-align: center; }
+    .pair .how { font-size: 0.95rem; }
+
+    /* Reveal drills */
+    .drill { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; margin: 12px 0; }
+    .drill.wide { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+    .rv { background: var(--bg-inner); border: 1px solid var(--line-strong); border-radius: 10px; padding: 10px; text-align: center; cursor: pointer; transition: border-color 0.2s; font: inherit; color: inherit; }
+    .rv:hover { border-color: var(--gold-dim); }
+    .rv .he { display: block; font-size: 1.9rem; }
+    .rv .ans { display: block; min-height: 1.6em; margin-top: 4px; }
+    .rv .ans .tr { visibility: hidden; }
+    .rv .ans::before { content: 'tap to check'; color: var(--silver-dim); font-size: 0.82rem; }
+    .rv.shown .ans::before { content: none; }
+    .rv.shown .ans .tr { visibility: visible; }
+    .rv.shown { border-color: var(--gold-dim); }
+    .drill-tools { text-align: right; }
+    .mini-btn { background: none; border: 1px solid var(--gold-dim); color: var(--gold); border-radius: 12px; padding: 2px 12px; font: inherit; font-size: 0.85rem; cursor: pointer; }
+    .mini-btn:hover { background: rgba(212,168,83,0.12); }
+
+    /* Ashkenazi notes */
+    .ash { display: inline-block; background: none; border: 1px dashed var(--gold-dim); color: var(--gold); border-radius: 10px; font: inherit; font-size: 0.78rem; padding: 0 8px; line-height: 1.5; cursor: pointer; vertical-align: 2px; margin-left: 4px; }
+    .ash:hover, .ash[aria-expanded="true"] { background: rgba(212,168,83,0.12); border-style: solid; }
+    .ash-note { display: none; margin: 6px 0; padding: 8px 12px; background: rgba(212,168,83,0.07); border: 1px solid var(--gold-dim); border-radius: 8px; font-size: 0.95rem; }
+    .ash-note.open { display: block; }
+    .lt .ash-note, .pair .ash-note { text-align: left; }
+
+    /* Rules list */
+    .rule { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; align-items: baseline; margin: 10px 0; }
+    .rule .num { color: var(--gold); font-weight: 600; }
+
+    /* Quiz */
+    .quiz { background: var(--bg-card); border: 1px solid var(--line-strong); border-radius: 12px; padding: 16px 20px; margin: 24px 0 10px; }
+    .quiz h3 { margin-top: 0; }
+    .q { border-top: 1px solid var(--line); padding: 12px 0; }
+    .q:first-of-type { border-top: none; }
+    .q .prompt { margin-bottom: 8px; }
+    .opts { display: flex; flex-wrap: wrap; gap: 8px; }
+    .opt { background: var(--bg-inner); border: 1px solid var(--line-strong); color: var(--silver); border-radius: 8px; padding: 4px 14px; font: inherit; cursor: pointer; }
+    .opt:hover { border-color: var(--gold-dim); }
+    .opt.right { border-color: var(--correct); color: var(--correct); }
+    .opt.wrong { border-color: var(--error); color: var(--error); text-decoration: line-through; }
+    .why { display: none; margin-top: 8px; font-size: 0.97rem; color: var(--silver); }
+    .why.show { display: block; }
+    .score { color: var(--gold); margin-top: 6px; }
+
+    .seeit { font-size: 0.95rem; }
+    footer { margin-top: 50px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--silver-dim); font-size: 0.92rem; text-align: center; }
+
+    .lbl-short { display: none; }
+    @media (max-width: 600px) {
+      .lbl-full { display: none; }
+      .lbl-short { display: inline; }
+      html { scroll-padding-top: 52px; }
+      .topbar-inner { flex-wrap: nowrap; gap: 8px; padding: 8px 10px; }
+      .topbar a { font-size: 0.82rem; white-space: nowrap; }
+      .toc { flex-wrap: nowrap; gap: 4px; }
+      .toc a { padding: 1px 8px; }
+      body { font-size: 1.05rem; }
+      header.hero h1 { font-size: 1.7rem; }
+      .toc { margin-left: 0; }
+      table.t td.big { font-size: 1.7rem; width: 54px; }
+      .card, .intro, .quiz { padding: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="back" href="index.html">← <span class="lbl-full">Back to practice</span><span class="lbl-short">Practice</span></a>
+    <nav class="toc" aria-label="Sections">
+      <a href="#part1">1 · <span class="lbl-full">Letters &amp; vowels</span><span class="lbl-short">Letters</span></a>
+      <a href="#part2">2 · <span class="lbl-full">Reading smoothly</span><span class="lbl-short">Fluency</span></a>
+      <a href="#part3">3 · <span class="lbl-full">Finer points</span><span class="lbl-short">Finer points</span></a>
+    </nav>
+  </div>
+</div>
+
+<main>
+  <header class="hero">
+    <h1>Reading Hebrew — the basics</h1>
+    <p class="sub">From your first letter to reading the prayers with confidence</p>
+  </header>
+
+  <div class="intro">
+    <p style="margin-top:0">This guide works at whatever level you're at:</p>
+    <ul>
+      <li><strong>Part 1</strong> starts from nothing: the letters, the vowels, and your first words.</li>
+      <li><strong>Part 2</strong> is for when you can sound words out but want to read more smoothly.</li>
+      <li><strong>Part 3</strong> covers the details that trip up even fairly confident readers.</li>
+    </ul>
+    <p>Every example comes from the prayers in the practice app. The pronunciation taught here is the modern Israeli one used in the app's transliterations. Where the traditional Ashkenazi pronunciation differs noticeably, look for an <button class="ash" type="button" data-note="Like this — tap any of these to see how the Ashkenazi pronunciation differs.">Ashkenazi</button> note.</p>
+    <p class="muted" style="margin-bottom:0">Transliterations show the stressed syllable in capitals, as in the app: <span class="tr">sha-LOM</span>.</p>
+  </div>
+
+  <!-- ═══════════════════════ PART 1 ═══════════════════════ -->
+  <section class="part" id="part1">
+    <div class="part-label">Part 1 · Total beginners</div>
+    <h2>Letters and vowels</h2>
+
+    <h3>Four things to know before you start</h3>
+    <div class="rule"><span class="num">1</span><span>Hebrew reads <strong>right to left</strong>. Start at the right-hand end of the line.</span></div>
+    <div class="rule"><span class="num">2</span><span>The <strong>letters are consonants</strong>. There are 22 of them, and a few change shape at the end of a word.</span></div>
+    <div class="rule"><span class="num">3</span><span>The <strong>vowels are small dots and dashes</strong>, mostly under the letters. A vowel is said <em>after</em> the letter it sits under: <span class="he" lang="he">בָּ</span> is <span class="tr">ba</span>, not <span class="tr">ab</span>.</span></div>
+    <div class="rule"><span class="num">4</span><span>Prayer books print every vowel, so a prayer can be sounded out exactly, even if you don't know the words. Modern Israeli newspapers leave the vowels out; you won't need to worry about that here.</span></div>
+
+    <h3>The letters</h3>
+    <p>Some letters come in two forms: with a dot inside (<em>dagesh</em>) and without. For three of them the dot changes the sound, so both forms are shown. The small letters marked <span class="muted">final</span> are the shapes used at the end of a word.</p>
+    <div class="letters" id="letter-grid"></div>
+
+    <div class="tip">
+      <strong>Same sound, different letter.</strong> Modern pronunciation has a few pairs that sound identical, so don't worry about telling them apart when reading aloud:
+      <span class="he" lang="he">ח</span>/<span class="he" lang="he">כ</span> (<span class="tr">ch</span>),
+      <span class="he" lang="he">כּ</span>/<span class="he" lang="he">ק</span> (<span class="tr">k</span>),
+      <span class="he" lang="he">ט</span>/<span class="he" lang="he">ת</span> (<span class="tr">t</span>),
+      <span class="he" lang="he">ס</span>/<span class="he" lang="he">שׂ</span> (<span class="tr">s</span>),
+      <span class="he" lang="he">ב</span>/<span class="he" lang="he">ו</span> (<span class="tr">v</span>), and
+      <span class="he" lang="he">א</span>/<span class="he" lang="he">ע</span> (silent).
+      They matter for spelling, not for reading.
+    </div>
+
+    <h3>Letters that look alike</h3>
+    <p>Most beginners' mistakes come from these pairs. Look for the small difference described under each.</p>
+    <div class="pairs">
+      <div class="pair"><div class="gl" lang="he">ב כ</div><div class="how"><span class="he" lang="he">ב</span> <strong>Bet</strong> has a little foot sticking out at the bottom right. <span class="he" lang="he">כ</span> <strong>Kaf</strong> is rounded with no foot.</div></div>
+      <div class="pair"><div class="gl" lang="he">ד ר</div><div class="how"><span class="he" lang="he">ד</span> <strong>Dalet</strong> has a sharp corner that pokes out. <span class="he" lang="he">ר</span> <strong>Resh</strong> is smoothly rounded.</div></div>
+      <div class="pair"><div class="gl" lang="he">ה ח ת</div><div class="how"><span class="he" lang="he">ה</span> <strong>Hey</strong> has a gap at the top left. <span class="he" lang="he">ח</span> <strong>Chet</strong> is closed. <span class="he" lang="he">ת</span> <strong>Tav</strong> has a little foot at the bottom left.</div></div>
+      <div class="pair"><div class="gl" lang="he">ו ז ן</div><div class="how"><span class="he" lang="he">ו</span> <strong>Vav</strong> is a short straight line. <span class="he" lang="he">ז</span> <strong>Zayin</strong> has a cap across the top. <span class="he" lang="he">ן</span> <strong>final Nun</strong> drops below the line.</div></div>
+      <div class="pair"><div class="gl" lang="he">ס ם</div><div class="how"><span class="he" lang="he">ס</span> <strong>Samech</strong> is round. <span class="he" lang="he">ם</span> <strong>final Mem</strong> is square, and only appears at the end of a word.</div></div>
+      <div class="pair"><div class="gl" lang="he">ג נ</div><div class="how"><span class="he" lang="he">ג</span> <strong>Gimel</strong> has a little leg kicking out at the bottom left. <span class="he" lang="he">נ</span> <strong>Nun</strong> has a flat base.</div></div>
+      <div class="pair"><div class="gl" lang="he">ע צ</div><div class="how"><span class="he" lang="he">ע</span> <strong>Ayin</strong> looks like a Y with a tail. <span class="he" lang="he">צ</span> <strong>Tsadi</strong> has a flat base.</div></div>
+      <div class="pair"><div class="gl" lang="he">שׁ שׂ</div><div class="how">Same letter, different dot: on the <strong>right</strong> it's <span class="tr">sh</span> (Shin), on the <strong>left</strong> it's <span class="tr">s</span> (Sin).</div></div>
+    </div>
+
+    <h3>The vowels</h3>
+    <p>Here every vowel is shown on <span class="he" lang="he">בּ</span> so you can hear the pattern: <span class="tr">ba, be, bi, bo, bu</span>. There are more marks than sounds; several look different but are said the same way.</p>
+    <div class="scroll-x">
+    <table class="t">
+      <thead><tr><th>Mark</th><th>Name</th><th>Sound</th><th>Example from the prayers</th></tr></thead>
+      <tbody>
+        <tr><td class="big" lang="he">בָּ</td><td>Kamatz</td><td><span class="tr">a</span> as in <em>father</em> <button class="ash" type="button" data-note="Said &lsquo;o&rsquo; (or &lsquo;aw&rsquo;): בָּרוּךְ אַתָּה is &lsquo;boruch ato&rsquo;, and כָּל, &lsquo;kol&rsquo;, sounds the same in both.">Ashkenazi</button></td><td><span class="he" lang="he">בָּרָא</span> <span class="tr">ba-RA</span></td></tr>
+        <tr><td class="big" lang="he">בַּ</td><td>Patach</td><td><span class="tr">a</span> as in <em>father</em></td><td><span class="he" lang="he">שַׁבָּת</span> <span class="tr">sha-BAT</span></td></tr>
+        <tr><td class="big" lang="he">בֵּ</td><td>Tsere</td><td><span class="tr">e</span> as in <em>they</em> (often written <span class="tr">ei</span>) <button class="ash" type="button" data-note="Usually a clear &lsquo;ei&rsquo;, as in &lsquo;eight&rsquo;: אָמֵן is &lsquo;O-mein&rsquo;.">Ashkenazi</button></td><td><span class="he" lang="he">אָמֵן</span> <span class="tr">a-MEN</span></td></tr>
+        <tr><td class="big" lang="he">בֶּ</td><td>Segol</td><td><span class="tr">e</span> as in <em>bed</em></td><td><span class="he" lang="he">מֶלֶךְ</span> <span class="tr">ME-lech</span></td></tr>
+        <tr><td class="big" lang="he">בִּ</td><td>Chirik</td><td><span class="tr">i</span> as in <em>machine</em></td><td><span class="he" lang="he">מִי</span> <span class="tr">mi</span></td></tr>
+        <tr><td class="big" lang="he">בֹּ</td><td>Cholam</td><td><span class="tr">o</span> as in <em>more</em> <button class="ash" type="button" data-note="Varies by community: often &lsquo;oy&rsquo; or &lsquo;ow&rsquo;, e.g. שָׁלוֹם as &lsquo;SHO-loym&rsquo; or &lsquo;SHO-lowm&rsquo;.">Ashkenazi</button></td><td><span class="he" lang="he">טוֹב</span> <span class="tr">tov</span></td></tr>
+        <tr><td class="big" lang="he">בּוֹ</td><td>Cholam with vav</td><td>same <span class="tr">o</span>: the vav is just a carrier</td><td><span class="he" lang="he">שָׁלוֹם</span> <span class="tr">sha-LOM</span></td></tr>
+        <tr><td class="big" lang="he">בֻּ</td><td>Kubutz</td><td><span class="tr">u</span> as in <em>flute</em></td><td><span class="he" lang="he">מְזֻזוֹת</span> <span class="tr">me-zu-ZOT</span></td></tr>
+        <tr><td class="big" lang="he">בּוּ</td><td>Shuruk</td><td>same <span class="tr">u</span></td><td><span class="he" lang="he">בָּרוּךְ</span> <span class="tr">ba-RUCH</span></td></tr>
+        <tr><td class="big" lang="he">בְּ</td><td>Shva</td><td>either silent, or a very short <span class="tr">e</span> (see Part 2)</td><td><span class="he" lang="he">בְּרִית</span> <span class="tr">be-RIT</span></td></tr>
+        <tr><td class="big" lang="he">אֲ</td><td>Chataf patach</td><td>short <span class="tr">a</span></td><td><span class="he" lang="he">אַהֲבָה</span> <span class="tr">a-ha-VA</span></td></tr>
+        <tr><td class="big" lang="he">אֱ</td><td>Chataf segol</td><td>short <span class="tr">e</span></td><td><span class="he" lang="he">אֱלֹהִים</span> <span class="tr">e-lo-HIM</span></td></tr>
+        <tr><td class="big" lang="he">אֳ</td><td>Chataf kamatz</td><td>short <span class="tr">o</span></td><td class="muted">rare in these prayers</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="tip"><strong>Vowel letters.</strong> <span class="he" lang="he">ו</span> and <span class="he" lang="he">י</span> sometimes act as vowel carriers instead of consonants: <span class="he" lang="he">וֹ</span> = <span class="tr">o</span>, <span class="he" lang="he">וּ</span> = <span class="tr">u</span>, and a <span class="he" lang="he">י</span> after <span class="he" lang="he">ִ</span> just lengthens the <span class="tr">i</span>: <span class="he" lang="he">מִי</span> <span class="tr">mi</span>.</div>
+
+    <h3>Practice: first syllables</h3>
+    <p>Say each one aloud, then tap it to check.</p>
+    <div class="drill-tools"><button class="mini-btn" type="button" data-reveal-all="d1">Show all</button></div>
+    <div class="drill" id="d1"></div>
+
+    <h3>Practice: first words</h3>
+    <p>Break each word into letter-plus-vowel pieces, right to left, then put them together.</p>
+    <div class="drill-tools"><button class="mini-btn" type="button" data-reveal-all="d2">Show all</button></div>
+    <div class="drill" id="d2"></div>
+
+    <h3>Practice: your first blessing</h3>
+    <p>Almost every blessing opens with these six words. Once you can read them, you've read the start of hundreds of blessings.</p>
+    <div class="drill wide" id="d3"></div>
+    <p class="seeit">See it in the app: <a href="index.html#hadlakat-nerot">Candles Blessing</a> · <a href="index.html#kiddush">Kiddush</a></p>
+
+    <div class="quiz" data-quiz="q1"><h3>Check yourself: Part 1</h3></div>
+  </section>
+
+  <!-- ═══════════════════════ PART 2 ═══════════════════════ -->
+  <section class="part" id="part2">
+    <div class="part-label">Part 2 · Getting fluent</div>
+    <h2>Reading smoothly</h2>
+
+    <h3>The shva: silent or said?</h3>
+    <p>The shva <span class="he" lang="he">ְ</span> is the mark that causes most hesitation. These rules cover nearly every case in the prayers:</p>
+    <div class="rule"><span class="num">1</span><span><strong>At the start of a word, say it</strong> as a quick <span class="tr">e</span>: <span class="he" lang="he">בְּרֵאשִׁית</span> <span class="tr">be-re-SHIT</span>, <span class="he" lang="he">צְבָאָם</span> <span class="tr">tze-va-AM</span>. In quick speech it can almost vanish: <span class="he" lang="he">שְׁמַע</span> is just <span class="tr">SHMA</span>.</span></div>
+    <div class="rule"><span class="num">2</span><span><strong>At the end of a word, it's silent</strong>: <span class="he" lang="he">מֶלֶךְ</span> <span class="tr">ME-lech</span>. (A final <span class="he" lang="he">ךְ</span> nearly always carries one.)</span></div>
+    <div class="rule"><span class="num">3</span><span><strong>In the middle of a word, it usually closes the syllable</strong>, so it's silent: <span class="he" lang="he">יִשְׂרָאֵל</span> <span class="tr">yis-ra-EL</span>, <span class="he" lang="he">מִצְוֹתָיו</span> <span class="tr">mitz-vo-TAV</span>.</span></div>
+    <div class="rule"><span class="num">4</span><span><strong>Two shvas in a row: the first is silent, the second is said</strong>: <span class="he" lang="he">נַפְשְׁךָ</span> → <span class="tr">naf · she · cha</span>.</span></div>
+    <div class="tip">If you're unsure, the app's transliteration always shows which shvas are said: look for the <span class="tr">e</span>.</div>
+
+    <h3>The dot that changes the sound</h3>
+    <p>Three letters sound different with and without a dot:</p>
+    <div class="scroll-x">
+    <table class="t">
+      <thead><tr><th>With dot</th><th></th><th>Without dot</th><th></th></tr></thead>
+      <tbody>
+        <tr><td class="big" lang="he">בּ</td><td><span class="tr">b</span></td><td class="big" lang="he">ב</td><td><span class="tr">v</span></td></tr>
+        <tr><td class="big" lang="he">כּ</td><td><span class="tr">k</span></td><td class="big" lang="he">כ</td><td><span class="tr">ch</span></td></tr>
+        <tr><td class="big" lang="he">פּ</td><td><span class="tr">p</span></td><td class="big" lang="he">פ</td><td><span class="tr">f</span></td></tr>
+        <tr><td class="big" lang="he">תּ</td><td><span class="tr">t</span></td><td class="big" lang="he">ת</td><td><span class="tr">t</span> <button class="ash" type="button" data-note="Without the dot, ת is &lsquo;s&rsquo;: שַׁבָּת is &lsquo;Shabbos&rsquo;, בְּרִית is &lsquo;Bris&rsquo;, while a dotted תּ stays &lsquo;t&rsquo;. This is the most noticeable Ashkenazi difference.">Ashkenazi</button></td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p>The dot usually appears <strong>at the start of a word</strong> and <strong>after a silent shva</strong>, and disappears <strong>after a vowel</strong>. The useful surprise is that this works <em>across words</em>. When a word ending in a vowel runs straight into the next one, the next word's first letter softens:</p>
+    <ul class="plain">
+      <li><span class="he" lang="he">מִי כָמֹכָה</span> <span class="tr">mi cha-MO-cha</span>: <span class="he" lang="he">מִי</span> ends in a vowel, so the <span class="he" lang="he">כ</span> softens. <span class="muted">Compare the second line of the same verse, <span class="he" lang="he">מִי כָּמֹכָה</span> <span class="tr">mi ka-MO-cha</span>, where the text keeps the dot.</span></li>
+      <li><span class="he" lang="he">כִּי בוֹ שָׁבַת</span> <span class="tr">ki vo sha-VAT</span>: not <span class="tr">ki bo</span>.</li>
+      <li><span class="he" lang="he">וַיְהִי בֹקֶר</span> <span class="tr">va-ye-HI VO-ker</span>, though on its own the word is <span class="tr">BO-ker</span>.</li>
+    </ul>
+    <div class="tip">You don't need to work this out yourself: <strong>just trust the dot</strong>. If the letter has one, say it hard. If not, say it soft. The rule simply explains why the same word can be printed both ways.</div>
+    <p class="muted">In other letters the dot traditionally doubles the sound (<span class="he" lang="he">אַתָּה</span> was once <span class="tr">at-ta</span>). In modern pronunciation you don't hear the difference, so read those letters normally.</p>
+
+    <h3>Where the stress falls</h3>
+    <p><strong>Most Hebrew words are stressed on the last syllable</strong>: <span class="tr">sha-LOM</span>, <span class="tr">ba-RUCH</span>, <span class="tr">e-lo-HIM</span>, <span class="tr">to-RA</span>. The common exceptions, stressed on the second-to-last syllable, are worth recognising:</p>
+    <ul class="plain">
+      <li><strong>Words with two "e" sounds</strong>, often two segols <span class="he" lang="he">ֶ ֶ</span>: <span class="he" lang="he">מֶלֶךְ</span> <span class="tr">ME-lech</span>, <span class="he" lang="he">אֶרֶץ</span> <span class="tr">E-retz</span>, <span class="he" lang="he">עֶרֶב</span> <span class="tr">E-rev</span>, <span class="he" lang="he">לֶחֶם</span> <span class="tr">LE-chem</span>, <span class="he" lang="he">גָּפֶן</span> <span class="tr">GA-fen</span>.</li>
+      <li><strong>Words ending in <span class="he" lang="he">ֵינוּ</span>/<span class="he" lang="he">ִינוּ</span></strong> ("our"): <span class="he" lang="he">אֱלֹהֵינוּ</span> <span class="tr">e-lo-HEI-nu</span>, <span class="he" lang="he">אָבִינוּ</span> <span class="tr">a-VI-nu</span>.</li>
+      <li>A few others you'll meet, such as <span class="he" lang="he">כָמֹכָה</span> <span class="tr">cha-MO-cha</span> and <span class="he" lang="he">סֶלָה</span> <span class="tr">SE-la</span>.</li>
+    </ul>
+    <p>The capital letters in the app's transliteration always show you where the stress goes. <button class="ash" type="button" data-note="Ashkenazi pronunciation tends to put the stress on the second-to-last syllable much more often: &lsquo;BO-ruch&rsquo;, &lsquo;SHA-bos&rsquo;, &lsquo;TOY-roh&rsquo;.">Ashkenazi</button></p>
+
+    <h3>Practice: reading in phrases</h3>
+    <p>Read each phrase aloud as one unit, then tap to check.</p>
+    <div class="drill-tools"><button class="mini-btn" type="button" data-reveal-all="d4">Show all</button></div>
+    <div class="drill wide" id="d4"></div>
+
+    <div class="quiz" data-quiz="q2"><h3>Check yourself: Part 2</h3></div>
+  </section>
+
+  <!-- ═══════════════════════ PART 3 ═══════════════════════ -->
+  <section class="part" id="part3">
+    <div class="part-label">Part 3 · Middling competent</div>
+    <h2>Finer points</h2>
+
+    <h3>The divine name</h3>
+    <p><span class="he" lang="he">יְהוָה</span> is <strong>never read as written</strong>. Say <span class="tr">a-do-NAI</span>. Some prayer books print <span class="he" lang="he">יְיָ</span> instead; it's read the same way. <button class="ash" type="button" data-note="Usually &lsquo;Adoynoy&rsquo; or &lsquo;Adonoi&rsquo;.">Ashkenazi</button></p>
+
+    <h3>Kamatz that says "o"</h3>
+    <p>The kamatz <span class="he" lang="he">ָ</span> is normally <span class="tr">a</span>, but in a short, unstressed, closed syllable it's an <span class="tr">o</span> (<em>kamatz katan</em>). The ones you'll meet most:</p>
+    <ul class="plain">
+      <li><span class="he" lang="he">כָּל</span> <span class="tr">kol</span> ("all"), very common, and <span class="he" lang="he">וּבְכָל</span> <span class="tr">uv-CHOL</span>.</li>
+      <li><span class="he" lang="he">חָכְמָה</span> <span class="tr">choch-MA</span> ("wisdom").</li>
+    </ul>
+    <p class="muted">Clue: the kamatz is followed by a silent shva or sits on a short word joined to the next. When in doubt, check the transliteration.</p>
+
+    <h3>Little words stuck to the front</h3>
+    <p>Hebrew attaches short words directly to the front of the next word. Spotting them makes long words much less daunting:</p>
+    <div class="scroll-x">
+    <table class="t">
+      <thead><tr><th>Prefix</th><th>Means</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td class="big" lang="he">וְ</td><td>and</td><td><span class="he" lang="he">וְכָל</span> <span class="tr">ve-CHOL</span>, "and all"</td></tr>
+        <tr><td class="big" lang="he">הַ</td><td>the</td><td><span class="he" lang="he">הָעוֹלָם</span> <span class="tr">ha-o-LAM</span>, "the world"</td></tr>
+        <tr><td class="big" lang="he">בְּ</td><td>in, with</td><td><span class="he" lang="he">בְּמִצְוֹתָיו</span> <span class="tr">be-mitz-vo-TAV</span>, "with His commandments"</td></tr>
+        <tr><td class="big" lang="he">לְ</td><td>to, for</td><td><span class="he" lang="he">לְהוֹשִׁיעַ</span> <span class="tr">le-ho-SHI-a</span>, "to save"</td></tr>
+        <tr><td class="big" lang="he">כְּ</td><td>like</td><td><span class="he" lang="he">כְּאֶרֶז</span> <span class="tr">ke-E-rez</span>, "like a cedar"</td></tr>
+        <tr><td class="big" lang="he">מִ</td><td>from</td><td><span class="he" lang="he">מִכָּל</span> <span class="tr">mi-KOL</span>, "from all"</td></tr>
+        <tr><td class="big" lang="he">שֶׁ</td><td>that, who</td><td class="muted">common in later Hebrew</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p>They can stack up: <span class="he" lang="he">וּבְכָל</span> = <span class="he" lang="he">וּ</span> "and" + <span class="he" lang="he">בְ</span> "with" + <span class="he" lang="he">כָל</span> "all". Notice that <span class="he" lang="he">וְ</span> becomes <span class="he" lang="he">וּ</span> <span class="tr">u</span> before <span class="he" lang="he">ב</span>, <span class="he" lang="he">מ</span>, <span class="he" lang="he">פ</span> and before a shva.</p>
+    <div class="tip">This is why the gold vocabulary highlighting in the app can find <span class="he" lang="he">הַשָּׁמַיִם</span> when the glossary lists <span class="he" lang="he">שָׁמַיִם</span>: it looks past the prefix.</div>
+
+    <h3>Endings that catch people out</h3>
+    <div class="rule"><span class="num">◆</span><span><strong><span class="he" lang="he">ָיו</span> is said <span class="tr">av</span></strong>, not <span class="tr">a-yo</span>: <span class="he" lang="he">מִצְוֹתָיו</span> <span class="tr">mitz-vo-TAV</span>. The <span class="he" lang="he">י</span> is silent.</span></div>
+    <div class="rule"><span class="num">◆</span><span><strong>A patach under a final <span class="he" lang="he">ח</span>, <span class="he" lang="he">ע</span> or <span class="he" lang="he">ה</span> is said <em>before</em> the letter</strong> (<em>"furtive patach"</em>): <span class="he" lang="he">לְהוֹשִׁיעַ</span> <span class="tr">le-ho-SHI-a</span>, not <span class="tr">le-ho-shi-ya</span>.</span></div>
+    <div class="rule"><span class="num">◆</span><span><strong>A final <span class="he" lang="he">ה</span> or <span class="he" lang="he">א</span> is usually silent</strong>: <span class="he" lang="he">תּוֹרָה</span> <span class="tr">to-RA</span>, <span class="he" lang="he">בָּרָא</span> <span class="tr">ba-RA</span>. But a <strong>dot in a final <span class="he" lang="he">ה</span></strong> (<span class="he" lang="he">הּ</span>, <em>mappik</em>) means you sound the <span class="tr">h</span>: <span class="he" lang="he">שְׁמֵהּ</span> <span class="tr">she-MEH</span> in the Kaddish.</span></div>
+    <div class="rule"><span class="num">◆</span><span><strong>A small dash between words</strong> (<span class="he" lang="he">־</span>, <em>maqaf</em>) joins them so they're read as one unit, with only the second one stressed.</span></div>
+
+    <h3>Practice: tricky words</h3>
+    <div class="drill-tools"><button class="mini-btn" type="button" data-reveal-all="d5">Show all</button></div>
+    <div class="drill" id="d5"></div>
+
+    <div class="quiz" data-quiz="q3"><h3>Check yourself: Part 3</h3></div>
+
+    <div class="card">
+      <h3 style="margin-top:0">Where next</h3>
+      <p>The best practice is reading real prayers. In the app, open <strong>📖 Full Text</strong> and tap any word to see how it's pronounced, or open <strong>📚 Vocab</strong> to see the key words highlighted in gold. Good places to start: <a href="index.html#hadlakat-nerot">Candles Blessing</a>, <a href="index.html#kiddush">Kiddush</a>, <a href="index.html#adon-olam">Adon Olam</a>.</p>
+    </div>
+  </section>
+
+  <footer>
+    <a href="index.html">← Back to practice</a>
+  </footer>
+</main>
+
+<script>
+  // ── Letters: [glyph, name, sound, example, example transliteration, final form, Ashkenazi note] ──
+  const LETTERS = [
+    ['א', 'Alef', 'silent: carries a vowel', 'אֱלֹהִים', 'e-lo-HIM'],
+    ['בּ', 'Bet', 'b', 'בָּרוּךְ', 'ba-RUCH'],
+    ['ב', 'Vet', 'v', 'אַהֲבָה', 'a-ha-VA'],
+    ['ג', 'Gimel', 'g', 'גָּפֶן', 'GA-fen'],
+    ['ד', 'Dalet', 'd', 'אֶחָד', 'e-CHAD'],
+    ['ה', 'Hey', 'h (silent at the end of a word)', 'הוּא', 'hu'],
+    ['ו', 'Vav', 'v, or a vowel carrier', 'וְכָל', 've-CHOL'],
+    ['ז', 'Zayin', 'z', 'זִכָּרוֹן', 'zi-ka-RON'],
+    ['ח', 'Chet', 'ch, as in Scottish "loch"', 'חַיִּים', 'cha-YIM'],
+    ['ט', 'Tet', 't', 'טוֹב', 'tov'],
+    ['י', 'Yod', 'y', 'יִשְׂרָאֵל', 'yis-ra-EL'],
+    ['כּ', 'Kaf', 'k', 'כִּי', 'ki'],
+    ['כ', 'Chaf', 'ch', 'מֶלֶךְ', 'ME-lech', 'ך'],
+    ['ל', 'Lamed', 'l', 'לֶחֶם', 'LE-chem'],
+    ['מ', 'Mem', 'm', 'שָׁלוֹם', 'sha-LOM', 'ם'],
+    ['נ', 'Nun', 'n', 'אָמֵן', 'a-MEN', 'ן'],
+    ['ס', 'Samech', 's', 'סֶלָה', 'SE-la'],
+    ['ע', 'Ayin', 'silent: carries a vowel', 'עוֹלָם', 'o-LAM'],
+    ['פּ', 'Pey', 'p', 'פְּרִי', 'pri'],
+    ['פ', 'Fey', 'f', 'אַף', 'af', 'ף'],
+    ['צ', 'Tsadi', 'ts', 'אֶרֶץ', 'E-retz', 'ץ'],
+    ['ק', 'Kuf', 'k', 'קָדוֹשׁ', 'ka-DOSH'],
+    ['ר', 'Resh', 'r (from the back of the throat)', 'רַחֲמִים', 'ra-cha-MIM'],
+    ['שׁ', 'Shin', 'sh', 'שַׁבָּת', 'sha-BAT'],
+    ['שׂ', 'Sin', 's', 'עָשָׂה', 'a-SA'],
+    ['תּ', 'Tav', 't', 'תּוֹרָה', 'to-RA'],
+    ['ת', 'Tav (no dot)', 't', 'בְּרִית', 'be-RIT', null, 'Said &lsquo;s&rsquo;: בְּרִית is &lsquo;Bris&rsquo;, שַׁבָּת is &lsquo;Shabbos&rsquo;.'],
+  ];
+  document.getElementById('letter-grid').innerHTML = LETTERS.map(([g, n, s, ex, tr, fin, ash]) => `
+    <div class="lt">
+      <div class="g" lang="he">${fin ? `<small title="final form">${fin}</small>` : ''}${g}</div>
+      <div class="n">${n}</div>
+      <div class="s">${s}${ash ? ` <button class="ash" type="button" data-note="${ash}">Ashkenazi</button>` : ''}</div>
+      ${fin ? `<div class="s muted">final form: <span class="he" lang="he">${fin}</span></div>` : ''}
+      <div class="ex"><span class="he" lang="he">${ex}</span><br><span class="tr">${tr}</span></div>
+    </div>`).join('');
+
+  // ── Reveal drills: [Hebrew, answer] ──
+  const DRILLS = {
+    d1: [['בָּ','ba'],['לוֹ','lo'],['מִי','mi'],['שֶׁ','she'],['נוּ','nu'],['רֵ','re'],['דָ','da'],['כִּי','ki'],['תוֹ','to'],['גֻ','gu'],['וַ','va'],['פִּי','pi']],
+    d2: [['שָׁלוֹם','sha-LOM'],['בָּרוּךְ','ba-RUCH'],['אַתָּה','a-TA'],['אָמֵן','a-MEN'],['מֶלֶךְ','ME-lech'],['תּוֹרָה','to-RA'],['לֶחֶם','LE-chem'],['חַיִּים','cha-YIM'],['קָדוֹשׁ','ka-DOSH'],['יִשְׂרָאֵל','yis-ra-EL']],
+    d3: [['בָּרוּךְ אַתָּה יְהוָה','ba-RUCH a-TA a-do-NAI — "Blessed are You, Lord"'],['אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם','e-lo-HEI-nu ME-lech ha-o-LAM — "our God, King of the universe"']],
+    d4: [['שְׁמַע יִשְׂרָאֵל','SHMA yis-ra-EL'],['בּוֹרֵא פְּרִי הַגָּפֶן','bo-REI pri ha-GA-fen'],['מִי כָמֹכָה','mi cha-MO-cha'],['כִּי בוֹ שָׁבַת','ki vo sha-VAT'],['זִכָּרוֹן לְמַעֲשֵׂה בְרֵאשִׁית','zi-ka-RON le-ma-a-SEH ve-re-SHIT'],['שָׁלוֹם עֲלֵיכֶם','sha-LOM a-lei-CHEM']],
+    d5: [['כָּל','kol'],['חָכְמָה','choch-MA'],['מִצְוֹתָיו','mitz-vo-TAV'],['לְהוֹשִׁיעַ','le-ho-SHI-a'],['שְׁמֵהּ','she-MEH'],['וּבְכָל','uv-CHOL'],['יְהוָה','a-do-NAI'],['מִצְווֹת','mitz-VOT']],
+  };
+  for (const [id, items] of Object.entries(DRILLS)) {
+    document.getElementById(id).innerHTML = items.map(([h, a]) =>
+      `<button class="rv" type="button"><span class="he" lang="he">${h}</span><span class="ans"><span class="tr">${a}</span></span></button>`).join('');
+  }
+
+  // ── Quizzes ──
+  const QUIZZES = {
+    q1: [
+      { p: 'Which way does Hebrew read?', o: ['Left to right', 'Right to left'], a: 1, w: 'Right to left: start at the right-hand end of the line.' },
+      { p: 'What sound does <span class="he" lang="he">ב</span> (no dot) make?', o: ['b', 'v', 'k'], a: 1, w: 'Without the dot it\'s Vet, <span class="tr">v</span>. With the dot, <span class="he" lang="he">בּ</span>, it\'s Bet, <span class="tr">b</span>.' },
+      { p: 'Which is the final (end-of-word) Mem?', o: ['<span class="he" lang="he">ס</span>', '<span class="he" lang="he">ם</span>', '<span class="he" lang="he">מ</span>'], a: 1, w: '<span class="he" lang="he">ם</span> is square. <span class="he" lang="he">ס</span> is Samech, which is round.' },
+      { p: 'The dot on <span class="he" lang="he">שׁ</span> is on the right. What sound is it?', o: ['s', 'sh'], a: 1, w: 'Dot on the right: Shin, <span class="tr">sh</span>. On the left, <span class="he" lang="he">שׂ</span>, it\'s Sin, <span class="tr">s</span>.' },
+      { p: 'How do you read <span class="he" lang="he">שָׁלוֹם</span>?', o: ['sha-LOM', 'sho-LAM', 'sha-LUM'], a: 0, w: '<span class="he" lang="he">שָׁ</span> = <span class="tr">sha</span>, <span class="he" lang="he">לוֹ</span> = <span class="tr">lo</span>, <span class="he" lang="he">ם</span> = <span class="tr">m</span>.' },
+    ],
+    q2: [
+      { p: 'The shva in <span class="he" lang="he">בְּרִית</span> is at the start of the word. Is it said?', o: ['Yes, a short "e"', 'No, it\'s silent'], a: 0, w: 'At the start of a word the shva is said: <span class="tr">be-RIT</span>.' },
+      { p: 'Why is it <span class="tr">mi cha-MO-cha</span> and not <span class="tr">mi ka-MO-cha</span>?', o: ['A spelling mistake', 'The כ has no dot, because מִי ends in a vowel', 'Ashkenazi pronunciation'], a: 1, w: 'After a word ending in a vowel, the next word\'s first letter often loses its dot, and כ without a dot is <span class="tr">ch</span>.' },
+      { p: 'Where is the stress in <span class="he" lang="he">מֶלֶךְ</span>?', o: ['ME-lech', 'me-LECH'], a: 0, w: 'Words with two segols like this are stressed on the first syllable.' },
+      { p: 'Most Hebrew words are stressed on…', o: ['the first syllable', 'the last syllable'], a: 1, w: 'The last syllable, with the exceptions listed in Part 2.' },
+    ],
+    q3: [
+      { p: 'How is <span class="he" lang="he">יְהוָה</span> read aloud?', o: ['Ye-ho-VA', 'A-do-NAI', 'It isn\'t read'], a: 1, w: 'Always <span class="tr">a-do-NAI</span>, never as written.' },
+      { p: 'How is <span class="he" lang="he">כָּל</span> read?', o: ['kal', 'kol'], a: 1, w: 'This kamatz is a short <span class="tr">o</span> (kamatz katan): <span class="tr">kol</span>.' },
+      { p: 'How do you say the ending of <span class="he" lang="he">מִצְוֹתָיו</span>?', o: ['-ta-yo', '-tav', '-ta-yiv'], a: 1, w: '<span class="he" lang="he">ָיו</span> is always <span class="tr">av</span>: <span class="tr">mitz-vo-TAV</span>.' },
+      { p: 'In <span class="he" lang="he">הָעוֹלָם</span>, what does the <span class="he" lang="he">הָ</span> at the front mean?', o: ['and', 'the', 'in'], a: 1, w: '<span class="he" lang="he">הַ</span>/<span class="he" lang="he">הָ</span> = "the": <span class="tr">ha-o-LAM</span>, "the world".' },
+      { p: 'In <span class="he" lang="he">לְהוֹשִׁיעַ</span>, where is the final "a" sound said?', o: ['Before the ע', 'After the ע'], a: 0, w: 'A furtive patach is said before its letter: <span class="tr">le-ho-SHI-a</span>.' },
+    ],
+  };
+  document.querySelectorAll('[data-quiz]').forEach(box => {
+    const qs = QUIZZES[box.dataset.quiz];
+    let right = 0, answered = 0;
+    const score = document.createElement('div');
+    score.className = 'score';
+    qs.forEach((q, qi) => {
+      const el = document.createElement('div');
+      el.className = 'q';
+      el.innerHTML = `<div class="prompt">${qi + 1}. ${q.p}</div><div class="opts">${q.o.map((o, oi) => `<button class="opt" type="button" data-oi="${oi}">${o}</button>`).join('')}</div><div class="why">${q.w}</div>`;
+      el.querySelector('.opts').addEventListener('click', e => {
+        const b = e.target.closest('.opt');
+        if (!b || el.dataset.done) return;
+        el.dataset.done = '1';
+        answered++;
+        const ok = +b.dataset.oi === q.a;
+        if (ok) right++;
+        b.classList.add(ok ? 'right' : 'wrong');
+        if (!ok) el.querySelectorAll('.opt')[q.a].classList.add('right');
+        el.querySelector('.why').classList.add('show');
+        if (answered === qs.length) score.textContent = `You got ${right} of ${qs.length}.` + (right === qs.length ? ' Well done!' : ' Have another look at the sections above, then try the app.');
+      });
+      box.appendChild(el);
+    });
+    box.appendChild(score);
+  });
+
+  // ── Tap to reveal, "Show all", and Ashkenazi notes (one delegated listener) ──
+  document.addEventListener('click', e => {
+    const rv = e.target.closest('.rv');
+    if (rv) { rv.classList.toggle('shown'); return; }
+    const all = e.target.closest('[data-reveal-all]');
+    if (all) {
+      const items = document.querySelectorAll(`#${all.dataset.revealAll} .rv`);
+      const show = [...items].some(i => !i.classList.contains('shown'));
+      items.forEach(i => i.classList.toggle('shown', show));
+      all.textContent = show ? 'Hide all' : 'Show all';
+      return;
+    }
+    const ash = e.target.closest('.ash');
+    if (ash) {
+      let note = ash.nextElementSibling;
+      if (!note || !note.classList.contains('ash-note')) {
+        note = document.createElement('span');
+        note.className = 'ash-note';
+        note.innerHTML = ash.dataset.note;
+        ash.after(note);
+      }
+      const open = !note.classList.contains('open');
+      note.classList.toggle('open', open);
+      ash.setAttribute('aria-expanded', open);
+    }
+  });
+</script>
+</body>
+</html>
