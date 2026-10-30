@@ -159,16 +159,21 @@
     .modal-head-close:hover { color: var(--gold); }
     .modal-head-btns { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 10px; }
     .lbl-short { display: none; }
-    .share-icon { background: none; border: none; padding: 2px 4px; font-size: 12px; line-height: 1; cursor: pointer; opacity: 0.55; transition: opacity 0.2s; color: var(--gold); }
-    .share-icon:hover, .share-icon:focus-visible { opacity: 1; }
+    /* Small tool icons beside the SR switch: ? shortcuts, link, home */
+    .tool-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; min-height: 28px; }
+    .tool-right { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+    .tool-icon { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; padding: 0; background: none; border: none; border-radius: 4px; color: var(--gold); opacity: 0.7; cursor: pointer; transition: opacity 0.2s, background 0.2s; }
+    .tool-icon:hover, .tool-icon:focus-visible { opacity: 1; background: rgba(212,168,83,0.12); }
+    .tool-icon + .quiz-only { margin-left: 4px; }
+    .desk-only { display: none; }
+    @media (hover: hover) and (pointer: fine) { .desk-only { display: inline-flex; } }
+    .tool-row.no-quiz .quiz-only { display: none !important; }
     /* Tap a word for its pronunciation */
     .tap-word { cursor: pointer; }
     @media (hover: hover) { .tap-word:hover { text-decoration: underline dotted; text-decoration-color: var(--gold-dim); text-underline-offset: 6px; } }
     .tap-word.tap-word-on { text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 6px; }
     #word-bubble { position: fixed; z-index: 1200; background: #1e3050; border: 1px solid var(--gold); color: var(--gold); font-style: italic; font-family: 'Crimson Pro', serif; font-size: 1.05rem; padding: 4px 12px; border-radius: 8px; pointer-events: none; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.45); }
     /* Keyboard shortcuts (desktop only) */
-    .kbd-hint { display: none; color: var(--silver-dim); font-size: 0.8rem; margin-top: 4px; }
-    @media (hover: hover) and (pointer: fine) { .kbd-hint { display: block; } }
     kbd { font-family: inherit; font-size: 0.85em; border: 1px solid var(--gold-dim); border-radius: 4px; padding: 0 5px; color: var(--gold); background: rgba(184,134,11,0.08); }
     .kbd-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
     .kbd-table td { padding: 6px 4px; border-bottom: 1px solid #131f33; color: var(--silver); vertical-align: top; }
@@ -562,20 +567,23 @@
       <header style="text-align: center;">
         <h1>קריאה בעברית</h1>
         <p class="subtitle">Hebrew Reading Practice with Speech Recognition</p>
-        <p class="kbd-hint">Press <kbd>?</kbd> for keyboard shortcuts</p>
       </header>
-    <div id="quiz-controls">
-    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-      <div class="progress-text" id="progress-text">Line 1 of 6</div>
-      <div style="display: flex; align-items: center; gap: 8px;">
-      <button id="share-btn" class="share-icon" type="button" title="Copy a link to this prayer" aria-label="Share a link to this prayer">🔗</button>
+    <div class="tool-row">
+      <div class="progress-text quiz-only" id="progress-text">Line 1 of 6</div>
+      <div class="tool-right">
+        <button id="kbd-help-btn" class="tool-icon desk-only" type="button" title="Keyboard shortcuts" aria-label="Keyboard shortcuts"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M9.5 9.5a2.6 2.6 0 1 1 3.6 2.4c-.7.3-1.1.9-1.1 1.6v.6"/><path d="M12 17.2v.1"/></svg></button>
+        <button id="share-btn" class="tool-icon" type="button" title="Copy a link to this page" aria-label="Share a link to this page"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg></button>
+        <button id="home-btn" class="tool-icon" type="button" title="Back to the start page" aria-label="Back to the start page"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg></button>
+        <div class="quiz-only" style="display: flex;">
       <div style="display: flex; align-items: center; gap: 5px; background: var(--bg-input); border: 1px solid var(--gold-dim); border-radius: 20px; padding: 3px;">
         <span style="font-size: 10px; color: var(--silver-dim); padding: 0 3px 0 6px; text-transform: uppercase; letter-spacing: 0.04em;">SR</span>
         <button id="sr-auto" onclick="setSRMode('auto')" style="font-size: 11px; padding: 3px 10px; border-radius: 14px; border: 1px solid var(--gold-dim); background: var(--bg-card); color: var(--gold); font-family: inherit; cursor: pointer;">Auto</button>
         <button id="sr-manual" onclick="setSRMode('manual')" style="font-size: 11px; padding: 3px 10px; border-radius: 14px; border: none; background: transparent; color: var(--silver-dim); font-family: inherit; cursor: pointer;">Manual</button>
       </div>
+        </div>
       </div>
     </div>
+    <div id="quiz-controls">
     <div class="progress-bar">
       <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
     </div>
@@ -3396,7 +3404,9 @@
       return (id && prayers[id] && prayers[id].lines) ? id : null;
     }
     // Some embedded previews (e.g. a sandboxed srcdoc frame) forbid changing the address — never let that break the app
+    var currentLinkId = '';
     function setAddressHash(id) {
+      currentLinkId = id;
       if (location.hash === '#' + id) return;
       try { history.replaceState(null, '', '#' + id); } catch (e) { /* address can't be changed here; links still work on the live site */ }
     }
@@ -3424,9 +3434,35 @@
     });
 
     const shareBtn = document.getElementById('share-btn');
+    const SHARE_ICON = shareBtn.innerHTML;
+    const LANDING_NAMES = { 'shema-intro': 'Shema', 'chanukah-intro': 'Chanukah', 'amida-intro': 'Amida' };
+
+    // Line count and SR switch only apply when a line is on screen (hidden on landing pages)
+    const toolRow = document.querySelector('.tool-row');
+    const quizControls = document.getElementById('quiz-controls');
+    const syncToolRow = () => toolRow.classList.toggle('no-quiz', quizControls.classList.contains('hidden'));
+    new MutationObserver(syncToolRow).observe(quizControls, { attributes: true, attributeFilter: ['class'] });
+    syncToolRow();
+
+    document.getElementById('kbd-help-btn').addEventListener('click', () => setKbdHelp(true));
+
+    // Home: back to the very first page
+    document.getElementById('home-btn').addEventListener('click', () => {
+      if (isListening && recognition) { try { recognition.stop(); } catch (e) {} }
+      if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+      updateSungVersionBar();   // stops any sung recording and resets its button
+      window.speechSynthesis && window.speechSynthesis.cancel();
+      hideWordBubble();
+      document.getElementById('main-layout').classList.add('hidden');
+      document.getElementById('welcome-screen').classList.remove('hidden');
+      currentLinkId = '';
+      try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+      window.scrollTo(0, 0);
+    });
     shareBtn.addEventListener('click', async () => {
-      const url = location.origin + location.pathname + '#' + currentPrayer;
-      const title = prayers[currentPrayer].name + ' — Hebrew reading practice';
+      const url = location.origin + location.pathname + '#' + currentLinkId;
+      const name = LANDING_NAMES[currentLinkId] || (prayers[currentLinkId] && prayers[currentLinkId].name) || 'Hebrew reading';
+      const title = name + ' — Hebrew reading practice';
       const isPhone = window.matchMedia('(pointer: coarse)').matches;
       if (isPhone && navigator.share) {
         try { await navigator.share({ title, url }); } catch (e) { /* cancelled */ }
@@ -3435,9 +3471,9 @@
       let copied = false;
       try { await navigator.clipboard.writeText(url); copied = true; } catch (e) {}
       if (!copied) { window.prompt('Copy this link:', url); return; }
-      shareBtn.textContent = '✓';
+      shareBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
       shareBtn.title = 'Link copied';
-      setTimeout(() => { shareBtn.textContent = '🔗'; shareBtn.title = 'Copy a link to this prayer'; }, 2000);
+      setTimeout(() => { shareBtn.innerHTML = SHARE_ICON; shareBtn.title = 'Copy a link to this page'; }, 2000);
     });
 
     // Welcome screen
