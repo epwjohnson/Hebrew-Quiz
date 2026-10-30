@@ -1947,6 +1947,7 @@
       shemaToggle.textContent = 'Shema ▾';
       shemaGroup.classList.add('open');
       updateSungVersionBar();
+      setLandingHash('shema-intro');
     }
 
     shemaToggle.addEventListener('click', () => {
@@ -1980,6 +1981,7 @@
       chanukahToggle.textContent = 'Chanukah ▾';
       chanukahGroup.classList.add('open');
       updateSungVersionBar();
+      setLandingHash('chanukah-intro');
     }
 
     chanukahToggle.addEventListener('click', () => {
@@ -2008,6 +2010,7 @@
       amidaToggle.textContent = 'Amida ▾';
       amidaGroup.classList.add('open');
       updateSungVersionBar();
+      setLandingHash('amida-intro');
     }
 
     amidaToggle.addEventListener('click', () => {
@@ -3383,10 +3386,22 @@
       if (e.key === ' ' && kbdSwallowSpaceUp) { e.preventDefault(); kbdSwallowSpaceUp = false; }
     });
 
-    // ── Links to a single prayer (#kiddush etc.) ───────────────────────────
+    // ── Links to a single prayer (#kiddush etc.) or a group landing page (#amida-intro etc.) ──
     function prayerFromHash() {
       const id = decodeURIComponent(location.hash.slice(1));
       return (id && prayers[id] && prayers[id].lines) ? id : null;
+    }
+    function setLandingHash(id) {
+      if (location.hash !== '#' + id) history.replaceState(null, '', '#' + id);
+    }
+    const LANDING_LINKS = { 'shema-intro': showShemaLanding, 'chanukah-intro': showChanukahLanding, 'amida-intro': showAmidaLanding };
+    function landingFromHash() {
+      return LANDING_LINKS[decodeURIComponent(location.hash.slice(1))] || null;
+    }
+    function openLandingFromLink(show) {
+      document.getElementById('welcome-screen').classList.add('hidden');
+      document.getElementById('main-layout').classList.remove('hidden');
+      show();
     }
     function openPrayerFromLink(id) {
       document.getElementById('welcome-screen').classList.add('hidden');
@@ -3395,7 +3410,10 @@
     }
     window.addEventListener('hashchange', () => {
       const id = prayerFromHash();
-      if (id && id !== currentPrayer) openPrayerFromLink(id);
+      const onPrayer = !document.getElementById('quiz-area').classList.contains('hidden');
+      if (id && (id !== currentPrayer || !onPrayer)) { openPrayerFromLink(id); return; }
+      const landing = landingFromHash();
+      if (landing) openLandingFromLink(landing);
     });
 
     const shareBtn = document.getElementById('share-btn');
@@ -3422,7 +3440,8 @@
     });
 
     // Opened from a prayer link? Go straight to it.
-    { const id = prayerFromHash(); if (id) openPrayerFromLink(id); }
+    { const id = prayerFromHash(); const landing = landingFromHash();
+      if (id) openPrayerFromLink(id); else if (landing) openLandingFromLink(landing); }
   </script>
 </body>
 </html>
