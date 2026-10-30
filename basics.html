@@ -87,10 +87,12 @@
     .tip { border-left: 3px solid var(--gold-dim); background: rgba(212,168,83,0.06); padding: 10px 16px; margin: 14px 0; border-radius: 0 8px 8px 0; }
 
     /* Letter grid */
-    .letters { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin: 14px 0; }
+    .letters { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin: 14px 0; direction: rtl; }
+    .lt { direction: ltr; }
     .lt { background: var(--bg-inner); border: 1px solid var(--line-strong); border-radius: 10px; padding: 10px 12px 12px; text-align: center; }
     .lt .g { font-family: 'David Libre', serif; font-size: 2.6rem; line-height: 1.1; color: #fff; }
-    .lt .g small { font-size: 0.55em; color: var(--silver-dim); margin-right: 6px; }
+    .lt .g { display: flex; justify-content: center; align-items: baseline; gap: 14px; direction: rtl; }
+    .lt .g .fin { font-size: 0.8em; color: var(--silver-dim); }
     .lt .n { color: var(--gold); font-weight: 600; margin-top: 2px; }
     .lt .s { font-size: 0.95rem; }
     .lt .ex { margin-top: 6px; font-size: 0.92rem; color: var(--silver-dim); }
@@ -244,12 +246,16 @@
         <p>Most beginners' mistakes come from these pairs. Look for the small difference described under each.</p>
     <div class="pairs">
       <div class="pair"><div class="gl" lang="he">ב כ</div><div class="how"><span class="he" lang="he">ב</span> <strong>Bet</strong> has a little foot sticking out at the bottom right. <span class="he" lang="he">כ</span> <strong>Kaf</strong> is rounded with no foot.</div></div>
+      <div class="pair"><div class="gl" lang="he">נ כ</div><div class="how"><span class="he" lang="he">נ</span> <strong>Nun</strong> is narrow, with a short flat base. <span class="he" lang="he">כ</span> <strong>Kaf</strong> is wider and rounder, like a backwards C.</div></div>
       <div class="pair"><div class="gl" lang="he">ד ר</div><div class="how"><span class="he" lang="he">ד</span> <strong>Dalet</strong> has a sharp corner that pokes out. <span class="he" lang="he">ר</span> <strong>Resh</strong> is smoothly rounded.</div></div>
       <div class="pair"><div class="gl" lang="he">ה ח ת</div><div class="how"><span class="he" lang="he">ה</span> <strong>Hey</strong> has a gap at the top left. <span class="he" lang="he">ח</span> <strong>Chet</strong> is closed. <span class="he" lang="he">ת</span> <strong>Tav</strong> has a little foot at the bottom left.</div></div>
-      <div class="pair"><div class="gl" lang="he">ו ז ן</div><div class="how"><span class="he" lang="he">ו</span> <strong>Vav</strong> is a short straight line. <span class="he" lang="he">ז</span> <strong>Zayin</strong> has a cap across the top. <span class="he" lang="he">ן</span> <strong>final Nun</strong> drops below the line.</div></div>
+      <div class="pair"><div class="gl" lang="he">ו ז</div><div class="how"><span class="he" lang="he">ו</span> <strong>Vav</strong> is a plain straight line. <span class="he" lang="he">ז</span> <strong>Zayin</strong> has a cap across the top.</div></div>
+      <div class="pair"><div class="gl" lang="he">י ו ן</div><div class="how"><span class="he" lang="he">י</span> <strong>Yod</strong> is small and hangs at the top of the line. <span class="he" lang="he">ו</span> <strong>Vav</strong> reaches the bottom of the line. <span class="he" lang="he">ן</span> <strong>final Nun</strong> drops below it.</div></div>
       <div class="pair"><div class="gl" lang="he">ס ם</div><div class="how"><span class="he" lang="he">ס</span> <strong>Samech</strong> is round. <span class="he" lang="he">ם</span> <strong>final Mem</strong> is square, and only appears at the end of a word.</div></div>
       <div class="pair"><div class="gl" lang="he">ג נ</div><div class="how"><span class="he" lang="he">ג</span> <strong>Gimel</strong> has a little leg kicking out at the bottom left. <span class="he" lang="he">נ</span> <strong>Nun</strong> has a flat base.</div></div>
-      <div class="pair"><div class="gl" lang="he">ע צ</div><div class="how"><span class="he" lang="he">ע</span> <strong>Ayin</strong> looks like a Y with a tail. <span class="he" lang="he">צ</span> <strong>Tsadi</strong> has a flat base.</div></div>
+      <div class="pair"><div class="gl" lang="he">ע צ ץ</div><div class="how"><span class="he" lang="he">ע</span> <strong>Ayin</strong> looks like a Y with a tail. <span class="he" lang="he">צ</span> <strong>Tsadi</strong> has a flat base. <span class="he" lang="he">ץ</span> <strong>final Tsadi</strong> drops straight down below the line.</div></div>
+      <div class="pair"><div class="gl" lang="he">ך ן ף</div><div class="how">All three are finals that drop below the line. <span class="he" lang="he">ך</span> <strong>final Chaf</strong> has a flat roof. <span class="he" lang="he">ן</span> <strong>final Nun</strong> is a plain line. <span class="he" lang="he">ף</span> <strong>final Fey</strong> has a little hook curling in at the top.</div></div>
+      <div class="pair"><div class="gl" lang="he">ט פ</div><div class="how">Easy to mix up in some fonts. <span class="he" lang="he">ט</span> <strong>Tet</strong> is open at the top. <span class="he" lang="he">פ</span> <strong>Pey/Fey</strong> is open on the left, with a curl inside.</div></div>
       <div class="pair"><div class="gl" lang="he">שׁ שׂ</div><div class="how">Same letter, different dot: on the <strong>right</strong> it's <span class="tr">sh</span> (Shin), on the <strong>left</strong> it's <span class="tr">s</span> (Sin).</div></div>
     </div>
       </section>
@@ -278,7 +284,7 @@
     </table>
     </div>
     <div class="tip"><strong>Vowel letters.</strong> <span class="he" lang="he">ו</span> and <span class="he" lang="he">י</span> sometimes act as vowel carriers instead of consonants: <span class="he" lang="he">וֹ</span> = <span class="tr">o</span>, <span class="he" lang="he">וּ</span> = <span class="tr">u</span>, and a <span class="he" lang="he">י</span> after <span class="he" lang="he">ִ</span> just lengthens the <span class="tr">i</span>: <span class="he" lang="he">מִי</span> <span class="tr">mi</span>.</div>
-    <div class="tip"><strong>When a tsere says "ei".</strong> A tsere <span class="he" lang="he">ֵ</span> is a plain <span class="tr">e</span> in the middle of a word: <span class="he" lang="he">מַלְכֵּנוּ</span> <span class="tr">mal-KE-nu</span>. It glides to <span class="tr">ei</span>, as in <em>eight</em>, in two places: when it's the <strong>last sound in the word</strong>, as in <span class="he" lang="he">בּוֹרֵא</span> <span class="tr">bo-REI</span>, and when a <strong><span class="he" lang="he">י</span> follows it</strong>, as in <span class="he" lang="he">אֱלֹהֵינוּ</span> <span class="tr">e-lo-HEI-nu</span>.</div>
+    <div class="tip"><strong>When a tsere says "ei".</strong> A tsere <span class="he" lang="he">ֵ</span> is a plain <span class="tr">e</span>: <span class="he" lang="he">בּוֹרֵא</span> <span class="tr">bo-RE</span>, <span class="he" lang="he">מַלְכֵּנוּ</span> <span class="tr">mal-KE-nu</span>. It only becomes <span class="tr">ei</span>, as in <em>eight</em>, when a <strong><span class="he" lang="he">י</span> follows it</strong>: <span class="he" lang="he">אֱלֹהֵינוּ</span> <span class="tr">e-lo-HEI-nu</span>.</div>
       </section>
       <section class="page" id="practice1" data-title="Practice" data-group="1">
         <div class="page-kicker">Part 1 · Beginners</div>
@@ -316,7 +322,7 @@
       <section class="page" id="dot" data-title="The dot that changes the sound" data-group="2">
         <div class="page-kicker">Part 2 · Getting fluent</div>
         <h2>The dot that changes the sound</h2>
-        <p>Three letters sound different with and without a dot (a fourth, <span class="he" lang="he">ת</span>, only in Ashkenazi pronunciation):</p>
+        <p>Three letters sound different with and without a dot:</p>
     <div class="scroll-x">
     <table class="t">
       <thead><tr><th>With dot</th><th></th><th>Without dot</th><th></th></tr></thead>
@@ -324,7 +330,6 @@
         <tr><td class="big" lang="he">בּ</td><td><span class="tr">b</span></td><td class="big" lang="he">ב</td><td><span class="tr">v</span></td></tr>
         <tr><td class="big" lang="he">כּ</td><td><span class="tr">k</span></td><td class="big" lang="he">כ</td><td><span class="tr">ch</span></td></tr>
         <tr><td class="big" lang="he">פּ</td><td><span class="tr">p</span></td><td class="big" lang="he">פ</td><td><span class="tr">f</span></td></tr>
-        <tr><td class="big" lang="he">תּ</td><td><span class="tr">t</span></td><td class="big" lang="he">ת</td><td><span class="tr">t</span> <button class="ash" type="button" data-note="Without the dot, ת is &lsquo;s&rsquo;: שַׁבָּת is &lsquo;Shabbos&rsquo;, בְּרִית is &lsquo;Bris&rsquo;, while a dotted תּ stays &lsquo;t&rsquo;. This is the most noticeable Ashkenazi difference.">Ashkenazi</button></td></tr>
       </tbody>
     </table>
     </div>
@@ -385,7 +390,7 @@
         <tr><td class="big" lang="he">וְ</td><td>and</td><td><span class="he" lang="he">וְכָל</span> <span class="tr">ve-CHOL</span>, "and all"</td></tr>
         <tr><td class="big" lang="he">הַ</td><td>the</td><td><span class="he" lang="he">הָעוֹלָם</span> <span class="tr">ha-o-LAM</span>, "the world"</td></tr>
         <tr><td class="big" lang="he">בְּ</td><td>in, with</td><td><span class="he" lang="he">בְּמִצְוֹתָיו</span> <span class="tr">be-mitz-vo-TAV</span>, "with His commandments"</td></tr>
-        <tr><td class="big" lang="he">לְ</td><td>to, for</td><td><span class="he" lang="he">לְהוֹשִׁיעַ</span> <span class="tr">le-ho-SHI-a</span>, "to save"</td></tr>
+        <tr><td class="big" lang="he">לְ</td><td>to, for</td><td><span class="he" lang="he">לְעוֹלָם וָעֶד</span> <span class="tr">le-o-LAM VA-ed</span>, "for ever and ever"</td></tr>
         <tr><td class="big" lang="he">כְּ</td><td>like</td><td><span class="he" lang="he">כְּאֶרֶז</span> <span class="tr">ke-E-rez</span>, "like a cedar"</td></tr>
         <tr><td class="big" lang="he">מִ</td><td>from</td><td><span class="he" lang="he">מִכָּל</span> <span class="tr">mi-KOL</span>, "from all"</td></tr>
         <tr><td class="big" lang="he">שֶׁ</td><td>that, who</td><td><span class="he" lang="he">שֶׁעָשָׂה</span> <span class="tr">she-a-SA</span>, "who performed" (Chanukah)</td></tr>
@@ -393,14 +398,14 @@
     </table>
     </div>
     <p>They can stack up: <span class="he" lang="he">וּבְכָל</span> = <span class="he" lang="he">וּ</span> "and" + <span class="he" lang="he">בְ</span> "with" + <span class="he" lang="he">כָל</span> "all". Notice that <span class="he" lang="he">וְ</span> becomes <span class="he" lang="he">וּ</span> <span class="tr">u</span> before <span class="he" lang="he">ב</span>, <span class="he" lang="he">מ</span>, <span class="he" lang="he">פ</span> and before a shva.</p>
+    <div class="tip"><strong>One exception:</strong> a <span class="he" lang="he">לְ</span> at the front of a verb, meaning "to …" (<span class="he" lang="he">לְהוֹשִׁיעַ</span> <span class="tr">le-ho-SHI-a</span>, "to save"), is part of the verb itself. Unlike the other prefixes, it can't be taken off.</div>
     <div class="tip">This is why the gold vocabulary highlighting in the app can find <span class="he" lang="he">הַשָּׁמַיִם</span> when the glossary lists <span class="he" lang="he">שָׁמַיִם</span>: it looks past the prefix.</div>
       </section>
       <section class="page" id="endings" data-title="Endings that catch people out" data-group="3">
         <div class="page-kicker">Part 3 · Confident readers</div>
         <h2>Endings that catch people out</h2>
-        <div class="rule"><span class="num">◆</span><span><strong><span class="he" lang="he">ָיו</span> is said <span class="tr">av</span></strong>, not <span class="tr">a-yo</span>: <span class="he" lang="he">מִצְוֹתָיו</span> <span class="tr">mitz-vo-TAV</span>. The <span class="he" lang="he">י</span> is silent.</span></div>
-    <div class="rule"><span class="num">◆</span><span><strong>A patach under a final <span class="he" lang="he">ח</span> or <span class="he" lang="he">ע</span> is said <em>before</em> the letter</strong> (<em>"furtive patach"</em>): <span class="he" lang="he">לְשַׁבֵּחַ</span> <span class="tr">le-sha-BE-ach</span> (Aleinu), not <span class="tr">le-sha-be-cha</span>. With <span class="he" lang="he">ע</span>, which is silent, you just hear an extra <span class="tr">a</span>: <span class="he" lang="he">לְהוֹשִׁיעַ</span> <span class="tr">le-ho-SHI-a</span>.</span></div>
-    <div class="rule"><span class="num">◆</span><span><strong>A final <span class="he" lang="he">ה</span> or <span class="he" lang="he">א</span> is usually silent</strong>: <span class="he" lang="he">תּוֹרָה</span> <span class="tr">to-RA</span>, <span class="he" lang="he">בָּרָא</span> <span class="tr">ba-RA</span>. A <strong>dot in a final <span class="he" lang="he">ה</span></strong> (<span class="he" lang="he">הּ</span>, <em>mappik</em>) strictly means the <span class="tr">h</span> is sounded, but we don't sound it: <span class="he" lang="he">שְׁמֵהּ</span> in the Kaddish is <span class="tr">she-MEI</span>. Because the <span class="tr">e</span> is then the last sound, it becomes <span class="tr">ei</span>.</span></div>
+        <div class="rule"><span class="num">◆</span><span><strong><span class="he" lang="he" style="margin-right: 0.45em;">ָיו</span> is said <span class="tr">av</span></strong>: <span class="he" lang="he">מִצְוֹתָיו</span> <span class="tr">mitz-vo-TAV</span>. The <span class="he" lang="he">י</span> is silent.</span></div>
+    <div class="rule"><span class="num">◆</span><span><strong>A patach under a final <span class="he" lang="he">ח</span> or <span class="he" lang="he">ע</span> is said <em>before</em> the letter</strong> (<em>"furtive patach"</em>): <span class="he" lang="he">לְשַׁבֵּחַ</span> <span class="tr">le-sha-BE-ach</span> (Aleinu). With <span class="he" lang="he">ע</span>, which is silent, you just hear an extra <span class="tr">a</span>: <span class="he" lang="he">לְהוֹשִׁיעַ</span> <span class="tr">le-ho-SHI-a</span>.</span></div>
     <div class="rule"><span class="num">◆</span><span><strong>A small dash between words</strong> (<span class="he" lang="he">־</span>, <em>maqaf</em>) joins them so they're read as one unit, with only the second one stressed.</span></div>
       </section>
       <section class="page" id="practice3" data-title="Practice: tricky words" data-group="3">
@@ -460,7 +465,7 @@
   ];
   document.getElementById('letter-grid').innerHTML = LETTERS.map(([g, n, s, ex, tr, fin, ash]) => `
     <div class="lt">
-      <div class="g" lang="he">${fin ? `<small title="final form">${fin}</small>` : ''}${g}</div>
+      <div class="g" lang="he"><span>${g}</span>${fin ? `<span class="fin" title="final form">${fin}</span>` : ''}</div>
       <div class="n">${n}</div>
       <div class="s">${s}${ash ? ` <button class="ash" type="button" data-note="${ash}">Ashkenazi</button>` : ''}</div>
       ${fin ? `<div class="s muted">final form: <span class="he" lang="he">${fin}</span></div>` : ''}
@@ -472,8 +477,8 @@
     d1: [['בָּ','ba'],['לוֹ','lo'],['מִי','mi'],['שֶׁ','she'],['נוּ','nu'],['רֵ','re'],['דָ','da'],['כִּי','ki'],['תוֹ','to'],['גֻ','gu'],['וַ','va'],['פִּי','pi']],
     d2: [['שָׁלוֹם','sha-LOM'],['בָּרוּךְ','ba-RUCH'],['אַתָּה','a-TA'],['אָמֵן','a-MEN'],['מֶלֶךְ','ME-lech'],['תּוֹרָה','to-RA'],['לֶחֶם','LE-chem'],['חַיִּים','cha-YIM'],['קָדוֹשׁ','ka-DOSH'],['יִשְׂרָאֵל','yis-ra-EL']],
     d3: [['בָּרוּךְ אַתָּה יְהוָה','ba-RUCH a-TA a-do-NAI — "Blessed are You, Lord"'],['אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם','e-lo-HEI-nu ME-lech ha-o-LAM — "our God, King of the universe"']],
-    d4: [['שְׁמַע יִשְׂרָאֵל','SHMA yis-ra-EL'],['בּוֹרֵא פְּרִי הַגָּפֶן','bo-REI pri ha-GA-fen'],['מִי כָמֹכָה','mi cha-MO-cha'],['כִּי בוֹ שָׁבַת','ki vo sha-VAT'],['זִכָּרוֹן לְמַעֲשֵׂה בְרֵאשִׁית','zi-ka-RON le-ma-a-SEH ve-re-SHIT'],['שָׁלוֹם עֲלֵיכֶם','sha-LOM a-lei-CHEM']],
-    d5: [['כָּל','kol'],['חָכְמָה','choch-MA'],['מִצְוֹתָיו','mitz-vo-TAV'],['לְשַׁבֵּחַ','le-sha-BE-ach'],['שְׁמֵהּ','she-MEI'],['וּבְכָל','uv-CHOL'],['יְהוָה','a-do-NAI'],['מִצְווֹת','mitz-VOT']],
+    d4: [['שְׁמַע יִשְׂרָאֵל','SHMA yis-ra-EL'],['בּוֹרֵא פְּרִי הַגָּפֶן','bo-RE pri ha-GA-fen'],['מִי כָמֹכָה','mi cha-MO-cha'],['כִּי בוֹ שָׁבַת','ki vo sha-VAT'],['זִכָּרוֹן לְמַעֲשֵׂה בְרֵאשִׁית','zi-ka-RON le-ma-a-SEH ve-re-SHIT'],['שָׁלוֹם עֲלֵיכֶם','sha-LOM a-lei-CHEM']],
+    d5: [['כָּל','kol'],['חָכְמָה','choch-MA'],['מִצְוֹתָיו','mitz-vo-TAV'],['לְשַׁבֵּחַ','le-sha-BE-ach'],['כְּאֶרֶז','ke-E-rez'],['וּבְכָל','uv-CHOL'],['יְהוָה','a-do-NAI'],['מִצְווֹת','mitz-VOT']],
   };
   for (const [id, items] of Object.entries(DRILLS)) {
     document.getElementById(id).innerHTML = items.map(([h, a]) =>
