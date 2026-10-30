@@ -105,6 +105,12 @@
     table.t td { border-bottom: 1px solid var(--line); padding: 8px; vertical-align: middle; }
     table.t td.big { font-family: 'David Libre', serif; font-size: 2rem; color: #fff; text-align: center; width: 70px; line-height: 1.2; }
     .scroll-x { overflow-x: auto; }
+    table.t.dots { width: auto; }
+    table.t.dots th { white-space: nowrap; text-align: left; padding-left: 8px; }
+    table.t.dots td.big { width: auto; text-align: left; padding-left: 8px; }
+    table.t.dots td { padding-right: 18px; }
+    table.t.dots .gap { padding-left: 40px; }
+    table.t.dots td:nth-child(3) { padding-left: 40px; }
     table.t .tr, .lt .tr { white-space: nowrap; }
 
     /* Look-alikes */
@@ -320,10 +326,10 @@
       <section class="page" id="dot" data-title="The dot that changes the sound" data-group="2">
         <div class="page-kicker">Part 2 · Getting fluent</div>
         <h2>The dot that changes the sound</h2>
-        <p>Three letters sound different with and without a dot:</p>
+        <p>The dot inside a letter is called a <strong><em>dagesh</em></strong>. Three letters sound different with and without one:</p>
     <div class="scroll-x">
-    <table class="t">
-      <thead><tr><th>With dot</th><th></th><th>Without dot</th><th></th></tr></thead>
+    <table class="t dots">
+      <thead><tr><th colspan="2">With dot</th><th colspan="2" class="gap">Without dot</th></tr></thead>
       <tbody>
         <tr><td class="big" lang="he">בּ</td><td><span class="tr">b</span></td><td class="big" lang="he">ב</td><td><span class="tr">v</span></td></tr>
         <tr><td class="big" lang="he">כּ</td><td><span class="tr">k</span></td><td class="big" lang="he">כ</td><td><span class="tr">ch</span></td></tr>
@@ -355,7 +361,7 @@
         <div class="page-kicker">Part 2 · Getting fluent</div>
         <h2>Practice: phrases</h2>
         <p>Read each phrase aloud as one unit, then tap to check.</p>
-    <div class="drill-tools"><button class="mini-btn" type="button" data-reveal-all="d4">Show all</button></div>
+    <div class="drill-tools"><button class="mini-btn" type="button" data-new-drill="d4">New set</button> <button class="mini-btn" type="button" data-reveal-all="d4">Show all</button></div>
     <div class="drill wide" id="d4"></div>
       </section>
       <section class="page" id="check2" data-title="Check yourself" data-group="2">
@@ -410,7 +416,7 @@
       <section class="page" id="practice3" data-title="Practice: tricky words" data-group="3">
         <div class="page-kicker">Part 3 · Confident readers</div>
         <h2>Practice: tricky words</h2>
-        <div class="drill-tools"><button class="mini-btn" type="button" data-reveal-all="d5">Show all</button></div>
+        <div class="drill-tools"><button class="mini-btn" type="button" data-new-drill="d5">New set</button> <button class="mini-btn" type="button" data-reveal-all="d5">Show all</button></div>
     <div class="drill" id="d5"></div>
       </section>
       <section class="page" id="check3" data-title="Check yourself" data-group="3">
@@ -476,14 +482,21 @@
     d1: [['בָּ','ba'],['לוֹ','lo'],['מִי','mi'],['שֶׁ','she'],['נוּ','nu'],['רֵ','re'],['דָ','da'],['כִּי','ki'],['תוֹ','to'],['גֻ','gu'],['וַ','va'],['פִּי','pi']],
     d2: [['שָׁלוֹם','sha-LOM'],['בָּרוּךְ','ba-RUCH'],['אַתָּה','a-TA'],['אָמֵן','a-MEN'],['מֶלֶךְ','ME-lech'],['תּוֹרָה','to-RA'],['לֶחֶם','LE-chem'],['חַיִּים','cha-YIM'],['קָדוֹשׁ','ka-DOSH'],['יִשְׂרָאֵל','yis-ra-EL']],
     d3: [['בָּרוּךְ אַתָּה יְהוָה','ba-RUCH a-TA a-do-NAI — "Blessed are You, Lord"'],['אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם','e-lo-HEI-nu ME-lech ha-o-LAM — "our God, King of the universe"']],
-    d4: [['שְׁמַע יִשְׂרָאֵל','SHMA yis-ra-EL'],['בּוֹרֵא פְּרִי הַגָּפֶן','bo-RE pri ha-GA-fen'],['מִי כָמֹכָה','mi cha-MO-cha'],['כִּי בוֹ שָׁבַת','ki vo sha-VAT'],['זִכָּרוֹן לְמַעֲשֵׂה בְרֵאשִׁית','zi-ka-RON le-ma-a-SEH ve-re-SHIT'],['שָׁלוֹם עֲלֵיכֶם','sha-LOM a-lei-CHEM']],
-    d5: [['כָּל','kol'],['חָכְמָה','choch-MA'],['מִצְוֹתָיו','mitz-vo-TAV'],['לְשַׁבֵּחַ','le-sha-BE-ach'],['כְּאֶרֶז','ke-E-rez'],['וּבְכָל','uv-CHOL'],['יְהוָה','a-do-NAI'],['מִצְווֹת','mitz-VOT']],
+    d4: [['שְׁמַע יִשְׂרָאֵל','SHMA yis-ra-EL'],['בּוֹרֵא פְּרִי הַגָּפֶן','bo-RE pri ha-GA-fen'],['מִי כָמֹכָה','mi cha-MO-cha'],['כִּי בוֹ שָׁבַת','ki vo sha-VAT'],['זִכָּרוֹן לְמַעֲשֵׂה בְרֵאשִׁית','zi-ka-RON le-ma-a-SEH ve-re-SHIT'],['שָׁלוֹם עֲלֵיכֶם','sha-LOM a-lei-CHEM'],['לְעוֹלָם וָעֶד','le-o-LAM VA-ed'],['הַקָּדוֹשׁ בָּרוּךְ הוּא','ha-ka-DOSH ba-RUCH hu'],['בְּרָכָה וְשָׁלוֹם','bra-CHA ve-sha-LOM'],['לְדֹר וָדֹר','le-DOR va-DOR'],['טוֹב לְהֹדוֹת לַיהוָה','tov le-ho-DOT la-do-NAI'],['צַדִּיק כַּתָּמָר יִפְרָח','tza-DIK ka-ta-MAR yif-RACH'],['עֹשֶׂה שָׁלוֹם בִּמְרוֹמָיו','o-SEH sha-LOM bim-ro-MAV'],['וְאִמְרוּ אָמֵן','ve-im-RU a-MEN'],['אֱמֶת מַלְכֵּנוּ','E-met mal-KE-nu'],['בָּרוּךְ כְּבוֹד יְהוָה מִמְּקוֹמוֹ','ba-RUCH ke-VOD a-do-NAI mim-ko-MO'],['לְכָה דוֹדִי','LE-cha do-DI'],['יְהוָה אֶחָד וּשְׁמוֹ אֶחָד','a-do-NAI e-CHAD ush-MO e-CHAD']],
+    d5: [['כָּל','kol'],['חָכְמָה','choch-MA'],['מִצְוֹתָיו','mitz-vo-TAV'],['לְשַׁבֵּחַ','le-sha-BE-ach'],['כְּאֶרֶז','ke-E-rez'],['וּבְכָל','uv-CHOL'],['יְהוָה','a-do-NAI'],['מִצְווֹת','mitz-VOT'],['בִּמְרוֹמָיו','bim-ro-MAV'],['פּוֹתֵחַ','po-TE-ach'],['בָּרָקִיעַ','ba-ra-KI-a'],['קָדְשֶׁךָ','kod-SHE-cha'],['בְּשָׁכְבֵנוּ','be-shoch-BE-nu'],['לְעָבְדְּךָ','le-ov-DE-cha'],['מַלְכֵּנוּ','mal-KE-nu'],['נִשְׁמוֹתֵינוּ','nish-mo-TEI-nu'],['וַיְקַדֵּשׁ','va-ye-ka-DESH'],['מְזֻזוֹת','me-zu-ZOT'],['שֶׁהֶחֱיָנוּ','she-he-che-YA-nu']],
   };
-  for (const [id, items] of Object.entries(DRILLS)) {
+  // Practice sets drawn at random from a larger pool each time (others show every card)
+  const DRILL_SHOW = { d4: 6, d5: 8 };
+  function renderDrill(id) {
+    const pool = DRILLS[id];
+    const items = DRILL_SHOW[id] ? shuffle(pool).slice(0, DRILL_SHOW[id]) : pool;
+    const all = document.querySelector(`[data-reveal-all="${id}"]`);
+    if (all) all.textContent = 'Show all';
     document.getElementById(id).innerHTML = items.map(([h, a]) =>
       { const [tr, mean] = a.split(' — ');
         return `<button class="rv" type="button"><span class="he" lang="he">${h}</span><span class="ans"><span class="tr">${tr.split(' ').map(w => `<span class="w">${w}</span>`).join(' ')}</span>${mean ? `<span class="mean">${mean}</span>` : ''}</span></button>`; }).join('');
   }
+  Object.keys(DRILLS).forEach(renderDrill);
 
   // ── Quizzes: each "Check yourself" draws 5 questions at random from a larger pool, with the answers shuffled ──
   const H = t => `<span class="he" lang="he">${t}</span>`;
@@ -517,6 +530,7 @@
       { p: `Why is it ${T('mi cha-MO-cha')} and not ${T('mi ka-MO-cha')}?`, o: [`The ${H('כ')} has no dot, because ${H('מִי')} ends in a vowel`, 'A spelling mistake', 'It\'s a different word'], w: `After a word ending in a vowel, the next word's first letter often loses its dot, and ${H('כ')} without a dot is ${T('ch')}.` },
       { p: `How is ${H('כִּי בוֹ שָׁבַת')} read?`, o: ['ki vo sha-VAT', 'ki bo sha-VAT'], w: `${H('ב')} has no dot here, so it's ${T('v')}.` },
       { p: `In the Kiddush, how is ${H('בְרֵאשִׁית')} (without a dot) read?`, o: ['ve-re-SHIT', 'be-re-SHIT'], w: `No dot in the ${H('ב')}, so it's ${T('v')}: ${T('le-ma-a-SEH ve-re-SHIT')}.` },
+      { p: `What is the dot inside a letter, as in ${H('בּ')}, called?`, o: ['A dagesh', 'A shva', 'A maqaf'], w: `It's a <em>dagesh</em>. In ${H('בּ')}, ${H('כּ')} and ${H('פּ')} it makes the sound hard: ${T('b')}, ${T('k')}, ${T('p')}.` },
       { p: 'Which of these letters sounds different without its dot?', o: [H('פ'), H('ל'), H('מ')], w: `${H('בּ')}/${H('ב')}, ${H('כּ')}/${H('כ')} and ${H('פּ')}/${H('פ')} change sound with the dot.` },
       { p: 'Most Hebrew words are stressed on…', o: ['the last syllable', 'the first syllable'], w: 'The last syllable, with the exceptions listed in "Where the stress falls".' },
       { p: `Where is the stress in ${H('מֶלֶךְ')}?`, o: ['ME-lech', 'me-LECH'], w: 'Short nouns with a segol in the second syllable, like this one, are stressed on the first syllable.' },
@@ -646,6 +660,8 @@
 
   // ── Tap to reveal and "Show all" (one delegated listener) ──
   document.addEventListener('click', e => {
+    const nd = e.target.closest('[data-new-drill]');
+    if (nd) { renderDrill(nd.dataset.newDrill); return; }
     const rv = e.target.closest('.rv');
     if (rv) { rv.classList.toggle('shown'); return; }
     const all = e.target.closest('[data-reveal-all]');
