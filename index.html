@@ -159,6 +159,8 @@
     .modal-head-close:hover { color: var(--gold); }
     .modal-head-btns { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 10px; }
     .lbl-short { display: none; }
+    .share-icon { background: none; border: none; padding: 2px 4px; font-size: 12px; line-height: 1; cursor: pointer; opacity: 0.55; transition: opacity 0.2s; color: var(--gold); }
+    .share-icon:hover, .share-icon:focus-visible { opacity: 1; }
     /* Tap a word for its pronunciation */
     .tap-word { cursor: pointer; }
     @media (hover: hover) { .tap-word:hover { text-decoration: underline dotted; text-decoration-color: var(--gold-dim); text-underline-offset: 6px; } }
@@ -565,10 +567,13 @@
     <div id="quiz-controls">
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
       <div class="progress-text" id="progress-text">Line 1 of 6</div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+      <button id="share-btn" class="share-icon" type="button" title="Copy a link to this prayer" aria-label="Share a link to this prayer">🔗</button>
       <div style="display: flex; align-items: center; gap: 5px; background: var(--bg-input); border: 1px solid var(--gold-dim); border-radius: 20px; padding: 3px;">
         <span style="font-size: 10px; color: var(--silver-dim); padding: 0 3px 0 6px; text-transform: uppercase; letter-spacing: 0.04em;">SR</span>
         <button id="sr-auto" onclick="setSRMode('auto')" style="font-size: 11px; padding: 3px 10px; border-radius: 14px; border: 1px solid var(--gold-dim); background: var(--bg-card); color: var(--gold); font-family: inherit; cursor: pointer;">Auto</button>
         <button id="sr-manual" onclick="setSRMode('manual')" style="font-size: 11px; padding: 3px 10px; border-radius: 14px; border: none; background: transparent; color: var(--silver-dim); font-family: inherit; cursor: pointer;">Manual</button>
+      </div>
       </div>
     </div>
     <div class="progress-bar">
@@ -736,7 +741,6 @@
           <button id="sung-version-btn" style="padding: 8px 22px; border: 1px solid var(--gold-dim); background: transparent; color: var(--gold); font-family: 'Crimson Pro', serif; font-size: 0.95rem; border-radius: 6px; cursor: pointer; transition: all 0.2s;">🎵 Sung Version</button>
           <button id="full-text-btn" style="padding: 8px 22px; border: 1px solid var(--gold-dim); background: transparent; color: var(--gold); font-family: 'Crimson Pro', serif; font-size: 0.95rem; border-radius: 6px; cursor: pointer; transition: all 0.2s;">📖 Full Text</button>
           <button id="vocab-btn" style="padding: 8px 22px; border: 1px solid var(--gold-dim); background: transparent; color: var(--gold); font-family: 'Crimson Pro', serif; font-size: 0.95rem; border-radius: 6px; cursor: pointer; transition: all 0.2s;">📚 Key Vocabulary</button>
-          <button id="share-btn" style="padding: 8px 22px; border: 1px solid var(--gold-dim); background: transparent; color: var(--gold); font-family: 'Crimson Pro', serif; font-size: 0.95rem; border-radius: 6px; cursor: pointer; transition: all 0.2s;" title="Share a link to this prayer">🔗 Share</button>
         </div>
 
         <!-- Full text modal -->
@@ -2709,7 +2713,7 @@
       updateListenButton();
       updateSungVersionBar();
       // Keep the address in step with the prayer on screen (replaceState: no Back-button clutter)
-      if (location.hash !== '#' + prayerId) history.replaceState(null, '', '#' + prayerId);
+      setAddressHash(prayerId);
     }
 
     // Event listeners
@@ -3391,9 +3395,12 @@
       const id = decodeURIComponent(location.hash.slice(1));
       return (id && prayers[id] && prayers[id].lines) ? id : null;
     }
-    function setLandingHash(id) {
-      if (location.hash !== '#' + id) history.replaceState(null, '', '#' + id);
+    // Some embedded previews (e.g. a sandboxed srcdoc frame) forbid changing the address — never let that break the app
+    function setAddressHash(id) {
+      if (location.hash === '#' + id) return;
+      try { history.replaceState(null, '', '#' + id); } catch (e) { /* address can't be changed here; links still work on the live site */ }
     }
+    function setLandingHash(id) { setAddressHash(id); }
     const LANDING_LINKS = { 'shema-intro': showShemaLanding, 'chanukah-intro': showChanukahLanding, 'amida-intro': showAmidaLanding };
     function landingFromHash() {
       return LANDING_LINKS[decodeURIComponent(location.hash.slice(1))] || null;
@@ -3428,8 +3435,9 @@
       let copied = false;
       try { await navigator.clipboard.writeText(url); copied = true; } catch (e) {}
       if (!copied) { window.prompt('Copy this link:', url); return; }
-      shareBtn.textContent = '✓ Link copied';
-      setTimeout(() => { shareBtn.textContent = '🔗 Share'; }, 2000);
+      shareBtn.textContent = '✓';
+      shareBtn.title = 'Link copied';
+      setTimeout(() => { shareBtn.textContent = '🔗'; shareBtn.title = 'Copy a link to this prayer'; }, 2000);
     });
 
     // Welcome screen

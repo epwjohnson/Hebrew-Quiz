@@ -569,8 +569,12 @@
     if (scroll) window.scrollTo(0, 0);
   }
   function go(id) {
-    if (location.hash === '#' + id) showPage(pageFromHash(), true);
-    else location.hash = id;        // adds a history entry, so the Back button steps through sections
+    const page = PAGES.find(p => p.id === id);
+    if (location.hash === '#' + id) { showPage(page, true); return; }
+    // Normally: change the address (adds a history entry, so Back steps through sections).
+    // In embedded previews that forbid it, just show the section.
+    try { history.pushState(null, '', '#' + id); } catch (e) { /* address can't be changed here */ }
+    showPage(page, true);
   }
   window.addEventListener('hashchange', () => showPage(pageFromHash(), true));
   menuBtn.addEventListener('click', () => {
