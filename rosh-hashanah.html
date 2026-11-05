@@ -298,6 +298,14 @@
     @media (min-width: 761px) { .study-tools { position: sticky; top: 50px; } }
     @media (max-width: 760px) { .st-label { min-width: 0; width: 100%; } }
     .he-sm { unicode-bidi: isolate; }
+
+/* Home icon in the top bar: back to the High Holy Days landing page (same icon as the practice app) */
+.tool-icon { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; padding: 0; background: none; border: none; border-radius: 4px; color: var(--gold); opacity: 0.7; cursor: pointer; transition: opacity 0.2s, background 0.2s; flex-shrink: 0; }
+.tool-icon:hover, .tool-icon:focus-visible { opacity: 1; background: rgba(212,168,83,0.12); }
+.topbar .home-link { text-decoration: none; }
+
+/* Words you'll hear: transliteration hidden until switched on, or until that card is tapped */
+.hide-tr .gl-card:not(.shown) .gl-tr { display: none; }
   </style>
 </head>
 <body>
@@ -306,6 +314,7 @@
   <div class="topbar-inner">
     <a class="back" href="index.html">← <span class="lbl-full">Back to practice</span><span class="lbl-short">Practice</span></a>
     <span class="topbar-title">Rosh Hashanah — the service</span>
+    <a class="tool-icon home-link" href="high-holy-days.html" title="Back to the High Holy Days page" aria-label="Back to the High Holy Days page"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg></a>
   </div>
 </div>
 
@@ -380,10 +389,15 @@
         <div class="tip">The <strong>notes at the back</strong> explain where each prayer comes from and the music we use. They're well worth reading at home.</div>
       </section>
 
-      <section class="page" id="words" data-title="Words you'll hear" data-group="1">
+      <section class="page hide-tr" id="words" data-title="Words you'll hear" data-group="1">
         <div class="page-kicker">Start here</div>
         <h2>Words you'll hear</h2>
-        <p>Tap a word to see what it means.</p>
+        <p>Tap a word to see how it's said and what it means.</p>
+        <div class="study-tools">
+          <div class="st-row"><span class="st-label">Show</span>
+            <button class="chip" type="button" data-study-toggle="tr">Transliteration</button>
+          </div>
+        </div>
         <div class="glossary" id="glossary"></div>
       </section>
 
@@ -721,6 +735,7 @@
         </ul>
         <h3>The texts</h3>
         <div class="glance">
+          <button class="glance-card" type="button" data-go="ts-candles"><span class="gc-when">Evening</span><span class="gc-title">The candle blessing</span><span class="gc-pages">p. 1</span></button>
           <button class="glance-card" type="button" data-go="ts-amidah"><span class="gc-when">Evening and morning</span><span class="gc-title">The Amidah additions</span><span class="gc-pages">pp. 8–12, 36–40</span></button>
           <button class="glance-card" type="button" data-go="ts-crown"><span class="gc-when">Evening</span><span class="gc-title">The Royal Crown</span><span class="gc-pages">pp. 13–14</span></button>
           <button class="glance-card" type="button" data-go="ts-eloheinu"><span class="gc-when">Evening</span><span class="gc-title">Our G_d who art in heaven</span><span class="gc-pages">pp. 15–17</span></button>
@@ -732,6 +747,33 @@
           <button class="glance-card" type="button" data-go="ts-chatanu"><span class="gc-when">Additional service</span><span class="gc-title">We have sinned before you</span><span class="gc-pages">pp. 57–58</span></button>
         </div>
         <p class="muted">For the little words joined to the front of Hebrew words, such as <span class="he-sm" lang="he">וְ</span> "and" and <span class="he-sm" lang="he">לְ</span> "to", see <a href="basics.html#prefixes">Little words in front</a> in the reading guide.</p>
+      </section>
+
+      <section class="page hide-tr" id="ts-candles" data-title="The candle blessing" data-group="5">
+        <div class="page-kicker">Text study</div>
+        <h2>The candle blessing <span class="h2-he" lang="he">הַדְלָקַת נֵרוֹת</span></h2>
+        <p class="where">Evening service · p. 1 · <button class="inline-go" type="button" data-go="map-evening">The evening service</button></p>
+        <p>The candles are lit as Rosh Hashanah begins, often at home before coming to synagogue. Our machzor prints the blessing at the very start of the evening service.</p>
+        <p>If you know the Shabbat candle blessing, you already know almost all of this one: only the name of the day at the end is different. You can practise the Shabbat version in the <a href="index.html#hadlakat-nerot">reading practice</a>.</p>
+        <div class="tip"><strong>Shehecheyanu.</strong> Many people also say the Shehecheyanu blessing when they light the candles, giving thanks for reaching this season. Our machzor does not print it at this point.</div>
+        <p>Read each line in Hebrew first. Tap a word to see how it's pronounced and what it means, or reveal the transliteration for that line. The English is our machzor's translation.</p>
+
+        <div class="study-tools">
+          <div class="st-row"><span class="st-label">Show</span>
+            <button class="chip" type="button" data-study-toggle="tr">Transliteration</button>
+            <button class="chip active" type="button" data-study-toggle="en">Translation</button>
+            <button class="chip active" type="button" data-study-toggle="notes">Notes</button>
+          </div>
+          <div class="st-row"><span class="st-label">Highlight</span>
+            <button class="chip" type="button" data-root-chip="cnu">-nu "us, our"</button>
+            <button class="chip" type="button" data-root-chip="cday">the name of the day</button>
+          </div>
+        </div>
+
+        <div class="study" id="study-candles"></div>
+
+        <h3 style="margin-top:28px">Check yourself</h3>
+        <div class="quiz" data-quiz="qcl"></div>
       </section>
 
       <section class="page hide-tr" id="ts-amidah" data-title="The Amidah additions" data-group="5">
@@ -1016,7 +1058,7 @@
   // ── Service maps: { t: title, he: Hebrew name, p: pages, d: description, tags: [...] } ──
   const MAPS = {
     'tl-evening': [
-      { t: 'Candle lighting', p: 'p. 1', d: 'The blessing over the festival lights, with Shabbat added when it falls on Shabbat.' },
+      { t: 'Candle lighting', he: 'הַדְלָקַת נֵרוֹת', p: 'p. 1', d: 'The blessing over the festival lights, with Shabbat added when it falls on Shabbat.' },
       { t: 'Mah Tovu', he: 'מַה טֹּבוּ', p: 'p. 1', d: '"How goodly are thy tents": the opening verses as we enter the synagogue.' },
       { t: 'Psalms 92 and 93', p: 'pp. 1–3', d: 'The psalms for Shabbat.', tags: ['shabbat'] },
       { t: '"As the old year departs"', p: 'p. 3', d: 'A meditation written for this machzor, as the old year gives way to the new.' },
@@ -1191,6 +1233,33 @@
   window.addEventListener('scroll', hideGloss);
   window.addEventListener('resize', hideGloss);
   document.addEventListener('keydown', e => { if (e.key === 'Escape') hideGloss(); });
+  // ── Text study: the candle blessing (Rosh Hashanah machzor p. 1) ──
+  const STUDY_CANDLES = [
+    { w: [['בָּרוּךְ', 'ba-RUCH', 'blessed (are)'], ['אַתָּה', 'a-TA', 'you'], ['יְהוָה', 'a-do-NAI', 'Lord'], ['אֱלֹהֵינוּ', 'e-lo-HEI-nu', 'our G_d', 'cnu'], ['מֶלֶךְ', 'ME-lech', 'King of', 'mlk'], ['הָעוֹלָם', 'ha-o-LAM', 'the universe']],
+      en: 'Blessed art thou, O Lord our G_d, King of the universe,',
+      n: 'The opening of almost every blessing. G_d\'s name יְהוָה is never said as it is written: we say אֲדֹנָי a-do-NAI "Lord". The ending ־ֵינוּ in אֱלֹהֵינוּ means "our".' },
+    { w: [['אֲשֶׁר', 'a-SHER', 'who'], ['קִדְּשָׁנוּ', 'kid-SHA-nu', 'has made us holy', 'cnu'], ['בְּמִצְוֹתָיו', 'be-mitz-vo-TAV', 'with (G_d\'s) commandments'], ['וְצִוָּנוּ', 've-tzi-VA-nu', 'and commanded us', 'cnu']],
+      en: 'who hast sanctified us by thy commandments and commanded us',
+      n: 'These words turn a blessing into a blessing over a mitzvah, a commandment: you will meet them again in the Shabbat and Chanukah candle blessings, and before the sounding of the shofar on Rosh Hashanah. The ending ־נוּ means "us", in קִדְּשָׁנוּ and וְצִוָּנוּ. In בְּמִצְוֹתָיו the ו is a consonant, "v", with a holam "o" after it: be-mitz-vo-TAV, not mitz-u-TAV.' },
+    { w: [['לְהַדְלִיק', 'le-had-LIK', 'to kindle'], ['נֵר', 'ner', 'the light'], ['שֶׁל', 'shel', 'of'], ['יוֹם', 'yom', 'the day of', 'cday'], ['הַזִּכָּרוֹן', 'ha-zi-ka-RON', 'memorial (remembrance)', 'cday']],
+      en: 'to kindle the Day of Memorial lights.',
+      n: 'Only the end changes from the Shabbat candle blessing: there it is נֵר שֶׁל שַׁבָּת "the light of Shabbat"; here it is נֵר שֶׁל יוֹם הַזִּכָּרוֹן "the light of the Day of Memorial", our machzor\'s name for Rosh Hashanah. נֵר "light" is singular in the Hebrew, though the English says "lights".' },
+    { w: [['לְהַדְלִיק', 'le-had-LIK', 'to kindle'], ['נֵר', 'ner', 'the light'], ['שֶׁל', 'shel', 'of'], ['שַׁבָּת', 'sha-BAT', 'Shabbat', 'cday'], ['וְשֶׁל', 've-SHEL', 'and of'], ['יוֹם', 'yom', 'the day of', 'cday'], ['הַזִּכָּרוֹן', 'ha-zi-ka-RON', 'memorial (remembrance)', 'cday']],
+      en: '[On Sabbath: to kindle the Sabbath and Day of Memorial lights.]',
+      n: 'When the day falls on Shabbat, two words are added, which our machzor prints in brackets: שַׁבָּת וְשֶׁל "Shabbat and of". Shabbat is named first.' },
+  ];
+  Object.assign(ROOTS, {
+    cnu: ['-nu', 'the ending ־נוּ, "us, our"'],
+    cday: ['the day', 'the words that name the day'],
+  });
+  STUDIES.push({ id: 'study-candles', quiz: 'qcl', refrain: null, lines: STUDY_CANDLES, extra: () => [
+    { p: `What does ${H('לְהַדְלִיק נֵר')} mean?`, o: ['to kindle the light', 'to bless the wine', 'to open the Ark'], w: `${T('le-had-LIK ner')}.` },
+    { p: 'Which part of the blessing changes from the Shabbat candle blessing?', o: ['Only the name of the day at the end', 'The first line', 'The whole blessing'], w: `${H('יוֹם הַזִּכָּרוֹן')} in place of ${H('שַׁבָּת')}.` },
+    { p: 'What is added when the day falls on Shabbat?', o: [`${H('שַׁבָּת וְשֶׁל')} "Shabbat and of"`, `${H('שָׁלוֹם')} "peace"`, 'Nothing'], w: 'Our machzor prints it in brackets.' },
+    { p: `What does the ending ${H('נוּ')} mean in ${H('קִדְּשָׁנוּ')} and ${H('וְצִוָּנוּ')}?`, o: ['us', 'you', 'them'], w: '"has made us holy", "and commanded us".' },
+    { p: `How do we say the name ${H('יְהוָה')}?`, o: ['a-do-NAI', 'As it is written', 'ha-SHEM, always'], w: 'It is never said as written.' },
+    { p: `What does ${H('יוֹם הַזִּכָּרוֹן')} mean?`, o: ['Day of Memorial', 'Day of Atonement', 'new moon'], w: 'The name of the day at the end of the blessing.' },
+  ] });
   // ── Text study: the Rosh Hashanah additions to the Amidah (Westminster machzor pp. 36–40; evening pp. 8–12) ──
   const STUDY_AMIDAH = [
     { w: [['זָכְרֵנוּ', 'zoch-RE-nu', 'remember us', 'zkr'], ['לְחַיִּים', 'le-cha-YIM', 'for life', 'life'], ['אֵל', 'el', 'G_d'], ['מֶלֶךְ', 'ME-lech', 'King', 'mlk'], ['חָפֵץ', 'cha-FETZ', 'who delights'], ['בַּחַיִּים', 'ba-cha-YIM', 'in life', 'life']],
