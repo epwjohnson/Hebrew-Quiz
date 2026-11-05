@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The High Holy Days — Service Guides</title>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=David+Libre:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep: #0a1628;
+      --bg-card: #112240;
+      --bg-inner: #0f1f3d;
+      --line: #1e3050;
+      --line-strong: #2a3f5f;
+      --gold: #d4a853;
+      --gold-dim: #a67c2e;
+      --silver: #c9d1d9;
+      --silver-dim: #8b949e;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Crimson Pro', Georgia, serif; background: var(--bg-deep); color: var(--silver); font-size: 1.12rem; line-height: 1.65; }
+    a { color: var(--gold); }
+    .he { font-family: 'David Libre', serif; direction: rtl; unicode-bidi: isolate; color: #e8e8e8; line-height: 1.3; }
+    .tr { color: var(--gold); font-style: italic; }
+    .hide-tr .tr { display: none !important; }
+    .muted { color: var(--silver-dim); }
+
+    .topbar { position: sticky; top: 0; z-index: 50; background: rgba(10,22,40,0.96); border-bottom: 1px solid var(--line); }
+    .topbar-inner { max-width: 1060px; margin: 0 auto; padding: 10px 16px; display: flex; align-items: center; gap: 14px; }
+    .topbar a { text-decoration: none; font-size: 0.95rem; }
+    .back { color: var(--silver-dim) !important; }
+    .back:hover { color: var(--gold) !important; }
+    .tr-toggle { margin-left: auto; border: 1px solid var(--gold-dim); background: transparent; color: var(--gold); font-family: inherit; font-size: 0.88rem; border-radius: 12px; padding: 2px 12px; cursor: pointer; }
+    .tr-toggle:hover { background: rgba(212,168,83,0.12); }
+
+    main { max-width: 1060px; margin: 0 auto; padding: 28px 16px 64px; }
+
+    .hero { text-align: center; max-width: 720px; margin: 0 auto 36px; }
+    .hero h1 { color: var(--gold); font-weight: 600; font-size: 2.3rem; line-height: 1.2; }
+    .hero .he { display: block; font-size: 1.9rem; margin: 10px 0 2px; }
+    .hero .sub { color: var(--silver-dim); font-style: italic; }
+    .hero p.intro { margin-top: 18px; text-align: left; }
+
+    .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .card { background: var(--bg-card); border: 1px solid var(--line-strong); border-radius: 10px; padding: 24px 24px 22px; display: flex; flex-direction: column; text-decoration: none; color: inherit; transition: border-color 0.2s, transform 0.2s; }
+    .card:hover, .card:focus-visible { border-color: var(--gold); transform: translateY(-2px); outline: none; }
+    .card .when { color: var(--silver-dim); font-size: 0.92rem; letter-spacing: 0.04em; text-transform: uppercase; }
+    .card h2 { color: var(--gold); font-weight: 600; font-size: 1.55rem; line-height: 1.25; margin-top: 4px; }
+    .card .he { font-size: 1.6rem; margin: 10px 0 0; display: block; }
+    .card .tr { display: block; font-size: 1rem; }
+    .card p { margin: 12px 0 18px; flex: 1; }
+    .btn { align-self: flex-start; border: 1px solid var(--gold); color: var(--gold); border-radius: 6px; padding: 6px 18px; font-size: 1rem; }
+    .card:hover .btn { background: var(--gold); color: var(--bg-deep); }
+
+    section.block { margin-top: 44px; }
+    section.block > h2 { color: var(--gold); font-weight: 600; font-size: 1.4rem; margin-bottom: 6px; }
+    section.block > h2 .he { font-size: 1.25rem; font-weight: 400; margin-left: 8px; }
+
+    /* Timeline */
+    .timeline { list-style: none; display: grid; grid-template-columns: repeat(5, 1fr); position: relative; margin-top: 20px; }
+    .timeline::before { content: ''; position: absolute; top: 11px; left: 10%; right: 10%; height: 2px; background: var(--line-strong); }
+    .timeline li { position: relative; text-align: center; padding: 0 6px; }
+    .timeline .dot { display: block; width: 24px; height: 24px; border-radius: 50%; margin: 0 auto 10px; background: var(--bg-deep); border: 2px solid var(--gold-dim); position: relative; }
+    .timeline li.major .dot { background: var(--gold); border-color: var(--gold); }
+    .timeline a, .timeline .stop { display: block; text-decoration: none; color: inherit; border-radius: 6px; padding: 4px 2px; }
+    .timeline a:hover, .timeline a:focus-visible { background: rgba(212,168,83,0.1); outline: none; }
+    .timeline a:hover .name { color: var(--gold); }
+    .timeline .name { display: block; font-weight: 600; color: #e8e8e8; line-height: 1.25; }
+    .timeline .date { display: block; font-size: 0.9rem; color: var(--silver-dim); }
+    .timeline .note { display: block; font-size: 0.95rem; margin-top: 4px; }
+
+    .days { margin-top: 20px; background: var(--bg-inner); border: 1px solid var(--line); border-left: 3px solid var(--gold-dim); border-radius: 6px; padding: 16px 20px; }
+    .days h3 { color: #e8e8e8; font-weight: 600; font-size: 1.15rem; }
+    .days h3 .he { font-size: 1.2rem; font-weight: 400; margin-left: 6px; }
+    .days p { margin-top: 6px; }
+
+    /* Shared texts */
+    .shared { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 16px; }
+    .text { background: var(--bg-card); border: 1px solid var(--line); border-radius: 8px; padding: 16px 18px; }
+    .text .he { font-size: 1.35rem; display: block; }
+    .text h3 { font-weight: 600; font-size: 1.1rem; color: #e8e8e8; margin-top: 4px; }
+    .text p { font-size: 1rem; margin: 4px 0 10px; }
+    .text .links { display: flex; gap: 8px; flex-wrap: wrap; }
+    .text .links a { border: 1px solid var(--gold-dim); border-radius: 12px; padding: 1px 12px; font-size: 0.9rem; text-decoration: none; }
+    .text .links a:hover { background: rgba(212,168,83,0.12); }
+
+    .start { margin-top: 44px; text-align: center; border-top: 1px solid var(--line); padding-top: 28px; }
+    .start a { font-weight: 600; }
+
+    @media (max-width: 760px) {
+      .hero h1 { font-size: 1.9rem; }
+      .cards, .shared { grid-template-columns: 1fr; }
+      .timeline { grid-template-columns: 1fr; gap: 4px; }
+      .timeline::before { top: 12px; bottom: 12px; left: 11px; right: auto; width: 2px; height: auto; }
+      .timeline li { text-align: left; padding: 0 0 0 38px; }
+      .timeline .dot { position: absolute; left: 0; top: 6px; margin: 0; }
+      .days h3 .he, .days h3 .tr { display: block; margin: 4px 0 0; }
+    }
+  </style>
+</head>
+<body class="hide-tr">
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="back" href="index.html">← Back to practice</a>
+    <button class="tr-toggle" type="button" aria-pressed="false" id="trToggle">Show transliteration</button>
+  </div>
+</div>
+
+<main>
+  <header class="hero">
+    <h1>The High Holy Days</h1>
+    <span class="he" lang="he">יָמִים נוֹרָאִים</span>
+    <span class="tr">ya-MIM no-ra-IM</span>
+    <div class="sub">the Days of Awe</div>
+    <p class="intro">Ten days in autumn, from Rosh Hashanah to the close of Yom Kippur, set aside for looking back, making amends and beginning again. These guides follow our own machzorim page by page, so you can find your way through the services, read the key prayers in Hebrew and understand what they say.</p>
+  </header>
+
+  <div class="cards">
+    <a class="card" href="rosh-hashanah.html">
+      <span class="when">1 Tishrei</span>
+      <h2>Rosh Hashanah, the Day of Memorial</h2>
+      <span class="he" lang="he">יוֹם הַזִּכָּרוֹן</span>
+      <span class="tr">yom ha-zi-ka-RON</span>
+      <p>The new year: the sound of the shofar, G_d as Ruler of the world, and the Binding of Isaac.</p>
+      <span class="btn">Open the guide</span>
+    </a>
+    <a class="card" href="yom-kippur.html">
+      <span class="when">10 Tishrei</span>
+      <h2>Yom Kippur, the Day of Atonement</h2>
+      <span class="he" lang="he">יוֹם הַכִּפֻּרִים</span>
+      <span class="tr">yom ha-ki-pu-RIM</span>
+      <p>A day of fasting and prayer, from Kol Nidrei at nightfall to the closing of the gates at Ne'ilah.</p>
+      <span class="btn">Open the guide</span>
+    </a>
+  </div>
+
+  <section class="block" aria-labelledby="journey">
+    <h2 id="journey">The journey through the season</h2>
+    <ol class="timeline">
+      <li>
+        <span class="dot" aria-hidden="true"></span>
+        <span class="stop">
+          <span class="name">Elul</span>
+          <span class="date">the month before</span>
+          <span class="note">A month of preparation. Psalm&nbsp;27, "The Lord is my light", is said every day.</span>
+        </span>
+      </li>
+      <li class="major">
+        <span class="dot" aria-hidden="true"></span>
+        <a href="rosh-hashanah.html#what">
+          <span class="name">Rosh Hashanah</span>
+          <span class="date">1 Tishrei</span>
+          <span class="note">The shofar calls us to remember.</span>
+        </a>
+      </li>
+      <li>
+        <span class="dot" aria-hidden="true"></span>
+        <a href="yom-kippur.html#diff">
+          <span class="name">Ten Days of Return</span>
+          <span class="date">1–10 Tishrei</span>
+          <span class="note">Time to put things right.</span>
+        </a>
+      </li>
+      <li class="major">
+        <span class="dot" aria-hidden="true"></span>
+        <a href="yom-kippur.html#what">
+          <span class="name">Yom Kippur</span>
+          <span class="date">10 Tishrei</span>
+          <span class="note">Beginning with Kol Nidrei.</span>
+        </a>
+      </li>
+      <li>
+        <span class="dot" aria-hidden="true"></span>
+        <a href="yom-kippur.html#km-neilah">
+          <span class="name">Ne'ilah</span>
+          <span class="date">the close of the day</span>
+          <span class="note">The gates close; one long shofar call.</span>
+        </a>
+      </li>
+    </ol>
+
+    <div class="days">
+      <h3>The Ten Days of Return <span class="he" lang="he">עֲשֶׂרֶת יְמֵי תְשׁוּבָה</span> <span class="tr">a-SE-ret ye-MEI te-shu-VA</span></h3>
+      <p>The days between are called the Ten Days of Return. Some prayers change for the whole period, and many texts from Rosh Hashanah come back on Yom Kippur.</p>
+    </div>
+  </section>
+
+  <section class="block" aria-labelledby="both">
+    <h2 id="both">Texts you'll meet on both days</h2>
+    <div class="shared">
+      <div class="text">
+        <span class="he" lang="he">אָבִינוּ מַלְכֵּנוּ</span>
+        <span class="tr">a-VI-nu mal-KE-nu</span>
+        <h3>Avinu Malkeinu</h3>
+        <p>Short lines of plea, said throughout the Ten Days.</p>
+        <div class="links"><a href="rosh-hashanah.html#ts-avinu">Rosh Hashanah</a><a href="yom-kippur.html#ts-avinu">Yom Kippur</a></div>
+      </div>
+      <div class="text">
+        <span class="he" lang="he">אֱלֹהֵינוּ שֶׁבַּשָּׁמַיִם</span>
+        <span class="tr">e-lo-HEI-nu she-ba-sha-MA-yim</span>
+        <h3>Our G_d who art in heaven</h3>
+        <p>A litany of short requests, sung with the Ark open.</p>
+        <div class="links"><a href="rosh-hashanah.html#ts-eloheinu">Rosh Hashanah</a><a href="yom-kippur.html#ts-eloheinu">Yom Kippur</a></div>
+      </div>
+      <div class="text">
+        <span class="he" lang="he">הַיּוֹם תְּאַמְּצֵנוּ</span>
+        <span class="tr">ha-YOM te-am-TZE-nu</span>
+        <h3>On this day, strengthen us</h3>
+        <p>A short, lively poem: each line begins "today", and everyone answers Amen.</p>
+        <div class="links"><a href="rosh-hashanah.html#ts-hayom">Rosh Hashanah</a><a href="yom-kippur.html#ts-hayom">Yom Kippur</a></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="start">
+    <p><strong>New to reading Hebrew?</strong> Start with the <a href="basics.html">reading guide</a>. It takes you from the letters to reading whole prayers.</p>
+  </div>
+</main>
+
+<script>
+  (function () {
+    var btn = document.getElementById('trToggle');
+    btn.addEventListener('click', function () {
+      var hidden = document.body.classList.toggle('hide-tr');
+      btn.textContent = hidden ? 'Show transliteration' : 'Hide transliteration';
+      btn.setAttribute('aria-pressed', hidden ? 'false' : 'true');
+    });
+  })();
+</script>
+</body>
+</html>
