@@ -109,6 +109,12 @@
     .amida-landing-subtitle { font-size: 1rem; color: var(--silver-dim); font-style: italic; margin-top: 4px; }
     .bl-heb { text-align: center; }
     .bl-heb .heb-inline { font-size: 1.35rem; }
+    .bl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(220px, 100%), 1fr)); gap: 10px; }
+    .bl-card { text-align: left; background: var(--bg-input); border: 1px solid var(--gold-dim); border-radius: 10px; padding: 12px 14px; color: var(--silver); font: inherit; cursor: pointer; display: flex; flex-direction: column; gap: 3px; transition: border-color 0.2s, background 0.2s; }
+    .bl-card:hover, .bl-card:focus-visible { border-color: var(--gold); outline: none; }
+    .bl-title { color: var(--gold); font-size: 1.05rem; font-weight: 600; }
+    .bl-he { font-family: 'David Libre', serif; direction: rtl; text-align: left; unicode-bidi: plaintext; color: #e8e8e8; font-size: 1.15rem; }
+    .bl-desc { color: var(--silver-dim); font-size: 0.88rem; }
     .bl-head { color: var(--gold); font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; margin: 22px 0 8px; }
     .amida-landing-intro { color: var(--silver); line-height: 1.7; margin-bottom: 12px; font-size: 1rem; }
     .amida-landing-intro strong { color: var(--gold); font-weight: 600; }
@@ -725,95 +731,38 @@
             <p class="amida-landing-intro bl-heb"><span class="heb-inline">אֲשֶׁר קִדְּשָׁנוּ בְּמִצְוֹתָיו וְצִוָּנוּ</span></p>
             <p class="amida-landing-intro"><strong>Answering.</strong> When someone else says a blessing, we answer "Amen", <span class="heb-inline">אָמֵן</span> "so be it".</p>
             <hr class="amida-landing-divider">
-            <div class="bl-head">On waking</div>
-            <div class="amida-sections-list">
-              <div class="amida-section-item" data-prayer="blessing-modeh">
-                <div class="amida-section-name">Modeh Ani — I give thanks</div>
-                <div class="amida-section-desc">The first words of the day, said on waking: thanks for the soul restored.</div>
-              </div>
-              <div class="amida-section-item" data-prayer="blessing-neshamah">
-                <div class="amida-section-name">Elohai Neshamah — The soul You gave me is pure</div>
-                <div class="amida-section-desc">A morning blessing for the gift of the soul, from our Shabbat morning service.</div>
-              </div>
+            <div class="bl-head">Every day</div>
+            <div class="bl-grid">
+              <button class="bl-card" type="button" data-prayer="blessing-modeh"><span class="bl-title">Modeh Ani</span><span class="bl-he" lang="he">מוֹדֶה אֲנִי</span><span class="bl-desc">On waking</span></button>
+              <button class="bl-card" type="button" data-prayer="blessing-neshamah"><span class="bl-title">Elohai Neshamah</span><span class="bl-he" lang="he">אֱלֹהַי נְשָׁמָה</span><span class="bl-desc">The soul You gave me</span></button>
+              <button class="bl-card" type="button" data-prayer="blessing-study"><span class="bl-title">Torah study</span><span class="bl-he" lang="he">לַעֲסֹק בְּדִבְרֵי תוֹרָה</span><span class="bl-desc">Before learning</span></button>
+              <button class="bl-card" type="button" data-prayer="blessing-mezuzah"><span class="bl-title">Mezuzah</span><span class="bl-he" lang="he">לִקְבֹּעַ מְזוּזָה</span><span class="bl-desc">Fixing a mezuzah</span></button>
             </div>
             <div class="bl-head">Meals</div>
-            <div class="amida-sections-list">
-              <div class="amida-section-item" data-prayer="blessing-handwashing">
-                <div class="amida-section-name">Netilat Yadayim — Washing the hands</div>
-                <div class="amida-section-desc">Said after washing the hands, before a meal with bread.</div>
-              </div>
-              <div class="amida-section-item" data-prayer="blessing-food">
-                <div class="amida-section-name">Blessings over food</div>
-                <div class="amida-section-desc">One opening and six endings: bread, wine, grain foods, fruit, vegetables and everything else.</div>
-              </div>
-              <div class="amida-section-item" data-prayer="blessing-hamazon">
-                <div class="amida-section-name">Birkat Hamazon — Grace after meals</div>
-                <div class="amida-section-desc">A short form: the invitation to say grace together, the blessing for food, and closing lines of peace.</div>
-              </div>
-              <div class="amida-section-item" data-prayer="blessing-nefashot">
-                <div class="amida-section-name">Borei Nefashot — After other foods</div>
-                <div class="amida-section-desc">The short blessing after a snack or a drink.</div>
-              </div>
+            <div class="bl-grid">
+              <button class="bl-card" type="button" data-prayer="blessing-handwashing"><span class="bl-title">Washing hands</span><span class="bl-he" lang="he">נְטִילַת יָדַיִם</span><span class="bl-desc">Before a meal with bread</span></button>
+              <button class="bl-card" type="button" data-prayer="blessing-food"><span class="bl-title">Over food</span><span class="bl-he" lang="he">הַמּוֹצִיא</span><span class="bl-desc">Bread, wine, fruit and more</span></button>
+              <button class="bl-card" type="button" data-prayer="blessing-hamazon"><span class="bl-title">Birkat Hamazon</span><span class="bl-he" lang="he">בִּרְכַּת הַמָּזוֹן</span><span class="bl-desc">Grace after meals (short form)</span></button>
+              <button class="bl-card" type="button" data-prayer="blessing-nefashot"><span class="bl-title">Borei Nefashot</span><span class="bl-he" lang="he">בּוֹרֵא נְפָשׁוֹת</span><span class="bl-desc">After a snack or a drink</span></button>
             </div>
             <div class="bl-head">Shabbat and festivals</div>
-            <div class="amida-sections-list">
-              <div class="amida-section-item" data-prayer="hadlakat-nerot">
-                <div class="amida-section-name">Candle lighting</div>
-                <div class="amida-section-desc">Lighting the Shabbat candles on Friday evening.</div>
-              </div>
-              <div class="amida-section-item" data-prayer="kiddush">
-                <div class="amida-section-name">Kiddush</div>
-                <div class="amida-section-desc">Sanctifying Shabbat over wine and bread.</div>
-              </div>
-              <div class="amida-section-item" data-prayer="blessing-children">
-                <div class="amida-section-name">Blessing the children</div>
-                <div class="amida-section-desc">Parents' blessing at the Friday night table, with the Priestly Blessing.</div>
-              </div>
-              <div class="amida-section-item" data-prayer="blessing-havdalah">
-                <div class="amida-section-name">Havdalah — The end of Shabbat</div>
-                <div class="amida-section-desc">Wine, spices and a plaited candle on Saturday night.</div>
-              </div>
-              <div class="amida-section-item" data-prayer="chanukah-shehecheyanu">
-                <div class="amida-section-name">Shehecheyanu — Who has kept us alive</div>
-                <div class="amida-section-desc">For the first night of a festival and other new and special moments.</div>
-              </div>
+            <div class="bl-grid">
+              <button class="bl-card" type="button" data-prayer="hadlakat-nerot"><span class="bl-title">Candle lighting</span><span class="bl-he" lang="he">הַדְלָקַת נֵרוֹת</span><span class="bl-desc">Friday evening</span></button>
+              <button class="bl-card" type="button" data-prayer="kiddush"><span class="bl-title">Kiddush</span><span class="bl-he" lang="he">קִדּוּשׁ</span><span class="bl-desc">Over wine on Friday night</span></button>
+              <button class="bl-card" type="button" data-prayer="blessing-children"><span class="bl-title">Blessing the children</span><span class="bl-he" lang="he">יְבָרֶכְךָ</span><span class="bl-desc">At the Friday night table</span></button>
+              <button class="bl-card" type="button" data-prayer="blessing-havdalah"><span class="bl-title">Havdalah</span><span class="bl-he" lang="he">הַבְדָּלָה</span><span class="bl-desc">The end of Shabbat</span></button>
+              <button class="bl-card" type="button" data-prayer="chanukah-shehecheyanu"><span class="bl-title">Shehecheyanu</span><span class="bl-he" lang="he">שֶׁהֶחֱיָנוּ</span><span class="bl-desc">New and special occasions</span></button>
             </div>
             <div class="bl-head">In synagogue</div>
-            <div class="amida-sections-list">
-              <div class="amida-section-item" data-prayer="blessing-torah">
-                <div class="amida-section-name">Torah blessings — For an aliyah</div>
-                <div class="amida-section-desc">Said by the person called up to the Torah, before and after the reading.</div>
-              </div>
-              <div class="amida-section-item" data-prayer="blessing-haftarah-before">
-                <div class="amida-section-name">Haftarah — Before the reading</div>
-                <div class="amida-section-desc">The blessing before the reading from the Prophets.</div>
-              </div>
-              <div class="amida-section-item" data-prayer="blessing-haftarah-after">
-                <div class="amida-section-name">Haftarah — After the reading</div>
-                <div class="amida-section-desc">The blessings after the reading, ending with Shabbat.</div>
-              </div>
-              <div class="amida-section-item" data-prayer="blessing-tallit">
-                <div class="amida-section-name">Putting on the tallit</div>
-                <div class="amida-section-desc">Said before wrapping yourself in the prayer shawl.</div>
-              </div>
-            </div>
-            <div class="bl-head">At home and in study</div>
-            <div class="amida-sections-list">
-              <div class="amida-section-item" data-prayer="blessing-study">
-                <div class="amida-section-name">Before studying Torah</div>
-                <div class="amida-section-desc">Said before learning: study as an everyday occupation.</div>
-              </div>
-              <div class="amida-section-item" data-prayer="blessing-mezuzah">
-                <div class="amida-section-name">Fixing a mezuzah</div>
-                <div class="amida-section-desc">Said when fixing a mezuzah to the doorpost of a home.</div>
-              </div>
+            <div class="bl-grid">
+              <button class="bl-card" type="button" data-prayer="blessing-tallit"><span class="bl-title">Tallit</span><span class="bl-he" lang="he">עֲטִיפַת טַלִּית</span><span class="bl-desc">Putting on the prayer shawl</span></button>
+              <button class="bl-card" type="button" data-prayer="blessing-torah"><span class="bl-title">Torah blessings</span><span class="bl-he" lang="he">בִּרְכוֹת הַתּוֹרָה</span><span class="bl-desc">For an aliyah</span></button>
+              <button class="bl-card" type="button" data-prayer="blessing-haftarah-before"><span class="bl-title">Haftarah: before</span><span class="bl-he" lang="he">בִּרְכוֹת הַהַפְטָרָה</span><span class="bl-desc">Before the reading</span></button>
+              <button class="bl-card" type="button" data-prayer="blessing-haftarah-after"><span class="bl-title">Haftarah: after</span><span class="bl-he" lang="he">בִּרְכוֹת הַהַפְטָרָה</span><span class="bl-desc">After the reading</span></button>
             </div>
             <div class="bl-head">Special moments</div>
-            <div class="amida-sections-list">
-              <div class="amida-section-item" data-prayer="blessing-moments">
-                <div class="amida-section-name">Blessings for special moments</div>
-                <div class="amida-section-desc">Lightning, thunder, a rainbow, the sea, trees in blossom, good news, and hearing of a death.</div>
-              </div>
+            <div class="bl-grid">
+              <button class="bl-card" type="button" data-prayer="blessing-moments"><span class="bl-title">Special moments</span><span class="bl-he" lang="he">הַטּוֹב וְהַמֵּטִיב</span><span class="bl-desc">Lightning, a rainbow, the sea, news</span></button>
             </div>
           </div>
 
@@ -2508,7 +2457,7 @@
       }
     });
 
-    document.querySelectorAll('#blessings-landing .amida-section-item').forEach(item => {
+    document.querySelectorAll('#blessings-landing [data-prayer]').forEach(item => {
       item.addEventListener('click', () => switchPrayer(item.dataset.prayer));
     });
 
