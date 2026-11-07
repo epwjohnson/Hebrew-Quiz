@@ -66,6 +66,27 @@
       /* align-self: start keeps it at the top */
       align-self: start;
     }
+    /* Desktop: the prayer list scrolls on its own, so the practice panel stays in view */
+    @media (min-width: 760px) {
+      .prayer-sidebar { position: sticky; top: 12px; max-height: calc(100vh - 24px); overflow-y: auto; overscroll-behavior: contain; padding-right: 6px; scrollbar-width: thin; scrollbar-color: var(--gold-dim) transparent; }
+    }
+    /* Phones: prayer list as a slide-out menu */
+    .nav-bar, .nav-head, .nav-backdrop { display: none; }
+    @media (max-width: 759px) {
+      .layout { grid-template-columns: 1fr; }
+      .nav-bar { display: block; margin: 4px 0 10px; }
+      .nav-btn { display: flex; align-items: center; gap: 8px; width: 100%; padding: 9px 14px; background: var(--bg-input); border: 1px solid var(--gold-dim); border-radius: 8px; color: var(--gold); font: inherit; font-size: 1rem; cursor: pointer; text-align: left; }
+      .nav-icon { font-size: 1.1rem; line-height: 1; }
+      .nav-current { margin-left: auto; color: var(--silver); font-size: 0.92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 60%; }
+      .nav-current:not(:empty)::before { content: '· '; color: var(--gold-dim); }
+      .prayer-sidebar { display: none; }
+      .prayer-sidebar.open { display: flex; position: fixed; top: 0; left: 0; bottom: 0; height: 100vh; height: 100dvh; max-height: none; width: min(86vw, 320px); z-index: 1050; background: var(--bg-deep); border-right: 1px solid var(--gold-dim); padding: 14px 14px 28px; overflow-y: auto; overscroll-behavior: contain; box-shadow: 6px 0 24px rgba(0,0,0,0.5); }
+      .prayer-sidebar.open > * { flex-shrink: 0; }
+      .nav-head { display: flex; align-items: center; justify-content: space-between; color: var(--gold); font-size: 1.1rem; margin-bottom: 6px; }
+      .nav-close { background: none; border: none; color: var(--silver); font-size: 1.8rem; line-height: 1; cursor: pointer; padding: 0 4px; }
+      .nav-backdrop.open { display: block; position: fixed; inset: 0; z-index: 1040; background: rgba(0,0,0,0.55); }
+      body.nav-open { overflow: hidden; }
+    }
     .main-column {
       grid-row: 1;
       min-width: 0;
@@ -588,6 +609,10 @@
         <h1>קריאה בעברית</h1>
         <p class="subtitle">Hebrew Reading Practice with Speech Recognition</p>
       </header>
+    <div class="nav-bar">
+      <button id="nav-btn" class="nav-btn" type="button" aria-controls="prayer-select" aria-expanded="false"><span class="nav-icon" aria-hidden="true">☰</span> Prayers<span class="nav-current" id="nav-current"></span></button>
+    </div>
+    <div id="nav-backdrop" class="nav-backdrop"></div>
     <div class="tool-row">
       <div class="progress-text quiz-only" id="progress-text">Line 1 of 6</div>
       <div class="tool-right">
@@ -611,6 +636,7 @@
 
     <div class="layout">
       <div class="prayer-sidebar" id="prayer-select">
+        <div class="nav-head"><span>Prayers</span><button id="nav-close" class="nav-close" type="button" aria-label="Close the prayer list">×</button></div>
         <button class="prayer-btn active" data-prayer="hadlakat-nerot">Candles Blessing</button>
         <button class="prayer-btn" data-prayer="shalom-aleichem">Shalom Aleichem</button>
         <button class="prayer-btn" data-prayer="mizmor-shir">Mizmor Shir</button>
@@ -2552,6 +2578,7 @@
 
     function showShemaLanding() {
       closeAllGroups();
+      requestAnimationFrame(() => { updateNavCurrent(); scrollToPractice(); revealInSidebar(document.getElementById('shema-toggle')); });
       shemaLanding.classList.remove('hidden');
       document.getElementById('quiz-area').classList.add('hidden');
       document.getElementById('completion').classList.add('hidden');
@@ -2586,6 +2613,7 @@
 
     function showChanukahLanding() {
       closeAllGroups();
+      requestAnimationFrame(() => { updateNavCurrent(); scrollToPractice(); revealInSidebar(document.getElementById('chanukah-toggle')); });
       chanukahLanding.classList.remove('hidden');
       document.getElementById('quiz-area').classList.add('hidden');
       document.getElementById('completion').classList.add('hidden');
@@ -2620,6 +2648,7 @@
 
     function showBlessingsLanding() {
       closeAllGroups();
+      requestAnimationFrame(() => { updateNavCurrent(); scrollToPractice(); revealInSidebar(document.getElementById('blessings-toggle')); });
       blessingsLanding.classList.remove('hidden');
       document.getElementById('quiz-area').classList.add('hidden');
       document.getElementById('completion').classList.add('hidden');
@@ -2657,12 +2686,12 @@
       document.getElementById(c.page).classList.remove('hidden');
       document.getElementById(c.btn).classList.add('active');
       setLandingHash(hash);
-      window.scrollTo(0, 0);
+      requestAnimationFrame(() => { updateNavCurrent(); revealInSidebar(document.getElementById(c.btn)); });
     }
     document.querySelectorAll('[data-landing]').forEach(el => {
       el.addEventListener('click', () => {
         const h = el.dataset.landing;
-        if (h === 'blessings-intro') { showBlessingsLanding(); window.scrollTo(0, 0); } else showBlChooser(h);
+        if (h === 'blessings-intro') showBlessingsLanding(); else showBlChooser(h);
       });
     });
     document.querySelectorAll('.bl-chooser [data-prayer]').forEach(item => {
@@ -2671,6 +2700,7 @@
 
     function showAmidaLanding() {
       closeAllGroups();
+      requestAnimationFrame(() => { updateNavCurrent(); scrollToPractice(); revealInSidebar(document.getElementById('amida-toggle')); });
       amidaLanding.classList.remove('hidden');
       document.getElementById('quiz-area').classList.add('hidden');
       document.getElementById('completion').classList.add('hidden');
@@ -3347,7 +3377,63 @@
     }
 
     // Switch prayer
+
+    // Bring the practice panel (line count, SR switch, current line) into view after choosing something
+    function scrollToPractice() {
+      const bar = document.querySelector('.nav-bar');
+      const row = (bar && bar.offsetParent) ? bar : document.querySelector('.tool-row');
+      if (!row) return;
+      const y = Math.max(0, row.getBoundingClientRect().top + window.scrollY - 8);
+      // On phones always line the menu bar up with the top, so the line to read has the most room
+      if (window.scrollY > y || (bar && bar.offsetParent)) window.scrollTo(0, y);
+    }
+    // On desktop the sidebar scrolls separately: keep the chosen item visible inside it
+    function revealInSidebar(el) {
+      const sb = document.getElementById('prayer-select');
+      if (!sb || !el || sb.scrollHeight <= sb.clientHeight) return;
+      const top = el.getBoundingClientRect().top - sb.getBoundingClientRect().top + sb.scrollTop, bottom = top + el.offsetHeight;
+      if (top < sb.scrollTop) sb.scrollTop = top - 8;
+      else {
+        // the part of the list actually on screen (its foot may be below the window until the page scrolls)
+        const shown = Math.min(sb.clientHeight, window.innerHeight - sb.getBoundingClientRect().top);
+        if (bottom > sb.scrollTop + shown) sb.scrollTop = bottom - shown + 8;
+      }
+      // Near the very end of the list, nudge the page so the item clears the bottom of the window
+      const over = el.getBoundingClientRect().bottom - window.innerHeight + 8;
+      if (over > 0) window.scrollBy(0, over);
+    }
+
+
+    // Phones: open and close the prayer list menu; show what is open on the menu button
+    const navSidebar = document.getElementById('prayer-select');
+    const navBtn = document.getElementById('nav-btn');
+    const navBackdrop = document.getElementById('nav-backdrop');
+    const navPhone = window.matchMedia('(max-width: 759px)');
+    function setNav(open) {
+      navSidebar.classList.toggle('open', open);
+      navBackdrop.classList.toggle('open', open);
+      document.body.classList.toggle('nav-open', open);
+      navBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open) requestAnimationFrame(() => revealInSidebar(navSidebar.querySelector('.prayer-btn.active') || navSidebar.querySelector('.amida-group-toggle.open')));
+    }
+    function updateNavCurrent() {
+      const a = navSidebar.querySelector('.prayer-btn.active') || navSidebar.querySelector('.amida-group-toggle.open');
+      document.getElementById('nav-current').textContent = a ? a.textContent.replace(/[▸▾]/g, '').trim() : '';
+    }
+    navBtn.addEventListener('click', () => setNav(true));
+    navBackdrop.addEventListener('click', () => setNav(false));
+    document.getElementById('nav-close').addEventListener('click', () => setNav(false));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && navSidebar.classList.contains('open')) setNav(false); });
+    // Choosing a prayer or a chooser page closes the menu; group headings stay open so you can pick inside them
+    navSidebar.addEventListener('click', e => {
+      const b = e.target.closest('.prayer-btn');
+      if (b && !b.classList.contains('amida-group-toggle') && navPhone.matches) setNav(false);
+      requestAnimationFrame(updateNavCurrent);
+    });
+    navPhone.addEventListener('change', () => { if (!navPhone.matches) setNav(false); });
+
     function switchPrayer(prayerId) {
+      requestAnimationFrame(() => { updateNavCurrent(); scrollToPractice(); revealInSidebar(document.querySelector('.prayer-sidebar .prayer-btn.active')); });
       currentPrayer = prayerId;
       currentLineIndex = 0;
       correctCount = 0;
