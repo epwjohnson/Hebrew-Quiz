@@ -144,6 +144,9 @@
     .bl-back { background: none; border: none; color: var(--silver-dim); font: inherit; font-size: 0.9rem; cursor: pointer; padding: 0; margin-bottom: 8px; }
     .bl-back:hover { color: var(--gold); }
     .bl-open-label { color: var(--gold); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; text-align: center; margin: 16px 0 6px; }
+    #blessings-toggle, #chanukah-toggle { border-style: solid; }
+    #blessings-toggle.open, #chanukah-toggle.open { background: var(--gold-dim); border-color: var(--gold); color: #fff; }
+    #blessings-group, #chanukah-group { display: none !important; }
     .bl-head { color: var(--gold); font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; margin: 22px 0 8px; }
     .amida-landing-intro { color: var(--silver); line-height: 1.7; margin-bottom: 12px; font-size: 1rem; }
     .amida-landing-intro strong { color: var(--gold); font-weight: 600; }
@@ -631,7 +634,7 @@
     <div class="layout">
       <div class="prayer-sidebar" id="prayer-select">
         <div class="nav-head"><span>Blessings</span><button id="nav-close" class="nav-close" type="button" aria-label="Close the list of blessings">×</button></div>
-        <button class="prayer-btn amida-group-toggle" id="blessings-toggle">Blessings ▸</button>
+        <button class="prayer-btn amida-group-toggle" id="blessings-toggle">About Blessings</button>
         <div class="amida-group" id="blessings-group">
           <button class="prayer-btn amida-sub" data-prayer="blessing-modeh">Modeh Ani</button>
           <button class="prayer-btn amida-sub" data-prayer="blessing-neshamah">Elohai Neshamah</button>
@@ -649,9 +652,12 @@
           <button class="prayer-btn amida-sub" data-prayer="blessing-mezuzah">Mezuzah</button>
           <button class="prayer-btn amida-sub bl-chooser-btn" id="blessings-moments-btn" data-landing="blessings-moments">Special Moments</button>
         </div>
-        <button class="prayer-btn" data-prayer="hadlakat-nerot">Shabbat Candles</button>
-        <button class="prayer-btn" data-prayer="kiddush">Kiddush</button>
-        <button class="prayer-btn amida-group-toggle" id="chanukah-toggle">Chanukah ▸</button>
+        <button class="prayer-btn bl-chooser-btn" id="cat-everyday" data-landing="blessings-everyday">Every Day</button>
+        <button class="prayer-btn bl-chooser-btn" id="cat-meals" data-landing="blessings-meals">Meals</button>
+        <button class="prayer-btn bl-chooser-btn" id="cat-shabbat" data-landing="blessings-shabbat">Shabbat & Festivals</button>
+        <button class="prayer-btn bl-chooser-btn" id="cat-synagogue" data-landing="blessings-synagogue">In Synagogue</button>
+        <button class="prayer-btn bl-chooser-btn" id="cat-moments" data-landing="blessings-moments">Special Moments</button>
+        <button class="prayer-btn amida-group-toggle" id="chanukah-toggle">Chanukah</button>
         <div class="amida-group" id="chanukah-group">
           <button class="prayer-btn amida-sub" data-prayer="chanukah-lehadlik">Lehadlik Ner</button>
           <button class="prayer-btn amida-sub" data-prayer="chanukah-nisim">She'asa Nisim</button>
@@ -700,53 +706,48 @@
             <p class="amida-landing-intro bl-heb"><span class="heb-inline">אֲשֶׁר קִדְּשָׁנוּ בְּמִצְוֹתָיו וְצִוָּנוּ</span></p>
             <p class="amida-landing-intro"><strong>Answering.</strong> When someone else says a blessing, we answer "Amen", <span class="heb-inline">אָמֵן</span> "so be it".</p>
             <hr class="amida-landing-divider">
-            <div class="bl-head">Every day</div>
+            <div class="bl-head">Choose a category</div>
+            <div class="bl-grid">
+              <button class="bl-card" type="button" data-landing="blessings-everyday"><span class="bl-title">Every day</span><span class="bl-he" lang="he">בְּכָל יוֹם</span><span class="bl-desc">Blessings for waking up, for study, and for the doorway of a Jewish home.</span></button>
+              <button class="bl-card" type="button" data-landing="blessings-meals"><span class="bl-title">Before and after eating</span><span class="bl-he" lang="he">לִפְנֵי הָאֹכֶל וְאַחֲרָיו</span><span class="bl-desc">Every blessing over food begins with the same opening line, followed by one ending for what you are about to eat.</span></button>
+              <button class="bl-card" type="button" data-landing="blessings-shabbat"><span class="bl-title">Shabbat and festivals</span><span class="bl-he" lang="he">שַׁבָּת וּמוֹעֲדִים</span><span class="bl-desc">Blessings to welcome Shabbat at home, to bless the family, and to mark its end.</span></button>
+              <button class="bl-card" type="button" data-landing="blessings-synagogue"><span class="bl-title">In synagogue</span><span class="bl-he" lang="he">בְּבֵית הַכְּנֶסֶת</span><span class="bl-desc">Blessings for the tallit, and for being called up to the Torah or reading the Haftarah.</span></button>
+              <button class="bl-card" type="button" data-landing="blessings-moments"><span class="bl-title">Special moments</span><span class="bl-he" lang="he">בִּרְכוֹת הָרְאִיָּה</span><span class="bl-desc">These blessings mark moments of wonder, joy and loss.</span></button>
+              <button class="bl-card" type="button" data-landing="chanukah-intro"><span class="bl-title">Chanukah</span><span class="bl-he" lang="he">חֲנֻכָּה</span><span class="bl-desc">The blessings for lighting the menorah.</span></button>
+            </div>
+          </div>
+
+          <!-- Every day page -->
+          <div id="bl-everyday-landing" class="hidden bl-chooser">
+            <button class="bl-back" type="button" data-landing="blessings-intro">← About blessings</button>
+            <div class="amida-landing-header">
+              <div class="amida-landing-title">בְּכָל יוֹם</div>
+              <div class="amida-landing-subtitle">Every day</div>
+            </div>
+            <p class="amida-landing-intro">Blessings for waking up, for study, and for the doorway of a Jewish home.</p>
             <div class="bl-grid">
               <button class="bl-card" type="button" data-prayer="blessing-modeh"><span class="bl-title">Modeh Ani</span><span class="bl-he" lang="he">מוֹדֶה אֲנִי</span><span class="bl-desc">On waking</span></button>
               <button class="bl-card" type="button" data-prayer="blessing-neshamah"><span class="bl-title">Elohai Neshamah</span><span class="bl-he" lang="he">אֱלֹהַי נְשָׁמָה</span><span class="bl-desc">The soul You gave me</span></button>
               <button class="bl-card" type="button" data-prayer="blessing-study"><span class="bl-title">Torah study</span><span class="bl-he" lang="he">לַעֲסֹק בְּדִבְרֵי תוֹרָה</span><span class="bl-desc">Before learning</span></button>
               <button class="bl-card" type="button" data-prayer="blessing-mezuzah"><span class="bl-title">Mezuzah</span><span class="bl-he" lang="he">לִקְבֹּעַ מְזוּזָה</span><span class="bl-desc">Fixing a mezuzah</span></button>
             </div>
-            <div class="bl-head">Meals</div>
-            <div class="bl-grid">
-              <button class="bl-card" type="button" data-prayer="blessing-handwashing"><span class="bl-title">Washing hands</span><span class="bl-he" lang="he">נְטִילַת יָדַיִם</span><span class="bl-desc">Before a meal with bread</span></button>
-              <button class="bl-card" type="button" data-landing="blessings-food"><span class="bl-title">Over food</span><span class="bl-he" lang="he">הַמּוֹצִיא</span><span class="bl-desc">Six blessings: bread, wine, fruit and more</span></button>
-              <button class="bl-card" type="button" data-prayer="blessing-hamazon"><span class="bl-title">Birkat Hamazon</span><span class="bl-he" lang="he">בִּרְכַּת הַמָּזוֹן</span><span class="bl-desc">Grace after meals (short form)</span></button>
-              <button class="bl-card" type="button" data-prayer="blessing-nefashot"><span class="bl-title">Borei Nefashot</span><span class="bl-he" lang="he">בּוֹרֵא נְפָשׁוֹת</span><span class="bl-desc">After a snack or a drink</span></button>
-            </div>
-            <div class="bl-head">Shabbat and festivals</div>
-            <div class="bl-grid">
-              <button class="bl-card" type="button" data-prayer="hadlakat-nerot"><span class="bl-title">Candle lighting</span><span class="bl-he" lang="he">הַדְלָקַת נֵרוֹת</span><span class="bl-desc">Friday evening</span></button>
-              <button class="bl-card" type="button" data-prayer="kiddush"><span class="bl-title">Kiddush</span><span class="bl-he" lang="he">קִדּוּשׁ</span><span class="bl-desc">Over wine on Friday night</span></button>
-              <button class="bl-card" type="button" data-prayer="blessing-children"><span class="bl-title">Blessing the children</span><span class="bl-he" lang="he">יְבָרֶכְךָ</span><span class="bl-desc">At the Friday night table</span></button>
-              <button class="bl-card" type="button" data-prayer="blessing-havdalah"><span class="bl-title">Havdalah</span><span class="bl-he" lang="he">הַבְדָּלָה</span><span class="bl-desc">The end of Shabbat</span></button>
-              <button class="bl-card" type="button" data-prayer="chanukah-shehecheyanu"><span class="bl-title">Shehecheyanu</span><span class="bl-he" lang="he">שֶׁהֶחֱיָנוּ</span><span class="bl-desc">New and special occasions</span></button>
-              <button class="bl-card" type="button" data-landing="chanukah-intro"><span class="bl-title">Chanukah</span><span class="bl-he" lang="he">חֲנֻכָּה</span><span class="bl-desc">The blessings for lighting the menorah</span></button>
-            </div>
-            <div class="bl-head">In synagogue</div>
-            <div class="bl-grid">
-              <button class="bl-card" type="button" data-prayer="blessing-tallit"><span class="bl-title">Tallit</span><span class="bl-he" lang="he">עֲטִיפַת טַלִּית</span><span class="bl-desc">Putting on the prayer shawl</span></button>
-              <button class="bl-card" type="button" data-prayer="blessing-torah"><span class="bl-title">Torah blessings</span><span class="bl-he" lang="he">בִּרְכוֹת הַתּוֹרָה</span><span class="bl-desc">For an aliyah</span></button>
-              <button class="bl-card" type="button" data-prayer="blessing-haftarah-before"><span class="bl-title">Haftarah: before</span><span class="bl-he" lang="he">בִּרְכוֹת הַהַפְטָרָה</span><span class="bl-desc">Before the reading</span></button>
-              <button class="bl-card" type="button" data-prayer="blessing-haftarah-after"><span class="bl-title">Haftarah: after</span><span class="bl-he" lang="he">בִּרְכוֹת הַהַפְטָרָה</span><span class="bl-desc">After the reading</span></button>
-            </div>
-            <div class="bl-head">Special moments</div>
-            <div class="bl-grid">
-              <button class="bl-card" type="button" data-landing="blessings-moments"><span class="bl-title">Special moments</span><span class="bl-he" lang="he">הַטּוֹב וְהַמֵּטִיב</span><span class="bl-desc">Seven blessings: lightning, a rainbow, news</span></button>
-            </div>
           </div>
 
-          <!-- Blessings over food and drink chooser -->
-          <div id="bl-food-landing" class="hidden bl-chooser">
-            <button class="bl-back" type="button" data-landing="blessings-intro">← All blessings</button>
+          <!-- Before and after eating page -->
+          <div id="bl-meals-landing" class="hidden bl-chooser">
+            <button class="bl-back" type="button" data-landing="blessings-intro">← About blessings</button>
             <div class="amida-landing-header">
-              <div class="amida-landing-title">בִּרְכוֹת הַנֶּהֱנִין</div>
-              <div class="amida-landing-subtitle">Blessings over food and drink</div>
+              <div class="amida-landing-title">לִפְנֵי הָאֹכֶל וְאַחֲרָיו</div>
+              <div class="amida-landing-subtitle">Before and after eating</div>
             </div>
-            <p class="amida-landing-intro">Every blessing over food begins with the same opening line. Then you add just one ending, for the food in front of you. Choose a food to practise its blessing.</p>
+            <p class="amida-landing-intro">Every blessing over food begins with the same opening line, followed by one ending for what you are about to eat. After eating comes a blessing of thanks.</p>
             <div class="bl-open-label">The opening, the same every time</div>
             <p class="amida-landing-intro bl-heb"><span class="heb-inline">בָּרוּךְ אַתָּה יְהוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם</span></p>
-            <div class="bl-open-label">Then one ending</div>
+            <div class="bl-head">Before a meal with bread</div>
+            <div class="bl-grid">
+              <button class="bl-card" type="button" data-prayer="blessing-handwashing"><span class="bl-title">Washing hands</span><span class="bl-he" lang="he">נְטִילַת יָדַיִם</span><span class="bl-desc">After washing, before Hamotzi</span></button>
+            </div>
+            <div class="bl-head">Over food: one opening, six endings</div>
             <div class="bl-grid">
               <button class="bl-card" type="button" data-prayer="blessing-food-bread"><span class="bl-title"><span class="bl-num">1</span>Bread</span><span class="bl-he" lang="he">הַמּוֹצִיא לֶחֶם מִן הָאָרֶץ</span><span class="bl-desc">Ha-motzi lechem min ha-aretz</span></button>
               <button class="bl-card" type="button" data-prayer="blessing-food-wine"><span class="bl-title"><span class="bl-num">2</span>Wine and grape juice</span><span class="bl-he" lang="he">בּוֹרֵא פְּרִי הַגָּפֶן</span><span class="bl-desc">Borei pri ha-gafen</span></button>
@@ -755,19 +756,56 @@
               <button class="bl-card" type="button" data-prayer="blessing-food-ground"><span class="bl-title"><span class="bl-num">5</span>Vegetables</span><span class="bl-he" lang="he">בּוֹרֵא פְּרִי הָאֲדָמָה</span><span class="bl-desc">Borei pri ha-adamah</span></button>
               <button class="bl-card" type="button" data-prayer="blessing-food-shehakol"><span class="bl-title"><span class="bl-num">6</span>Everything else</span><span class="bl-he" lang="he">שֶׁהַכֹּל נִהְיָה בִּדְבָרוֹ</span><span class="bl-desc">She-ha-kol nihyah bidvaro</span></button>
             </div>
+            <div class="bl-head">After eating</div>
+            <div class="bl-grid">
+              <button class="bl-card" type="button" data-prayer="blessing-hamazon"><span class="bl-title">Birkat Hamazon</span><span class="bl-he" lang="he">בִּרְכַּת הַמָּזוֹן</span><span class="bl-desc">Grace after meals (short form)</span></button>
+              <button class="bl-card" type="button" data-prayer="blessing-nefashot"><span class="bl-title">Borei Nefashot</span><span class="bl-he" lang="he">בּוֹרֵא נְפָשׁוֹת</span><span class="bl-desc">After a snack or a drink</span></button>
+            </div>
           </div>
 
-          <!-- Blessings for special moments chooser -->
+          <!-- Shabbat and festivals page -->
+          <div id="bl-shabbat-landing" class="hidden bl-chooser">
+            <button class="bl-back" type="button" data-landing="blessings-intro">← About blessings</button>
+            <div class="amida-landing-header">
+              <div class="amida-landing-title">שַׁבָּת וּמוֹעֲדִים</div>
+              <div class="amida-landing-subtitle">Shabbat and festivals</div>
+            </div>
+            <p class="amida-landing-intro">Blessings to welcome Shabbat at home, to bless the family, and to mark its end; and the blessing for new and special occasions.</p>
+            <div class="bl-grid">
+              <button class="bl-card" type="button" data-prayer="hadlakat-nerot"><span class="bl-title">Shabbat candles</span><span class="bl-he" lang="he">הַדְלָקַת נֵרוֹת</span><span class="bl-desc">Friday evening</span></button>
+              <button class="bl-card" type="button" data-prayer="kiddush"><span class="bl-title">Kiddush</span><span class="bl-he" lang="he">קִדּוּשׁ</span><span class="bl-desc">Over wine on Friday night</span></button>
+              <button class="bl-card" type="button" data-prayer="blessing-children"><span class="bl-title">Blessing the children</span><span class="bl-he" lang="he">יְבָרֶכְךָ</span><span class="bl-desc">At the Friday night table</span></button>
+              <button class="bl-card" type="button" data-prayer="blessing-havdalah"><span class="bl-title">Havdalah</span><span class="bl-he" lang="he">הַבְדָּלָה</span><span class="bl-desc">The end of Shabbat</span></button>
+              <button class="bl-card" type="button" data-prayer="chanukah-shehecheyanu"><span class="bl-title">Shehecheyanu</span><span class="bl-he" lang="he">שֶׁהֶחֱיָנוּ</span><span class="bl-desc">New and special occasions</span></button>
+            </div>
+          </div>
+
+          <!-- In synagogue page -->
+          <div id="bl-synagogue-landing" class="hidden bl-chooser">
+            <button class="bl-back" type="button" data-landing="blessings-intro">← About blessings</button>
+            <div class="amida-landing-header">
+              <div class="amida-landing-title">בְּבֵית הַכְּנֶסֶת</div>
+              <div class="amida-landing-subtitle">In synagogue</div>
+            </div>
+            <p class="amida-landing-intro">Blessings for the tallit, and for being called up to the Torah or reading the Haftarah.</p>
+            <div class="bl-grid">
+              <button class="bl-card" type="button" data-prayer="blessing-tallit"><span class="bl-title">Tallit</span><span class="bl-he" lang="he">עֲטִיפַת טַלִּית</span><span class="bl-desc">Putting on the prayer shawl</span></button>
+              <button class="bl-card" type="button" data-prayer="blessing-torah"><span class="bl-title">Torah blessings</span><span class="bl-he" lang="he">בִּרְכוֹת הַתּוֹרָה</span><span class="bl-desc">For an aliyah</span></button>
+              <button class="bl-card" type="button" data-prayer="blessing-haftarah-before"><span class="bl-title">Haftarah: before</span><span class="bl-he" lang="he">בִּרְכוֹת הַהַפְטָרָה</span><span class="bl-desc">Before the reading</span></button>
+              <button class="bl-card" type="button" data-prayer="blessing-haftarah-after"><span class="bl-title">Haftarah: after</span><span class="bl-he" lang="he">בִּרְכוֹת הַהַפְטָרָה</span><span class="bl-desc">After the reading</span></button>
+            </div>
+          </div>
+
+          <!-- Special moments page -->
           <div id="bl-moments-landing" class="hidden bl-chooser">
-            <button class="bl-back" type="button" data-landing="blessings-intro">← All blessings</button>
+            <button class="bl-back" type="button" data-landing="blessings-intro">← About blessings</button>
             <div class="amida-landing-header">
               <div class="amida-landing-title">בִּרְכוֹת הָרְאִיָּה</div>
-              <div class="amida-landing-subtitle">Blessings for special moments</div>
+              <div class="amida-landing-subtitle">Special moments</div>
             </div>
-            <p class="amida-landing-intro">These blessings mark moments of wonder, joy and loss. Each begins with the same opening line, followed by just one ending for the moment. Choose a moment to practise its blessing.</p>
+            <p class="amida-landing-intro">These blessings mark moments of wonder, joy and loss. Each begins with the same opening line, followed by just one ending for the moment.</p>
             <div class="bl-open-label">The opening, the same every time</div>
             <p class="amida-landing-intro bl-heb"><span class="heb-inline">בָּרוּךְ אַתָּה יְהוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם</span></p>
-            <div class="bl-open-label">Then one ending</div>
             <div class="bl-grid">
               <button class="bl-card" type="button" data-prayer="blessing-moment-lightning"><span class="bl-title"><span class="bl-num">1</span>Lightning</span><span class="bl-he" lang="he">עֹשֶׂה מַעֲשֵׂה בְרֵאשִׁית</span><span class="bl-desc">Also for high mountains, great deserts and wide views</span></button>
               <button class="bl-card" type="button" data-prayer="blessing-moment-thunder"><span class="bl-title"><span class="bl-num">2</span>Thunder</span><span class="bl-he" lang="he">שֶׁכֹּחוֹ וּגְבוּרָתוֹ מָלֵא עוֹלָם</span><span class="bl-desc">Hearing a storm</span></button>
@@ -1582,8 +1620,8 @@
       [
         {id:'amida-toggle', label:'Amida ▸'},
         {id:'shema-toggle', label:'Shema ▸'},
-        {id:'chanukah-toggle', label:'Chanukah ▸'},
-        {id:'blessings-toggle', label:'Blessings ▸'}
+        {id:'chanukah-toggle', label:'Chanukah'},
+        {id:'blessings-toggle', label:'About Blessings'}
       ].forEach(({id, label}) => {
         const el = document.getElementById(id);
         if (!el) return;
@@ -1592,7 +1630,7 @@
       });
       // Landing pages
       document.querySelectorAll('.bl-chooser-btn').forEach(b => b.classList.remove('active'));
-      ['amida-landing','shema-landing','chanukah-landing','blessings-landing','bl-food-landing','bl-moments-landing'].forEach(id => {
+      ['amida-landing','shema-landing','chanukah-landing','blessings-landing','bl-everyday-landing','bl-meals-landing','bl-shabbat-landing','bl-synagogue-landing','bl-moments-landing'].forEach(id => {
         const p = document.getElementById(id); if (p) p.classList.add('hidden');
       });
     }
@@ -1647,7 +1685,7 @@
       document.getElementById('sung-version-bar').classList.add('hidden');
       prayerBtns.forEach(btn => btn.classList.remove('active'));
       chanukahToggle.classList.add('open');
-      chanukahToggle.textContent = 'Chanukah ▾';
+      chanukahToggle.textContent = 'Chanukah';
       chanukahGroup.classList.add('open');
       updateSungVersionBar();
       setLandingHash('chanukah-intro');
@@ -1659,7 +1697,7 @@
       if (!willOpen) {
         chanukahGroup.classList.remove('open');
         chanukahToggle.classList.remove('open');
-        chanukahToggle.textContent = 'Chanukah ▸';
+        chanukahToggle.textContent = 'Chanukah';
       }
     });
 
@@ -1682,7 +1720,7 @@
       document.getElementById('sung-version-bar').classList.add('hidden');
       prayerBtns.forEach(btn => btn.classList.remove('active'));
       blessingsToggle.classList.add('open');
-      blessingsToggle.textContent = 'Blessings ▾';
+      blessingsToggle.textContent = 'About Blessings';
       blessingsGroup.classList.add('open');
       updateSungVersionBar();
       setLandingHash('blessings-intro');
@@ -1694,7 +1732,7 @@
       if (!willOpen) {
         blessingsGroup.classList.remove('open');
         blessingsToggle.classList.remove('open');
-        blessingsToggle.textContent = 'Blessings ▸';
+        blessingsToggle.textContent = 'About Blessings';
       }
     });
 
@@ -1703,14 +1741,16 @@
     });
 
 
-    // Blessings: chooser pages (Over food, Special moments)
-    const BL_CHOOSERS = { 'blessings-food': { page: 'bl-food-landing', btn: 'blessings-food-btn' }, 'blessings-moments': { page: 'bl-moments-landing', btn: 'blessings-moments-btn' } };
+    // Blessings: category pages (Every day, Meals, ...)
+    const BL_CHOOSERS = { 'blessings-everyday': { page: 'bl-everyday-landing', btn: 'cat-everyday' }, 'blessings-meals': { page: 'bl-meals-landing', btn: 'cat-meals' }, 'blessings-shabbat': { page: 'bl-shabbat-landing', btn: 'cat-shabbat' }, 'blessings-synagogue': { page: 'bl-synagogue-landing', btn: 'cat-synagogue' }, 'blessings-moments': { page: 'bl-moments-landing', btn: 'cat-moments' }, 'blessings-food': { page: 'bl-meals-landing', btn: 'cat-meals' } };
+    const BL_CAT_OF = {"blessing-modeh": "cat-everyday", "blessing-neshamah": "cat-everyday", "blessing-study": "cat-everyday", "blessing-mezuzah": "cat-everyday", "blessing-handwashing": "cat-meals", "blessing-food-bread": "cat-meals", "blessing-food-wine": "cat-meals", "blessing-food-grain": "cat-meals", "blessing-food-tree": "cat-meals", "blessing-food-ground": "cat-meals", "blessing-food-shehakol": "cat-meals", "blessing-hamazon": "cat-meals", "blessing-nefashot": "cat-meals", "hadlakat-nerot": "cat-shabbat", "kiddush": "cat-shabbat", "blessing-children": "cat-shabbat", "blessing-havdalah": "cat-shabbat", "blessing-tallit": "cat-synagogue", "blessing-torah": "cat-synagogue", "blessing-haftarah-before": "cat-synagogue", "blessing-haftarah-after": "cat-synagogue", "blessing-moment-lightning": "cat-moments", "blessing-moment-thunder": "cat-moments", "blessing-moment-rainbow": "cat-moments", "blessing-moment-sea": "cat-moments", "blessing-moment-trees": "cat-moments", "blessing-moment-goodnews": "cat-moments", "blessing-moment-death": "cat-moments"};
     function showBlChooser(hash) {
       const c = BL_CHOOSERS[hash];
       showBlessingsLanding();
       blessingsLanding.classList.add('hidden');
+      blessingsToggle.classList.remove('open');
       document.getElementById(c.page).classList.remove('hidden');
-      document.getElementById(c.btn).classList.add('active');
+      const btn = document.getElementById(c.btn); if (btn) btn.classList.add('active');
       setLandingHash(hash);
       requestAnimationFrame(() => { updateNavCurrent(); revealInSidebar(document.getElementById(c.btn)); });
     }
@@ -1720,8 +1760,14 @@
         if (go) go();
       });
     });
+    let blFromCat = null;  // the category page a blessing was opened from
     document.querySelectorAll('.bl-chooser [data-prayer]').forEach(item => {
-      item.addEventListener('click', () => switchPrayer(item.dataset.prayer));
+      item.addEventListener('click', () => {
+        const pg = item.closest('.bl-chooser').id;
+        const c = Object.values(BL_CHOOSERS).find(x => x.page === pg);
+        blFromCat = c ? c.btn : null;
+        switchPrayer(item.dataset.prayer);
+      });
     });
 
     function showAmidaLanding() {
@@ -2440,10 +2486,10 @@
       navBackdrop.classList.toggle('open', open);
       document.body.classList.toggle('nav-open', open);
       navBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-      if (open) requestAnimationFrame(() => revealInSidebar(navSidebar.querySelector('.prayer-btn.active') || navSidebar.querySelector('.amida-group-toggle.open')));
+      if (open) requestAnimationFrame(() => revealInSidebar(navSidebar.querySelector(':scope > .prayer-btn.active') || navSidebar.querySelector(':scope > .amida-group-toggle.open')));
     }
     function updateNavCurrent() {
-      const a = navSidebar.querySelector('.prayer-btn.active') || navSidebar.querySelector('.amida-group-toggle.open');
+      const a = navSidebar.querySelector(':scope > .prayer-btn.active') || navSidebar.querySelector(':scope > .amida-group-toggle.open');
       document.getElementById('nav-current').textContent = a ? a.textContent.replace(/[▸▾]/g, '').trim() : '';
     }
     navBtn.addEventListener('click', () => setNav(true));
@@ -2460,6 +2506,8 @@
 
     function switchPrayer(prayerId) {
       requestAnimationFrame(() => { updateNavCurrent(); scrollToPractice(); revealInSidebar(document.querySelector('.prayer-sidebar .prayer-btn.active')); });
+      const blCat = blFromCat || BL_CAT_OF[prayerId]; blFromCat = null;
+      requestAnimationFrame(() => { const cb = document.getElementById(blCat || ''); if (cb) { cb.classList.add('active'); const ct = document.getElementById('chanukah-toggle'); if (ct) ct.classList.remove('open'); } if (typeof updateNavCurrent === 'function') updateNavCurrent(); });
       currentPrayer = prayerId;
       currentLineIndex = 0;
       correctCount = 0;
@@ -2481,14 +2529,14 @@
         amidaToggle.classList.add('open');
         amidaToggle.textContent = 'Amida ▾';
       } else if (prayerId.startsWith('blessing-')) {
-        document.querySelectorAll('.bl-chooser-btn').forEach(b => b.classList.toggle('active', (prayerId.startsWith('blessing-food-') && b.id === 'blessings-food-btn') || (prayerId.startsWith('blessing-moment-') && b.id === 'blessings-moments-btn')));
+        setTimeout(() => blessingsToggle.classList.remove('open'), 0);
         blessingsGroup.classList.add('open');
         blessingsToggle.classList.add('open');
-        blessingsToggle.textContent = 'Blessings ▾';
+        blessingsToggle.textContent = 'About Blessings';
       } else if (prayerId.startsWith('chanukah-')) {
         chanukahGroup.classList.add('open');
         chanukahToggle.classList.add('open');
-        chanukahToggle.textContent = 'Chanukah ▾';
+        chanukahToggle.textContent = 'Chanukah';
       } else if (prayerId.startsWith('shema')) {
         shemaGroup.classList.add('open');
         shemaToggle.classList.add('open');
@@ -3191,7 +3239,7 @@
       try { history.replaceState(null, '', '#' + id); } catch (e) { /* address can't be changed here; links still work on the live site */ }
     }
     function setLandingHash(id) { setAddressHash(id); }
-    const LANDING_LINKS = { 'chanukah-intro': showChanukahLanding, 'blessings-intro': showBlessingsLanding, 'blessings-food': () => showBlChooser('blessings-food'), 'blessings-moments': () => showBlChooser('blessings-moments') };
+    const LANDING_LINKS = { 'chanukah-intro': showChanukahLanding, 'blessings-intro': showBlessingsLanding, 'blessings-everyday': () => showBlChooser('blessings-everyday'), 'blessings-meals': () => showBlChooser('blessings-meals'), 'blessings-shabbat': () => showBlChooser('blessings-shabbat'), 'blessings-synagogue': () => showBlChooser('blessings-synagogue'), 'blessings-moments': () => showBlChooser('blessings-moments'), 'blessings-food': () => showBlChooser('blessings-food') };
     function landingFromHash() {
       return LANDING_LINKS[decodeURIComponent(location.hash.slice(1))] || null;
     }
@@ -3215,7 +3263,7 @@
 
     const shareBtn = document.getElementById('share-btn');
     const SHARE_ICON = shareBtn.innerHTML;
-    const LANDING_NAMES = { 'chanukah-intro': 'Chanukah', 'blessings-intro': 'Blessings', 'blessings-food': 'Blessings over food', 'blessings-moments': 'Blessings for special moments' };
+    const LANDING_NAMES = { 'chanukah-intro': 'Chanukah', 'blessings-intro': 'About blessings', 'blessings-everyday': 'Blessings: every day', 'blessings-meals': 'Blessings: before and after eating', 'blessings-shabbat': 'Blessings: shabbat and festivals', 'blessings-synagogue': 'Blessings: in synagogue', 'blessings-moments': 'Blessings: special moments' };
 
     // Line count and SR switch only apply when a line is on screen (hidden on landing pages)
     const toolRow = document.querySelector('.tool-row');
