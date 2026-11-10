@@ -709,6 +709,9 @@
 
 
 
+
+
+
           <!-- Amida landing page -->
           <div id="amida-landing" class="hidden">
             <div class="amida-landing-header">
@@ -1938,7 +1941,7 @@
       });
       // Landing pages
       document.querySelectorAll('.bl-chooser-btn').forEach(b => b.classList.remove('active'));
-      ['amida-landing','shema-landing','chanukah-landing','blessings-landing','bl-food-landing','bl-moments-landing'].forEach(id => {
+      ['amida-landing','shema-landing','chanukah-landing','blessings-landing','bl-everyday-landing','bl-meals-landing','bl-shabbat-landing','bl-synagogue-landing','bl-moments-landing'].forEach(id => {
         const p = document.getElementById(id); if (p) p.classList.add('hidden');
       });
     }
@@ -2049,14 +2052,15 @@
     });
 
 
-    // Blessings: chooser pages (Over food, Special moments)
-    const BL_CHOOSERS = { 'blessings-food': { page: 'bl-food-landing', btn: 'blessings-food-btn' }, 'blessings-moments': { page: 'bl-moments-landing', btn: 'blessings-moments-btn' } };
+    // Blessings: category pages (Every day, Meals, ...)
+    const BL_CHOOSERS = { 'blessings-everyday': { page: 'bl-everyday-landing', btn: 'cat-everyday' }, 'blessings-meals': { page: 'bl-meals-landing', btn: 'cat-meals' }, 'blessings-shabbat': { page: 'bl-shabbat-landing', btn: 'cat-shabbat' }, 'blessings-synagogue': { page: 'bl-synagogue-landing', btn: 'cat-synagogue' }, 'blessings-moments': { page: 'bl-moments-landing', btn: 'cat-moments' }, 'blessings-food': { page: 'bl-meals-landing', btn: 'cat-meals' } };
+    const BL_CAT_OF = {"blessing-modeh": "cat-everyday", "blessing-neshamah": "cat-everyday", "blessing-study": "cat-everyday", "blessing-mezuzah": "cat-everyday", "blessing-handwashing": "cat-meals", "blessing-food-bread": "cat-meals", "blessing-food-wine": "cat-meals", "blessing-food-grain": "cat-meals", "blessing-food-tree": "cat-meals", "blessing-food-ground": "cat-meals", "blessing-food-shehakol": "cat-meals", "blessing-hamazon": "cat-meals", "blessing-nefashot": "cat-meals", "hadlakat-nerot": "cat-shabbat", "kiddush": "cat-shabbat", "blessing-children": "cat-shabbat", "blessing-havdalah": "cat-shabbat", "blessing-tallit": "cat-synagogue", "blessing-torah": "cat-synagogue", "blessing-haftarah-before": "cat-synagogue", "blessing-haftarah-after": "cat-synagogue", "blessing-moment-lightning": "cat-moments", "blessing-moment-thunder": "cat-moments", "blessing-moment-rainbow": "cat-moments", "blessing-moment-sea": "cat-moments", "blessing-moment-trees": "cat-moments", "blessing-moment-goodnews": "cat-moments", "blessing-moment-death": "cat-moments"};
     function showBlChooser(hash) {
       const c = BL_CHOOSERS[hash];
       showBlessingsLanding();
       blessingsLanding.classList.add('hidden');
       document.getElementById(c.page).classList.remove('hidden');
-      document.getElementById(c.btn).classList.add('active');
+      const btn = document.getElementById(c.btn); if (btn) btn.classList.add('active');
       setLandingHash(hash);
       requestAnimationFrame(() => { updateNavCurrent(); revealInSidebar(document.getElementById(c.btn)); });
     }
@@ -2066,8 +2070,14 @@
         if (go) go();
       });
     });
+    let blFromCat = null;  // the category page a blessing was opened from
     document.querySelectorAll('.bl-chooser [data-prayer]').forEach(item => {
-      item.addEventListener('click', () => switchPrayer(item.dataset.prayer));
+      item.addEventListener('click', () => {
+        const pg = item.closest('.bl-chooser').id;
+        const c = Object.values(BL_CHOOSERS).find(x => x.page === pg);
+        blFromCat = c ? c.btn : null;
+        switchPrayer(item.dataset.prayer);
+      });
     });
 
     function showAmidaLanding() {
@@ -2806,6 +2816,8 @@
 
     function switchPrayer(prayerId) {
       requestAnimationFrame(() => { updateNavCurrent(); scrollToPractice(); revealInSidebar(document.querySelector('.prayer-sidebar .prayer-btn.active')); });
+      const blCat = blFromCat || BL_CAT_OF[prayerId]; blFromCat = null;
+      requestAnimationFrame(() => { const cb = document.getElementById(blCat || ''); if (cb) { cb.classList.add('active'); const ct = document.getElementById('chanukah-toggle'); if (ct) ct.classList.remove('open'); } if (typeof updateNavCurrent === 'function') updateNavCurrent(); });
       currentPrayer = prayerId;
       currentLineIndex = 0;
       correctCount = 0;
@@ -2827,7 +2839,6 @@
         amidaToggle.classList.add('open');
         amidaToggle.textContent = 'Amida ▾';
       } else if (prayerId.startsWith('blessing-')) {
-        document.querySelectorAll('.bl-chooser-btn').forEach(b => b.classList.toggle('active', (prayerId.startsWith('blessing-food-') && b.id === 'blessings-food-btn') || (prayerId.startsWith('blessing-moment-') && b.id === 'blessings-moments-btn')));
         blessingsGroup.classList.add('open');
         blessingsToggle.classList.add('open');
         blessingsToggle.textContent = 'Blessings ▾';
@@ -2947,12 +2958,6 @@
         sungBar.classList.remove('hidden');
         sungBtn.dataset.src = 'audio/adon-olam/full.mp3';
         sungBtn.dataset.label = '🎵 Sung Version';
-        sungBtn.style.display = '';
-        sungBtn.textContent = sungBtn.dataset.label;
-      } else if (currentPrayer === 'amida-petichah') {
-        sungBar.classList.remove('hidden');
-        sungBtn.dataset.src = 'audio/amida-petichah/full.mp3';
-        sungBtn.dataset.label = '🎵 Recording';
         sungBtn.style.display = '';
         sungBtn.textContent = sungBtn.dataset.label;
       } else {
