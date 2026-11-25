@@ -650,6 +650,7 @@
           <button class="prayer-btn amida-sub" data-prayer="blessing-tallit">Tallit</button>
           <button class="prayer-btn amida-sub" data-prayer="blessing-study">Torah Study</button>
           <button class="prayer-btn amida-sub" data-prayer="blessing-mezuzah">Mezuzah</button>
+          <button class="prayer-btn amida-sub" data-prayer="hashkiveinu">Hashkiveinu</button>
           <button class="prayer-btn amida-sub bl-chooser-btn" id="blessings-moments-btn" data-landing="blessings-moments">Special Moments</button>
         </div>
         <button class="prayer-btn bl-chooser-btn" id="cat-everyday" data-landing="blessings-everyday">Every Day</button>
@@ -708,7 +709,7 @@
             <hr class="amida-landing-divider">
             <div class="bl-head">Choose a category</div>
             <div class="bl-grid">
-              <button class="bl-card" type="button" data-landing="blessings-everyday"><span class="bl-title">Every day</span><span class="bl-he" lang="he">בְּכָל יוֹם</span><span class="bl-desc">Blessings for waking up, for study, and for the doorway of a Jewish home.</span></button>
+              <button class="bl-card" type="button" data-landing="blessings-everyday"><span class="bl-title">Every day</span><span class="bl-he" lang="he">בְּכָל יוֹם</span><span class="bl-desc">Blessings for waking up and lying down, for study, and for the doorway of a Jewish home.</span></button>
               <button class="bl-card" type="button" data-landing="blessings-meals"><span class="bl-title">Before and after eating</span><span class="bl-he" lang="he">לִפְנֵי הָאֹכֶל וְאַחֲרָיו</span><span class="bl-desc">Every blessing over food begins with the same opening line, followed by one ending for what you are about to eat.</span></button>
               <button class="bl-card" type="button" data-landing="blessings-shabbat"><span class="bl-title">Shabbat and festivals</span><span class="bl-he" lang="he">שַׁבָּת וּמוֹעֲדִים</span><span class="bl-desc">Blessings to welcome Shabbat at home, to bless the family, and to mark its end.</span></button>
               <button class="bl-card" type="button" data-landing="blessings-synagogue"><span class="bl-title">In synagogue</span><span class="bl-he" lang="he">בְּבֵית הַכְּנֶסֶת</span><span class="bl-desc">Blessings for the tallit, and for being called up to the Torah or reading the Haftarah.</span></button>
@@ -724,12 +725,13 @@
               <div class="amida-landing-title">בְּכָל יוֹם</div>
               <div class="amida-landing-subtitle">Every day</div>
             </div>
-            <p class="amida-landing-intro">Blessings for waking up, for study, and for the doorway of a Jewish home.</p>
+            <p class="amida-landing-intro">Blessings for waking up and lying down, for study, and for the doorway of a Jewish home.</p>
             <div class="bl-grid">
               <button class="bl-card" type="button" data-prayer="blessing-modeh"><span class="bl-title">Modeh Ani</span><span class="bl-he" lang="he">מוֹדֶה אֲנִי</span><span class="bl-desc">On waking</span></button>
               <button class="bl-card" type="button" data-prayer="blessing-neshamah"><span class="bl-title">Elohai Neshamah</span><span class="bl-he" lang="he">אֱלֹהַי נְשָׁמָה</span><span class="bl-desc">The soul You gave me</span></button>
               <button class="bl-card" type="button" data-prayer="blessing-study"><span class="bl-title">Torah study</span><span class="bl-he" lang="he">לַעֲסֹק בְּדִבְרֵי תוֹרָה</span><span class="bl-desc">Before learning</span></button>
               <button class="bl-card" type="button" data-prayer="blessing-mezuzah"><span class="bl-title">Mezuzah</span><span class="bl-he" lang="he">לִקְבֹּעַ מְזוּזָה</span><span class="bl-desc">Fixing a mezuzah</span></button>
+              <button class="bl-card" type="button" data-prayer="hashkiveinu"><span class="bl-title">Hashkiveinu</span><span class="bl-he" lang="he">הַשְׁכִּיבֵנוּ</span><span class="bl-desc">At night</span></button>
             </div>
           </div>
 
@@ -983,12 +985,12 @@
       "chanukah-lehadlik": {
         name: "Chanukah — Lehadlik Ner",
         lines: [
-          { hebrew: "בָּרוּךְ אַתָּה יְהוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם", transliteration: "baruch ata adonai eloheinu melech haolam", stress: "ba-RUCH a-TA a-do-NAI e-lo-HEI-nu ME-lech ha-o-LAM", english: "Blessed are You, Lord our God, King of the universe" },
+          { hebrew: "בָּרוּךְ אַתָּה יְהוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם", transliteration: "baruch ata adonai eloheinu melech haolam", stress: "ba-RUCH a-TA a-do-NAI e-lo-HEI-nu ME-lech ha-o-LAM", english: "Blessed are You, Lord our G_d, King of the universe" },
           { hebrew: "אֲשֶׁר קִדְּשָׁנוּ בְּמִצְוֹתָיו וְצִוָּנוּ", transliteration: "asher kidshanu bemitzvotav vetzivanu", stress: "A-sher kid-SHA-nu be-mitz-vo-TAV ve-tzi-VA-nu", english: "who has sanctified us with His commandments and commanded us" },
           { hebrew: "לְהַדְלִיק נֵר שֶׁל חֲנֻכָּה", transliteration: "lehadlik ner shel chanukah", stress: "le-had-LIK NER shel cha-nu-KA", english: "to kindle the Chanukah light" }
         ],
         vocab: [
-          { hebrew: "קִדְּשָׁנוּ", english: "sanctified us", stress: "kid-SHA-nu", note: "Also in Hadlakat Nerot, Kiddush; through commandments, we participate in God's holiness — the act of kindling is itself a holy act" },
+          { hebrew: "קִדְּשָׁנוּ", english: "sanctified us", stress: "kid-SHA-nu", note: "Also in Hadlakat Nerot, Kiddush; through commandments, we participate in G_d's holiness — the act of kindling is itself a holy act" },
           { hebrew: "בְּמִצְוֹתָיו", english: "with His commandments", stress: "be-mitz-vo-TAV", note: "Also in Hadlakat Nerot, Kiddush; commandments are described as instruments of sanctification — they make ordinary actions holy" },
           { hebrew: "לְהַדְלִיק", english: "to kindle / to light", stress: "le-had-LIK", note: "Also in Hadlakat Nerot; the root דלק means to burn or ignite; lighting is a visible act of public witness to the miracle" },
           { hebrew: "נֵר", english: "candle / light", stress: "NER", note: "Also in Hadlakat Nerot; a single light in darkness; the Chanukah candles are placed at doorways or windows to publicise the miracle" },
@@ -999,12 +1001,12 @@
       "chanukah-nisim": {
         name: "Chanukah — She'asa Nisim",
         lines: [
-          { hebrew: "בָּרוּךְ אַתָּה יְהוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם", transliteration: "baruch ata adonai eloheinu melech haolam", stress: "ba-RUCH a-TA a-do-NAI e-lo-HEI-nu ME-lech ha-o-LAM", english: "Blessed are You, Lord our God, King of the universe" },
+          { hebrew: "בָּרוּךְ אַתָּה יְהוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם", transliteration: "baruch ata adonai eloheinu melech haolam", stress: "ba-RUCH a-TA a-do-NAI e-lo-HEI-nu ME-lech ha-o-LAM", english: "Blessed are You, Lord our G_d, King of the universe" },
           { hebrew: "שֶׁעָשָׂה נִסִּים לַאֲבוֹתֵינוּ", transliteration: "sheasah nisim laavoteinu", stress: "she-a-SA ni-SIM la-a-vo-TEI-nu", english: "who performed miracles for our ancestors" },
           { hebrew: "בַּיָּמִים הָהֵם בַּזְּמַן הַזֶּה", transliteration: "bayamim hahem bazman hazeh", stress: "ba-ya-MIM ha-HEM baz-MAN ha-ZEH", english: "in those days at this season" }
         ],
         vocab: [
-          { hebrew: "שֶׁעָשָׂה", english: "who performed / who did", stress: "she-a-SA", note: "The blessing formula for miracles that happened to our ancestors; God's past acts are remembered as present realities" },
+          { hebrew: "שֶׁעָשָׂה", english: "who performed / who did", stress: "she-a-SA", note: "The blessing formula for miracles that happened to our ancestors; G_d's past acts are remembered as present realities" },
           { hebrew: "נִסִּים", english: "miracles", stress: "ni-SIM", note: "Plural of נֵס; the Chanukah miracle refers both to the military victory and the miraculous oil lasting eight days" },
           { hebrew: "לַאֲבוֹתֵינוּ", english: "for our ancestors", stress: "la-a-vo-TEI-nu", note: "The miracles happened to our ancestors — but we say this blessing as their inheritors; past miracles create present obligation" },
           { hebrew: "בַּיָּמִים הָהֵם", english: "in those days", stress: "ba-ya-MIM ha-HEM", note: "The temporal frame distances the events in time" },
@@ -1016,14 +1018,14 @@
         name: "Chanukah — Shehecheyanu",
         note: "This blessing is said on the first night only.",
         lines: [
-          { hebrew: "בָּרוּךְ אַתָּה יְהוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם", transliteration: "baruch ata adonai eloheinu melech haolam", stress: "ba-RUCH a-TA a-do-NAI e-lo-HEI-nu ME-lech ha-o-LAM", english: "Blessed are You, Lord our God, King of the universe" },
+          { hebrew: "בָּרוּךְ אַתָּה יְהוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם", transliteration: "baruch ata adonai eloheinu melech haolam", stress: "ba-RUCH a-TA a-do-NAI e-lo-HEI-nu ME-lech ha-o-LAM", english: "Blessed are You, Lord our G_d, King of the universe" },
           { hebrew: "שֶׁהֶחֱיָנוּ וְקִיְּמָנוּ וְהִגִּיעָנוּ", transliteration: "shehecheyanu vekiyemanu vehigianu", stress: "she-he-che-YA-nu ve-ki-ye-MA-nu ve-hi-gi-A-nu", english: "who has kept us alive, sustained us" },
           { hebrew: "לַזְּמַן הַזֶּה", transliteration: "lazman hazeh", stress: "laz-MAN ha-ZEH", english: "and brought us to this season" }
         ],
         vocab: [
-          { hebrew: "שֶׁהֶחֱיָנוּ", english: "who has kept us alive", stress: "she-he-che-YA-nu", note: "The first of three verbs; God sustains our life — recited at first occurrence of each festival, first new fruit, new clothing, and special occasions" },
-          { hebrew: "וְקִיְּמָנוּ", english: "and sustained us", stress: "ve-ki-ye-MA-nu", note: "Root: קוּם — to stand, to exist; God has upheld us, kept us standing through time to reach this moment" },
-          { hebrew: "וְהִגִּיעָנוּ", english: "and brought us", stress: "ve-hi-gi-A-nu", note: "Root: נָגַע — to reach; God has brought us to arrive at this special time — each festival is a destination reached together" },
+          { hebrew: "שֶׁהֶחֱיָנוּ", english: "who has kept us alive", stress: "she-he-che-YA-nu", note: "The first of three verbs; G_d sustains our life — recited at first occurrence of each festival, first new fruit, new clothing, and special occasions" },
+          { hebrew: "וְקִיְּמָנוּ", english: "and sustained us", stress: "ve-ki-ye-MA-nu", note: "Root: קוּם — to stand, to exist; G_d has upheld us, kept us standing through time to reach this moment" },
+          { hebrew: "וְהִגִּיעָנוּ", english: "and brought us", stress: "ve-hi-gi-A-nu", note: "Root: נָגַע — to reach; G_d has brought us to arrive at this special time — each festival is a destination reached together" },
           { hebrew: "לַזְּמַן הַזֶּה", english: "to this season", stress: "laz-MAN ha-ZEH", note: "The destination of the blessing; the very fact that we have arrived at this moment — alive, together, celebrating — is itself the miracle" },
         ]
       },
@@ -1387,6 +1389,36 @@
         ]
       },
 
+      "hashkiveinu": {
+        name: "Hashkiveinu — At night",
+        note: "Part of the evening service, and also said at bedtime: the night-time partner to Modeh Ani in the morning. This is the version in our Friday evening booklet.",
+        lines: [
+          { hebrew: "הַשְׁכִּיבֵנוּ אָבִינוּ לְשָׁלוֹם", transliteration: "hashkivenu avinu leshalom", stress: "hash-ki-VE-nu a-VI-nu le-sha-LOM", english: "Cause us, our Father, to lie down in peace," },
+          { hebrew: "וְהַעֲמִידֵנוּ מַלְכֵּנוּ לְחַיִּים", transliteration: "vehaamidenu malkenu lechayim", stress: "ve-ha-a-mi-DE-nu mal-KE-nu le-cha-YIM", english: "and raise us up again, our King, to life." },
+          { hebrew: "וּפְרוֹשׂ עָלֵינוּ סֻכַּת שְׁלוֹמֶךָ", transliteration: "ufros aleinu sukat shelomecha", stress: "u-FROS a-LEI-nu su-KAT she-lo-ME-cha", english: "Spread over us the shelter of Your peace;" },
+          { hebrew: "וְתַקְּנֵנוּ בְּעֵצָה טוֹבָה מִלְּפָנֶיךָ", transliteration: "vetaknenu beetza tova milefanecha", stress: "ve-tak-NE-nu be-e-TZA to-VA mi-le-fa-NE-cha", english: "guide us with Your good counsel," },
+          { hebrew: "וְהוֹשִׁיעֵנוּ לְמַעַן שְׁמֶךָ", transliteration: "vehoshienu lemaan shemecha", stress: "ve-ho-shi-E-nu le-MA-an she-ME-cha", english: "and save us for the sake of Your name." },
+          { hebrew: "וְהָגֵן בַּעֲדֵנוּ", transliteration: "vehagen baadenu", stress: "ve-ha-GEN ba-a-DE-nu", english: "Shield us," },
+          { hebrew: "וְהָסֵר מֵעָלֵינוּ אוֹיֵב דֶּבֶר וְחֶרֶב וְרָעָב וְיָגוֹן", transliteration: "vehaser mealeinu oyev dever vecherev veraav veyagon", stress: "ve-ha-SER me-a-LEI-nu o-YEV DE-ver ve-CHE-rev ve-ra-AV ve-ya-GON", english: "and remove from us enemy, plague, sword, famine and sorrow;" },
+          { hebrew: "וְהָסֵר שָׂטָן מִלְּפָנֵינוּ וּמֵאַחֲרֵינוּ", transliteration: "vehaser satan milefaneinu umeachareinu", stress: "ve-ha-SER sa-TAN mi-le-fa-NEI-nu u-me-a-cha-REI-nu", english: "remove the adversary from before us and behind us,",
+            notes: ["<strong>שָׂטָן</strong> — \"adversary\" or \"obstacle\": in the Bible the word means whatever stands in our way, not a devil figure"] },
+          { hebrew: "וּבְצֵל כְּנָפֶיךָ תַּסְתִּירֵנוּ", transliteration: "uvtzel kenafecha tastirenu", stress: "uv-TZEL ke-na-FE-cha tas-ti-RE-nu", english: "and shelter us in the shadow of Your wings,",
+            notes: ["An image from the Psalms: \"hide me in the shadow of Your wings\" (Psalm 17:8)"] },
+          { hebrew: "כִּי אֵל שׁוֹמְרֵנוּ וּלְשָׁלוֹם אָתָּה", transliteration: "ki el shomrenu uleshalom ata", stress: "ki EL shom-RE-nu u-le-sha-LOM A-ta", english: "for You are G_d, who guards us, and our peace." },
+          { hebrew: "בָּרוּךְ אַתָּה יְהוָה שׁוֹמֵר עַמּוֹ יִשְׂרָאֵל לָעַד", transliteration: "baruch ata adonai shomer amo yisrael laad", stress: "ba-RUCH a-TA a-do-NAI sho-MER a-MO yis-ra-EL la-AD", english: "Blessed are You, Lord, who guards Your people Israel for ever.",
+            notes: ["Our booklet uses this ending on Friday night too. Many communities use a Shabbat ending instead: <strong>הַפּוֹרֵשׂ סֻכַּת שָׁלוֹם עָלֵינוּ</strong>, \"who spreads the shelter of peace over us\""] },
+        ],
+        vocab: [
+          { hebrew: "הַשְׁכִּיבֵנוּ", english: "cause us to lie down", stress: "hash-ki-VE-nu", note: "From ש־כ־ב, to lie down, as in the Shema's \"when you lie down\" (בְּשָׁכְבְּךָ)" },
+          { hebrew: "וְהַעֲמִידֵנוּ", english: "and raise us up", stress: "ve-ha-a-mi-DE-nu", note: "From ע־מ־ד, to stand, as in עֲמִידָה, the Standing Prayer" },
+          { hebrew: "סֻכַּת שְׁלוֹמֶךָ", english: "the shelter of Your peace", stress: "su-KAT she-lo-ME-cha", note: "סֻכָּה is a booth or shelter, as at Sukkot; the same image appears in Yedid Nefesh" },
+          { hebrew: "עֵצָה", english: "counsel, advice", stress: "e-TZA", note: "Still the everyday word for advice in modern Hebrew" },
+          { hebrew: "כְּנָפֶיךָ", english: "Your wings", stress: "ke-na-FE-cha", note: "From כָּנָף, wing; sheltering wings are an image from the Psalms (17:8, 91:4)" },
+          { hebrew: "שׁוֹמֵר", english: "who guards", stress: "sho-MER", note: "From ש־מ־ר, to guard or keep, the same root as V'shamru" },
+          { hebrew: "לָעַד", english: "for ever", stress: "la-AD", note: "A shorter partner of לְעוֹלָם וָעֶד, \"for ever and ever\"" },
+        ]
+      },
+
       "blessing-mezuzah": {
         name: "Fixing a Mezuzah",
         note: "Said when fixing a mezuzah to the doorpost of a home.",
@@ -1504,7 +1536,7 @@
         lines: [
           { hebrew: "בָּרוּךְ אַתָּה יְהוָה", transliteration: "baruch ata adonai", stress: "ba-RUCH a-TA a-do-NAI", english: "Blessed are You, Lord",
             notes: ["<strong>בָּרוּךְ</strong> — ba-<em>ruch</em>, not ba-<em>rook</em> (ך = guttural ch)"] },
-          { hebrew: "אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם", transliteration: "eloheinu melech haolam", stress: "e-lo-HEI-nu ME-lech ha-o-LAM", english: "our God, King of the universe",
+          { hebrew: "אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם", transliteration: "eloheinu melech haolam", stress: "e-lo-HEI-nu ME-lech ha-o-LAM", english: "our G_d, King of the universe",
             notes: ["<strong>מֶלֶךְ</strong> — ME-lech, not ME-leh (ך = guttural ch)"] },
           { hebrew: "אֲשֶׁר קִדְּשָׁנוּ בְּמִצְוֹתָיו", transliteration: "asher kidshanu bemitzvotav", stress: "A-sher kid-SHA-nu be-mitz-vo-TAV", english: "who has sanctified us with His commandments" },
           { hebrew: "וְצִוָּנוּ לְהַדְלִיק נֵר שֶׁל שַׁבָּת", transliteration: "vetzivanu lehadlik ner shel shabat", stress: "ve-tzi-VA-nu le-had-LIK ner shel sha-BAT", english: "and commanded us to kindle the Sabbath light",
@@ -1529,21 +1561,21 @@
           // Vayechulu - Friday night intro
           { hebrew: "וַיְכֻלּוּ הַשָּׁמַיִם וְהָאָרֶץ", transliteration: "vayechulu hashamayim vehaaretz", stress: "va-ye-chu-LU ha-sha-MA-yim ve-ha-A-retz", english: "And the heavens and the earth" },
           { hebrew: "וְכָל צְבָאָם", transliteration: "vechol tzevaam", stress: "ve-CHOL tze-va-AM", english: "and all their hosts were completed" },
-          { hebrew: "וַיְכַל אֱלֹהִים בַּיּוֹם הַשְּׁבִיעִי", transliteration: "vayechal elohim bayom hashvii", stress: "va-ye-CHAL e-lo-HIM ba-YOM hash-vi-I", english: "And God completed on the seventh day" },
+          { hebrew: "וַיְכַל אֱלֹהִים בַּיּוֹם הַשְּׁבִיעִי", transliteration: "vayechal elohim bayom hashvii", stress: "va-ye-CHAL e-lo-HIM ba-YOM hash-vi-I", english: "And G_d completed on the seventh day" },
           { hebrew: "מְלַאכְתּוֹ אֲשֶׁר עָשָׂה", transliteration: "melachto asher asa", stress: "me-lach-TO A-sher a-SA", english: "His work which He had done" },
           { hebrew: "וַיִּשְׁבֹּת בַּיּוֹם הַשְּׁבִיעִי", transliteration: "vayishbot bayom hashvii", stress: "va-yish-BOT ba-YOM hash-vi-I", english: "And He rested on the seventh day" },
           { hebrew: "מִכָּל מְלַאכְתּוֹ אֲשֶׁר עָשָׂה", transliteration: "mikol melachto asher asa", stress: "mi-KOL me-lach-TO A-sher a-SA", english: "from all His work which He had done" },
-          { hebrew: "וַיְבָרֶךְ אֱלֹהִים אֶת יוֹם הַשְּׁבִיעִי", transliteration: "vayevarech elohim et yom hashvii", stress: "va-ye-va-RECH e-lo-HIM et yom hash-vi-I", english: "And God blessed the seventh day" },
+          { hebrew: "וַיְבָרֶךְ אֱלֹהִים אֶת יוֹם הַשְּׁבִיעִי", transliteration: "vayevarech elohim et yom hashvii", stress: "va-ye-va-RECH e-lo-HIM et yom hash-vi-I", english: "And G_d blessed the seventh day" },
           { hebrew: "וַיְקַדֵּשׁ אֹתוֹ", transliteration: "vayekadesh oto", stress: "va-ye-ka-DESH o-TO", english: "and sanctified it" },
           { hebrew: "כִּי בוֹ שָׁבַת מִכָּל מְלַאכְתּוֹ", transliteration: "ki vo shavat mikol melachto", stress: "ki vo sha-VAT mi-KOL me-lach-TO", english: "for on it He rested from all His work" },
-          { hebrew: "אֲשֶׁר בָּרָא אֱלֹהִים לַעֲשׂוֹת", transliteration: "asher bara elohim laasot", stress: "A-sher ba-RA e-lo-HIM la-a-SOT", english: "which God created to do" },
+          { hebrew: "אֲשֶׁר בָּרָא אֱלֹהִים לַעֲשׂוֹת", transliteration: "asher bara elohim laasot", stress: "A-sher ba-RA e-lo-HIM la-a-SOT", english: "which G_d created to do" },
           // Borei pri hagafen
           { hebrew: "סַבְרִי מָרָנָן וְרַבָּנָן וְרַבּוֹתַי", transliteration: "savri maranan verabanan verabotai", stress: "sav-RI ma-ra-NAN ve-ra-ba-NAN ve-ra-bo-TAI", english: "Attention, masters, teachers, and friends" },
           { hebrew: "בָּרוּךְ אַתָּה יְהוָה", transliteration: "baruch ata adonai", stress: "ba-RUCH a-TA a-do-NAI", english: "Blessed are You, Lord" },
-          { hebrew: "אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם", transliteration: "eloheinu melech haolam", stress: "e-lo-HEI-nu ME-lech ha-o-LAM", english: "our God, King of the universe" },
+          { hebrew: "אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם", transliteration: "eloheinu melech haolam", stress: "e-lo-HEI-nu ME-lech ha-o-LAM", english: "our G_d, King of the universe" },
           { hebrew: "בּוֹרֵא פְּרִי הַגָּפֶן", transliteration: "borei pri hagafen", stress: "bo-REH pri ha-GA-fen", english: "who creates the fruit of the vine" },
           // Kiddush blessing
-          { hebrew: "בָּרוּךְ אַתָּה יְהוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם", transliteration: "baruch ata adonai eloheinu melech haolam", stress: "ba-RUCH a-TA a-do-NAI e-lo-HEI-nu ME-lech ha-o-LAM", english: "Blessed are You, Lord our God, King of the universe" },
+          { hebrew: "בָּרוּךְ אַתָּה יְהוָה אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם", transliteration: "baruch ata adonai eloheinu melech haolam", stress: "ba-RUCH a-TA a-do-NAI e-lo-HEI-nu ME-lech ha-o-LAM", english: "Blessed are You, Lord our G_d, King of the universe" },
           { hebrew: "אֲשֶׁר קִדְּשָׁנוּ בְּמִצְוֹתָיו", transliteration: "asher kidshanu bemitzvotav", stress: "A-sher kid-SHA-nu be-mitz-vo-TAV", english: "who has sanctified us with His commandments" },
           { hebrew: "וְרָצָה בָנוּ", transliteration: "veratza vanu", stress: "ve-ra-TZA VA-nu", english: "and was pleased with us" },
           { hebrew: "וְשַׁבַּת קָדְשׁוֹ בְּאַהֲבָה וּבְרָצוֹן הִנְחִילָנוּ", transliteration: "veshabat kodsho beahava uveratzon hinchilanu", stress: "ve-sha-BAT kod-SHO be-a-ha-VA u-ve-ra-TZON hin-chi-LA-nu", english: "His holy Sabbath with love and favour He gave us as a heritage" },
@@ -1556,15 +1588,15 @@
           { hebrew: "בָּרוּךְ אַתָּה יְהוָה מְקַדֵּשׁ הַשַּׁבָּת", transliteration: "baruch ata adonai mekadesh hashabat", stress: "ba-RUCH a-TA a-do-NAI me-ka-DESH ha-sha-BAT", english: "Blessed are You, Lord, who sanctifies the Sabbath" },
           // Hamotzi
           { hebrew: "בָּרוּךְ אַתָּה יְהוָה", transliteration: "baruch ata adonai", stress: "ba-RUCH a-TA a-do-NAI", english: "Blessed are You, Lord" },
-          { hebrew: "אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם", transliteration: "eloheinu melech haolam", stress: "e-lo-HEI-nu ME-lech ha-o-LAM", english: "our God, King of the universe" },
+          { hebrew: "אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם", transliteration: "eloheinu melech haolam", stress: "e-lo-HEI-nu ME-lech ha-o-LAM", english: "our G_d, King of the universe" },
           { hebrew: "הַמּוֹצִיא לֶחֶם מִן הָאָרֶץ", transliteration: "hamotzi lechem min haaretz", stress: "ha-MO-tzi LE-chem min ha-A-retz", english: "who brings forth bread from the earth" }
         ],
         vocab: [
           { hebrew: "וַיְכֻלּוּ", english: "and were completed", stress: "va-ye-chu-LU", note: "Opens the Vayechulu passage (Genesis 2); signals the completion of creation" },
           { hebrew: "שָׁמַיִם", english: "heavens", stress: "sha-MA-yim", note: "Paired with אָרֶץ throughout; also in Shema (V'haya), Barchu" },
           { hebrew: "אָרֶץ", english: "earth / land", stress: "A-retz", note: "Also in Shema (V'haya im shamoa); the land is central to Kiddush's themes" },
-          { hebrew: "שָׁבַת", match: ["שָׁבַת"], english: "rested", stress: "sha-VAT", note: "The verbal root of שַׁבָּת (Sabbath); God's rest on the seventh day sanctifies ours" },
-          { hebrew: "בּוֹרֵא", english: "who creates", stress: "bo-REH", note: "Also in Amida; the present-tense form — God continuously creates" },
+          { hebrew: "שָׁבַת", match: ["שָׁבַת"], english: "rested", stress: "sha-VAT", note: "The verbal root of שַׁבָּת (Sabbath); G_d's rest on the seventh day sanctifies ours" },
+          { hebrew: "בּוֹרֵא", english: "who creates", stress: "bo-REH", note: "Also in Amida; the present-tense form — G_d continuously creates" },
           { hebrew: "גָּפֶן", english: "vine", stress: "GA-fen", note: "פְּרִי הַגָּפֶן means 'the fruit of the vine' — the Borei pri hagafen blessing" },
           { hebrew: "קִדְּשָׁנוּ", english: "sanctified us", stress: "kid-SHA-nu", note: "Also in Candles blessing; shares the root קדש with קָדוֹשׁ (holy)" },
           { hebrew: "זִכָּרוֹן", english: "remembrance", stress: "zi-ka-RON", note: "Also in Kedushat HaYom; memory is central to Jewish practice" },
@@ -1573,8 +1605,8 @@
           { hebrew: "לֶחֶם", english: "bread", stress: "LE-chem", note: "הַמּוֹצִיא — who brings forth bread from the earth — the blessing over challah" },
           { hebrew: "הַמּוֹצִיא", english: "who brings forth", stress: "ha-MO-tzi", note: "From the root יצא (to go out); the Hamotzi blessing that opens the meal" },
           { hebrew: "מְקַדֵּשׁ", english: "who sanctifies", stress: "me-ka-DESH", note: "The closing word of the main Kiddush blessing; also closes Kedushat HaYom" },
-          { hebrew: "אַהֲבָה", english: "love", stress: "a-ha-VA", note: "Also in Ahavat Olam; God gives Shabbat בְּאַהֲבָה — with love" },
-          { hebrew: "רָצוֹן", english: "favour / will", stress: "ra-TZON", note: "Also in Kedushat HaYom (Avodah); God's willing, gracious gift of Shabbat" },
+          { hebrew: "אַהֲבָה", english: "love", stress: "a-ha-VA", note: "Also in Ahavat Olam; G_d gives Shabbat בְּאַהֲבָה — with love" },
+          { hebrew: "רָצוֹן", english: "favour / will", stress: "ra-TZON", note: "Also in Kedushat HaYom (Avodah); G_d's willing, gracious gift of Shabbat" },
         ]
       },
     };
@@ -1743,7 +1775,7 @@
 
     // Blessings: category pages (Every day, Meals, ...)
     const BL_CHOOSERS = { 'blessings-everyday': { page: 'bl-everyday-landing', btn: 'cat-everyday' }, 'blessings-meals': { page: 'bl-meals-landing', btn: 'cat-meals' }, 'blessings-shabbat': { page: 'bl-shabbat-landing', btn: 'cat-shabbat' }, 'blessings-synagogue': { page: 'bl-synagogue-landing', btn: 'cat-synagogue' }, 'blessings-moments': { page: 'bl-moments-landing', btn: 'cat-moments' }, 'blessings-food': { page: 'bl-meals-landing', btn: 'cat-meals' } };
-    const BL_CAT_OF = {"blessing-modeh": "cat-everyday", "blessing-neshamah": "cat-everyday", "blessing-study": "cat-everyday", "blessing-mezuzah": "cat-everyday", "blessing-handwashing": "cat-meals", "blessing-food-bread": "cat-meals", "blessing-food-wine": "cat-meals", "blessing-food-grain": "cat-meals", "blessing-food-tree": "cat-meals", "blessing-food-ground": "cat-meals", "blessing-food-shehakol": "cat-meals", "blessing-hamazon": "cat-meals", "blessing-nefashot": "cat-meals", "hadlakat-nerot": "cat-shabbat", "kiddush": "cat-shabbat", "blessing-children": "cat-shabbat", "blessing-havdalah": "cat-shabbat", "blessing-tallit": "cat-synagogue", "blessing-torah": "cat-synagogue", "blessing-haftarah-before": "cat-synagogue", "blessing-haftarah-after": "cat-synagogue", "blessing-moment-lightning": "cat-moments", "blessing-moment-thunder": "cat-moments", "blessing-moment-rainbow": "cat-moments", "blessing-moment-sea": "cat-moments", "blessing-moment-trees": "cat-moments", "blessing-moment-goodnews": "cat-moments", "blessing-moment-death": "cat-moments"};
+    const BL_CAT_OF = {"blessing-modeh": "cat-everyday", "blessing-neshamah": "cat-everyday", "blessing-study": "cat-everyday", "blessing-mezuzah": "cat-everyday", "hashkiveinu": "cat-everyday", "blessing-handwashing": "cat-meals", "blessing-food-bread": "cat-meals", "blessing-food-wine": "cat-meals", "blessing-food-grain": "cat-meals", "blessing-food-tree": "cat-meals", "blessing-food-ground": "cat-meals", "blessing-food-shehakol": "cat-meals", "blessing-hamazon": "cat-meals", "blessing-nefashot": "cat-meals", "hadlakat-nerot": "cat-shabbat", "kiddush": "cat-shabbat", "blessing-children": "cat-shabbat", "blessing-havdalah": "cat-shabbat", "blessing-tallit": "cat-synagogue", "blessing-torah": "cat-synagogue", "blessing-haftarah-before": "cat-synagogue", "blessing-haftarah-after": "cat-synagogue", "blessing-moment-lightning": "cat-moments", "blessing-moment-thunder": "cat-moments", "blessing-moment-rainbow": "cat-moments", "blessing-moment-sea": "cat-moments", "blessing-moment-trees": "cat-moments", "blessing-moment-goodnews": "cat-moments", "blessing-moment-death": "cat-moments"};
     function showBlChooser(hash) {
       const c = BL_CHOOSERS[hash];
       showBlessingsLanding();
